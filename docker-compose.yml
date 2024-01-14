@@ -1,0 +1,28 @@
+version: '3'
+services:
+    db:
+        container_name: "db-blog"
+        platform: linux/x86_64
+        image: thanhvocse/mysql:8.0
+        restart: always
+        ports:
+            - "3306:3306"
+        volumes:
+            - ./docker/mysql:/var/lib/mysql:delegated
+            - ./docker/mysqlbackup:/home:delegated
+        environment:
+            MYSQL_ROOT_PASSWORD: 123456
+    php:
+        container_name: "php-blog"
+        image: "thanhvocse/php:8.1-apache-intel"
+        ports:
+          - "80:80"
+          - "443:443"
+        volumes:
+          - ./:/var/www/html:delegated
+          - ./null:/var/www/html/docker
+          - ~/.ssh:/root/.ssh:delegated
+        links:
+          - "db:db"
+        environment:
+          DOCUMENT_ROOT: "/"
