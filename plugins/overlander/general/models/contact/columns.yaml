@@ -1,0 +1,19 @@
+columns:
+    id:
+        label: 'Member Id'
+        type: number
+    name:
+        label: Name
+        type: text
+    email:
+        label: 'Email Address'
+        type: text
+    reason:
+        label: 'Contact Reason'
+        type: text
+    title:
+        label: Title
+        type: text
+    message:
+        label: Message
+        type: text

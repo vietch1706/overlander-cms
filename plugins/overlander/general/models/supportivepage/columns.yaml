@@ -1,0 +1,16 @@
+columns:
+    terms:
+        label: 'Terms & Conditions'
+        type: text
+    policy:
+        label: 'Privacy Policy'
+        type: text
+    disclaimer:
+        label: Disclaimer
+        type: text
+    created_at:
+        label: 'Created At'
+        type: datetime
+    updated_at:
+        label: 'Updated At'
+        type: datetime

@@ -1,0 +1,16 @@
+fields:
+    terms:
+        label: 'Terms & Conditions'
+        size: ''
+        span: auto
+        type: textarea
+    policy:
+        label: 'Privacy Policy'
+        size: ''
+        span: auto
+        type: textarea
+    disclaimer:
+        label: Disclaimer
+        size: ''
+        span: auto
+        type: textarea

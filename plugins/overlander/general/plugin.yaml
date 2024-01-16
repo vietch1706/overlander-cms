@@ -1,0 +1,20 @@
+plugin:
+    name: 'overlander.general::lang.plugin.name'
+    description: 'overlander.general::lang.plugin.description'
+    author: Overlander
+    icon: oc-icon-cog
+    homepage: ''
+navigation:
+    general:
+        label: General
+        url: /
+        icon: icon-cog
+        sideMenu:
+            supportive-page:
+                label: Supportive
+                url: overlander/general/supportivepage
+                icon: icon-support
+            contact:
+                label: Contact
+                url: overlander/general/contact
+                icon: icon-phone
