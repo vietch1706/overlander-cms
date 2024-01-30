@@ -1,0 +1,10 @@
+name: Contactus
+form: $/overlander/general/models/contact/fields.yaml
+modelClass: Overlander\General\Models\Contact
+defaultRedirect: overlander/general/contactus
+create:
+    redirect: 'overlander/general/contactus/update/:id'
+    redirectClose: overlander/general/contactus
+update:
+    redirect: overlander/general/contactus
+    redirectClose: overlander/general/contactus

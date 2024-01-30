@@ -9,3 +9,4 @@ toolbar:
     buttons: list_toolbar
     search:
         prompt: 'backend::lang.list.search_prompt'
+recordUrl: 'overlander/general/contactus/update/:id'

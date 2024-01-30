@@ -2,7 +2,16 @@ columns:
     id:
         label: 'Brand ID'
         type: number
-    brands:
-        label: Brand
+    name:
+        label: 'Brand Name'
+        type: text
+    image:
+        label: 'Brand Logo'
         type: partial
         path: ~/plugins/overlander/general/controllers/brands/_brand.htm
+    created_at:
+        label: 'Created At'
+        type: datetime
+    updated_at:
+        label: 'Updated At'
+        type: datetime

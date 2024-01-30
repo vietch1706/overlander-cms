@@ -13,7 +13,6 @@ class Brands extends Model
      * @var bool timestamps are disabled.
      * Remove this line if timestamps are defined in the database table.
      */
-    public $timestamps = false;
 
     /**
      * @var string table in the database used by the model.
@@ -24,7 +23,8 @@ class Brands extends Model
      * @var array rules for validation.
      */
     public $rules = [
-        'brands' => 'required',
+        'name' => 'required',
+        'image' => 'required',
     ];
 
 }
