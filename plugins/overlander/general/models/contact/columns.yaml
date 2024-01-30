@@ -1,0 +1,19 @@
+columns:
+    id:
+        label: 'Contact ID'
+        type: number
+    name:
+        label: Name
+        type: text
+    email:
+        label: Email
+        type: text
+    reason_id:
+        label: Reason
+        type: text
+    title:
+        label: Title
+        type: text
+    message:
+        label: Message
+        type: text

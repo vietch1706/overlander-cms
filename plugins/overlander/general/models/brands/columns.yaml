@@ -1,0 +1,8 @@
+columns:
+    id:
+        label: 'Brand ID'
+        type: number
+    brands:
+        label: Brand
+        type: partial
+        path: ~/plugins/overlander/general/controllers/brands/_brand.htm

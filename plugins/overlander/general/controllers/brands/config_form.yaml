@@ -1,0 +1,10 @@
+name: Brands
+form: $/overlander/general/models/brands/fields.yaml
+modelClass: Overlander\General\Models\Brands
+defaultRedirect: overlander/general/brands
+create:
+    redirect: 'overlander/general/brands/update/:id'
+    redirectClose: overlander/general/brands
+update:
+    redirect: overlander/general/brands
+    redirectClose: overlander/general/brands

@@ -1,0 +1,12 @@
+list: $/overlander/general/models/contactreason/columns.yaml
+modelClass: Overlander\General\Models\Contactreason
+title: Contactreason
+noRecordsMessage: 'backend::lang.list.no_records'
+showSetup: true
+showCheckboxes: true
+recordsPerPage: 20
+toolbar:
+    buttons: list_toolbar
+    search:
+        prompt: 'backend::lang.list.search_prompt'
+recordUrl: 'overlander/general/contactreason/update/:id'
