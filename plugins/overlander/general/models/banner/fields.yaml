@@ -19,14 +19,14 @@ fields:
         required: 1
         type: text
     published_at:
-        label: 'Published at'
-        mode: datetime
-        span: full
+        label: "Published at"
+        mode: date
+        span: auto
         required: 1
         type: datepicker
     expired_at:
-        label: 'Expired at'
-        mode: datetime
-        span: full
+        label: "Expired at"
+        mode: date
+        span: auto
         required: 1
         type: datepicker

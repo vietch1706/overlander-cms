@@ -29,7 +29,11 @@ class Banner extends Model
         'name' => 'required',
         'image' => 'required',
         'link' => 'required',
-        'published_at' => 'required',
-        'expired_at' => 'required',
+        'published_at' => 'required|before:expired_at',
+        'expired_at' => 'required|after:tomorrow',
+    ];
+    public $customMessages = [
+        'published_at.before' => 'The publish date must before the expired date.',
+        'expired_at.before' => 'The expired date must be one day later',
     ];
 }
