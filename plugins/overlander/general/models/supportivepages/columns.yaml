@@ -2,21 +2,22 @@ columns:
     id:
         label: ID
         type: number
+        sortable: true
     title:
         label: Title
         type: text
-    contents:
-        label: Contents
+        searchable: true
+    slug:
+        label: Slug
         type: text
+    status:
+        label: Status
+        type: partial
+        searchable: true
+        path: ~/plugins/overlander/general/models/supportivepages/_status.htm
     created_at:
         label: 'Created At'
         type: datetime
     updated_at:
         label: 'Updated At'
         type: datetime
-    slug:
-        label: Slug
-        type: text
-    status:
-        label: Status
-        type: text

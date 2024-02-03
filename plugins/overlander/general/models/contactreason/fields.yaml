@@ -1,6 +1,0 @@
-fields:
-    reason:
-        label: Reason
-        span: full
-        required: 1
-        type: text

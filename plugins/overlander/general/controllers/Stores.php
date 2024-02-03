@@ -1,10 +1,12 @@
-<?php namespace Overlander\General\Controllers;
+<?php
+
+namespace Overlander\General\Controllers;
 
 use Backend;
 use BackendMenu;
 use Backend\Classes\Controller;
 
-class Contactreason extends Controller
+class Stores extends Controller
 {
     public $implement = [
         \Backend\Behaviors\FormController::class,
@@ -17,7 +19,6 @@ class Contactreason extends Controller
     public function __construct()
     {
         parent::__construct();
-        BackendMenu::setContext('Overlander.General', 'general', 'general-reason');
+        BackendMenu::setContext('Overlander.General', 'general', 'general-stores');
     }
-
 }

@@ -1,4 +1,6 @@
-<?php namespace Overlander\General;
+<?php
+
+namespace Overlander\General;
 
 use System\Classes\PluginBase;
 

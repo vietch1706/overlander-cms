@@ -1,9 +1,4 @@
 <div data-control="toolbar">
-    <a
-        href="<?= Backend::url('overlander/general/contactus/create') ?>"
-        class="btn btn-primary oc-icon-plus">
-        <?= e(trans('backend::lang.form.create')) ?>
-    </a>
     <button
         class="btn btn-default oc-icon-trash-o"
         data-request="onDelete"

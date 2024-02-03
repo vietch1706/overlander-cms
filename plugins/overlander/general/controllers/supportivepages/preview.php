@@ -1,17 +1,17 @@
 <?php Block::put('breadcrumb') ?>
-    <ul>
-        <li><a href="<?= Backend::url('overlander/general/supportivepages') ?>">Supportivepages</a></li>
-        <li><?= e($this->pageTitle) ?></li>
-    </ul>
+<ul>
+    <li><a href="<?= Backend::url('overlander/general/supportivepages') ?>">Supportivepages</a></li>
+    <li><?= e($this->pageTitle) ?></li>
+</ul>
 <?php Block::endPut() ?>
 
-<?php if (!$this->fatalError): ?>
+<?php if (!$this->fatalError) : ?>
 
     <div class="form-preview">
         <?= $this->formRenderPreview() ?>
     </div>
 
-<?php else: ?>
+<?php else : ?>
     <p class="flash-message static error"><?= e($this->fatalError) ?></p>
 <?php endif ?>
 

@@ -1,17 +1,19 @@
 columns:
     id:
-        label: 'Brand ID'
+        label: "ID"
         type: number
+        sortable: true
     name:
-        label: 'Brand Name'
+        label: "Name"
         type: text
+        searchable: true
     image:
-        label: 'Brand Logo'
+        label: "Logo"
         type: partial
-        path: ~/plugins/overlander/general/controllers/brands/_brand.htm
+        path: ~/plugins/overlander/general/models/brands/_image.htm
     created_at:
-        label: 'Created At'
+        label: "Created At"
         type: datetime
     updated_at:
-        label: 'Updated At'
+        label: "Updated At"
         type: datetime

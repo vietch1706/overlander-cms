@@ -1,12 +1,11 @@
-title: 'Supportive Pages'
+title: "Supportive Pages"
 modelClass: Overlander\General\Models\Supportivepages
 list: $/overlander/general/models/supportivepages/columns.yaml
-recordUrl: 'overlander/general/supportivepages/update/:id'
-noRecordsMessage: 'backend::lang.list.no_records'
+recordUrl: "overlander/general/supportivepages/update/:id"
+noRecordsMessage: "backend::lang.list.no_records"
 recordsPerPage: 20
-showSetup: true
-showCheckboxes: true
+showSetup: false
+showCheckboxes: false
 toolbar:
-    buttons: list_toolbar
     search:
-        prompt: 'backend::lang.list.search_prompt'
+        prompt: "backend::lang.list.search_prompt"

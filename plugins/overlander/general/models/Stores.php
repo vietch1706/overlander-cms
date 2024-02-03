@@ -1,11 +1,13 @@
-<?php namespace Overlander\General\Models;
+<?php
+
+namespace Overlander\General\Models;
 
 use Model;
-use HasMany;
+
 /**
  * Model
  */
-class Contactreason extends Model
+class Stores extends Model
 {
     use \October\Rain\Database\Traits\Validation;
 
@@ -18,17 +20,17 @@ class Contactreason extends Model
     /**
      * @var string table in the database used by the model.
      */
-    public $table = 'overlander_general_contactreason';
+    public $table = 'overlander_general_stores';
 
     /**
      * @var array rules for validation.
      */
     public $rules = [
-        'reason' => 'required',
+        'name' => 'required',
+        'image' => 'required',
+        'address' => 'required',
+        'phone_number' => 'required|numeric|min:10|unique:overlander_general_stores',
+        'start_hour' => 'required',
+        'end_hour' => 'required',
     ];
-
-    public function Contact(): HasMany
-    {
-        return $this->hasMany(Contact::class);
-    }
 }

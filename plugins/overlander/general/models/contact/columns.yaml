@@ -1,13 +1,18 @@
 columns:
     id:
-        label: 'Contact ID'
+        label: ID
         type: number
+        sortable: true
     name:
         label: Name
         type: text
+        searchable: true
+        sortable: true
     email:
         label: Email
         type: text
+        searchable: true
+        sortable: true
     reason_id:
         label: Reason
         type: text

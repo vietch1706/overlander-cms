@@ -1,0 +1,55 @@
+fields:
+    name:
+        label: Name
+        span: full
+        required: 1
+        type: text
+    shop_id:
+        label: "Shop Id"
+        span: auto
+        required: 1
+        type: number
+    image:
+        label: Image
+        mode: file
+        thumbOptions:
+            mode: crop
+            extension: auto
+        span: auto
+        required: 1
+        type: mediafinder
+    address:
+        label: Address
+        span: full
+        required: 1
+        type: text
+    area:
+        label: Area
+        span: auto
+        required: 1
+        type: text
+    longitude:
+        label: Longitude
+        span: auto
+        type: number
+    phone_number:
+        label: "Phone number"
+        span: auto
+        required: 1
+        type: text
+    latitude:
+        label: Latitude
+        span: auto
+        type: number
+    start_hour:
+        label: "Start hour"
+        mode: time
+        span: auto
+        required: 1
+        type: datepicker
+    end_hour:
+        label: "End hour"
+        mode: time
+        span: auto
+        required: 1
+        type: datepicker

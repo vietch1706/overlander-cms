@@ -1,0 +1,10 @@
+name: Banner
+form: $/overlander/general/models/banner/fields.yaml
+modelClass: Overlander\General\Models\Banner
+defaultRedirect: overlander/general/banner
+create:
+    redirect: 'overlander/general/banner/update/:id'
+    redirectClose: overlander/general/banner
+update:
+    redirect: overlander/general/banner
+    redirectClose: overlander/general/banner

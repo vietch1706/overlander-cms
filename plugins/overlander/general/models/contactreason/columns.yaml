@@ -1,7 +1,0 @@
-columns:
-    id:
-        label: 'Reason ID'
-        type: number
-    reason:
-        label: Reason
-        type: text

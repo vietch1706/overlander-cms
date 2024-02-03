@@ -3,12 +3,11 @@
 namespace Overlander\General\Models;
 
 use Model;
-use Lang;
 
 /**
  * Model
  */
-class Contact extends Model
+class Banner extends Model
 {
     use \October\Rain\Database\Traits\Validation;
 
@@ -21,18 +20,16 @@ class Contact extends Model
     /**
      * @var string table in the database used by the model.
      */
-    public $table = 'overlander_general_contact';
+    public $table = 'overlander_general_banner';
 
     /**
      * @var array rules for validation.
      */
-    public $rules = [];
-    public function getReasonOptions()
-    {
-        return [
-            1 => 'Login Problems',
-            2 => 'Points Porblems',
-            3 => 'Others',
-        ];
-    }
+    public $rules = [
+        'name' => 'required',
+        'image' => 'required',
+        'link' => 'required',
+        'published_at' => 'required',
+        'expired_at' => 'required',
+    ];
 }

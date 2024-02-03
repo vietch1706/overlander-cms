@@ -1,0 +1,32 @@
+fields:
+    name:
+        label: Name
+        span: full
+        required: 1
+        type: text
+    image:
+        label: Image
+        mode: file
+        thumbOptions:
+            mode: crop
+            extension: auto
+        span: full
+        required: 1
+        type: mediafinder
+    link:
+        label: Link
+        span: full
+        required: 1
+        type: text
+    published_at:
+        label: 'Published at'
+        mode: datetime
+        span: full
+        required: 1
+        type: datepicker
+    expired_at:
+        label: 'Expired at'
+        mode: datetime
+        span: full
+        required: 1
+        type: datepicker

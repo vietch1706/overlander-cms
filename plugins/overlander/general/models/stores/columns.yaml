@@ -1,0 +1,42 @@
+columns:
+    id:
+        label: ID
+        type: number
+    name:
+        label: Name
+        type: text
+        searchable: true
+        sortable: true
+    image:
+        label: Image
+        type: partial
+        path: ~/plugins/overlander/general/models/stores/_image.htm
+    shop_id:
+        label: "Shop ID"
+        type: number
+        sortable: true
+    area:
+        label: Area
+        type: text
+        searchable: true
+        sortable: true
+    address:
+        label: Address
+        type: text
+        searchable: true
+        sortable: true
+    longitude:
+        label: Longitude
+        type: number
+    latitude:
+        label: Latitude
+        type: number
+    phone_number:
+        label: "Phone Number"
+        type: text
+    start_hour:
+        label: "Start Time"
+        type: time
+    end_hour:
+        label: "End Time"
+        type: time

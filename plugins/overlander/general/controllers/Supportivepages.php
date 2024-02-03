@@ -17,7 +17,7 @@ class Supportivepages extends Controller
     public function __construct()
     {
         parent::__construct();
-        BackendMenu::setContext('Overlander.General', 'general', 'general-supportivecontroller');
+        BackendMenu::setContext('Overlander.General', 'general', 'general-supportive-pages');
     }
 
 }

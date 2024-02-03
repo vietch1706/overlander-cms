@@ -1,6 +1,6 @@
 <?php Block::put('breadcrumb') ?>
     <ul>
-        <li><a href="<?= Backend::url('overlander/general/contactreason') ?>">Contactreason</a></li>
+        <li><a href="<?= Backend::url('overlander/general/banner') ?>">Banner</a></li>
         <li><?= e($this->pageTitle) ?></li>
     </ul>
 <?php Block::endPut() ?>
@@ -16,7 +16,7 @@
 <?php endif ?>
 
 <p>
-    <a href="<?= Backend::url('overlander/general/contactreason') ?>" class="btn btn-default oc-icon-chevron-left">
+    <a href="<?= Backend::url('overlander/general/banner') ?>" class="btn btn-default oc-icon-chevron-left">
         <?= e(trans('backend::lang.form.return_to_list')) ?>
     </a>
 </p>

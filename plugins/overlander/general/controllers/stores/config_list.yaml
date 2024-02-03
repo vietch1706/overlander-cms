@@ -1,6 +1,6 @@
-list: $/overlander/general/models/contactreason/columns.yaml
-modelClass: Overlander\General\Models\Contactreason
-title: Contactreason
+list: $/overlander/general/models/stores/columns.yaml
+modelClass: Overlander\General\Models\Stores
+title: Stores
 noRecordsMessage: 'backend::lang.list.no_records'
 showSetup: true
 showCheckboxes: true
@@ -9,4 +9,4 @@ toolbar:
     buttons: list_toolbar
     search:
         prompt: 'backend::lang.list.search_prompt'
-recordUrl: 'overlander/general/contactreason/update/:id'
+recordUrl: 'overlander/general/stores/update/:id'
