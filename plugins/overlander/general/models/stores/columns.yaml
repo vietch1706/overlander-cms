@@ -25,12 +25,6 @@ columns:
         type: text
         searchable: true
         sortable: true
-    longitude:
-        label: Longitude
-        type: number
-    latitude:
-        label: Latitude
-        type: number
     phone_number:
         label: "Phone Number"
         type: text
@@ -40,3 +34,9 @@ columns:
     end_hour:
         label: "End Time"
         type: time
+    created_at:
+        label: "Created At"
+        type: datetime
+    updated_at:
+        label: "Updated At"
+        type: datetime

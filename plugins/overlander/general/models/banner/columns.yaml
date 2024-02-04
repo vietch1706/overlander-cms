@@ -24,3 +24,9 @@ columns:
         type: date
         sortable: true
         searchable: true
+    created_at:
+        label: "Created At"
+        type: datetime
+    updated_at:
+        label: "Updated At"
+        type: datetime

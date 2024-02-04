@@ -21,6 +21,8 @@ class BuilderTableCreateOverlanderGeneralStores extends Migration
             $table->string('phone_number');
             $table->time('start_hour');
             $table->time('end_hour');
+            $table->timestamp('created_at')->nullable();
+            $table->timestamp('updated_at')->nullable();
         });
     }
 

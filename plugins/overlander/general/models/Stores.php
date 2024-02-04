@@ -28,16 +28,15 @@ class Stores extends Model
         'name' => 'required',
         'image' => 'required',
         'address' => 'required',
-        'longitude' => 'decimal',
-        'latitude' => 'decimal',
+        // 'longitude' => 'decimal',
+        // 'latitude' => 'decimal',
         'shop_id' => 'required|unique:overlander_general_stores,shop_id',
-        'phone_number' => 'numeric|required|unique:overlander_general_stores,phone_number|digits_between:7,15',
+        'phone_number' => ['required', 'unique:overlander_general_stores,phone_number', 'regex:/(84|0[3|5|7|8|9])+([0-9]{8})/'],
         'start_hour' => 'required|before:end_hour',
         'end_hour' => 'required|after:start_hour',
     ];
 
     public $customMessages = [
-        'phone_number.digits_between' => 'Phone number must be from 7 to 15 numbers',
         'start_hour.before' => 'Start time must be before end time',
         'end_hour.before' => 'End time must be after start time',
     ];

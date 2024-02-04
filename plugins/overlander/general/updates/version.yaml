@@ -1,23 +1,20 @@
 v1.0.1:
-    - "Initialize plugin"
+    - 'Initialize plugin'
 v1.0.2:
-    - "Created table overlander_general_supportivepages"
+    - 'Created table overlander_general_supportivepages'
     - builder_table_create_overlander_general_supportivepages.php
 v1.0.3:
-    - "Created table overlander_general_contact"
+    - 'Created table overlander_general_contact'
     - builder_table_create_overlander_general_contact.php
 v1.0.4:
-    - "Created table overlander_general_contactreason"
-    - builder_table_create_overlander_general_contactreason.php
-v1.0.5:
-    - "Created table overlander_general_brands"
+    - 'Created table overlander_general_brands'
     - builder_table_create_overlander_general_brands.php
+v1.0.5:
+    - 'Seeder table overlander_general_supportivepages'
+    - builder_table_seed_overlander_general_supportive_page.php
 v1.0.6:
-    - Seed_supportive_pages
-    - general_supportive_page_seeders.php
-v1.0.7:
-    - "Created table overlander_general_banner"
+    - 'Created table overlander_general_banner'
     - builder_table_create_overlander_general_banner.php
-v1.0.8:
-    - "Created table overlander_general_stores"
+v1.0.7:
+    - 'Created table overlander_general_stores'
     - builder_table_create_overlander_general_stores.php

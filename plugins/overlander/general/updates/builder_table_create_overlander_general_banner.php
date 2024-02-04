@@ -16,6 +16,8 @@ class BuilderTableCreateOverlanderGeneralBanner extends Migration
             $table->string('link');
             $table->date('published_at')->nullable();
             $table->date('expired_at')->nullable();
+            $table->timestamp('created_at')->nullable();
+            $table->timestamp('updated_at')->nullable();
         });
     }
 
