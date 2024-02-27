@@ -35,4 +35,12 @@ class Supportivepages extends Model
             self::STATUS_INACTIVE => 'Inactive',
         ];
     }
+    public function scopeGetBySlug($query, $slug)
+    {
+        return $query->where('slug', $slug)->first();
+    }
+    public function scopeGetById($query, $id)
+    {
+        return $query->where('id', $id)->first();
+    }
 }

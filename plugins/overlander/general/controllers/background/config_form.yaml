@@ -1,0 +1,10 @@
+name: Background
+form: $/overlander/general/models/background/fields.yaml
+modelClass: Overlander\General\Models\Background
+defaultRedirect: overlander/general/background
+create:
+    redirect: 'overlander/general/background/update/:id'
+    redirectClose: overlander/general/background
+update:
+    redirect: overlander/general/background
+    redirectClose: overlander/general/background

@@ -1,0 +1,26 @@
+fields:
+    name:
+        label: Name
+        span: auto
+        type: text
+    splash_screen:
+        label: 'Splash Screen'
+        mode: file
+        thumbOptions:
+            mode: crop
+            extension: auto
+        span: auto
+        readOnly: 0
+        required: 1
+        type: mediafinder
+    publish_date:
+        label: 'Publish date'
+        mode: date
+        span: auto
+        type: datepicker
+    end_date:
+        label: 'End date'
+        mode: date
+        span: auto
+        required: 1
+        type: datepicker

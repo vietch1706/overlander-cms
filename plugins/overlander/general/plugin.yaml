@@ -30,3 +30,7 @@ navigation:
                 label: Store
                 url: overlander/general/stores
                 icon: icon-shopping-cart
+            general-background:
+                label: Background
+                url: overlander/general/background
+                icon: icon-image

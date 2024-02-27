@@ -13,9 +13,10 @@ columns:
         type: text
         searchable: true
         sortable: true
-    reason_id:
+    reason:
         label: Reason
-        type: text
+        type: partial
+        path: ~/plugins/overlander/general/models/contact/_status.htm
     title:
         label: Title
         type: text

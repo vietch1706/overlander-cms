@@ -13,7 +13,7 @@ class BuilderTableCreateOverlanderGeneralContact extends Migration
             $table->increments('id')->unsigned();
             $table->string('name');
             $table->string('email');
-            $table->integer('reason');
+            $table->string('reason');
             $table->string('title');
             $table->text('message');
         });

@@ -1,12 +1,10 @@
-<?php
-
-namespace Overlander\General\Controllers;
+<?php namespace Overlander\General\Controllers;
 
 use Backend;
 use BackendMenu;
 use Backend\Classes\Controller;
 
-class Supportivepages extends Controller
+class Background extends Controller
 {
     public $implement = [
         \Backend\Behaviors\FormController::class,
@@ -19,6 +17,7 @@ class Supportivepages extends Controller
     public function __construct()
     {
         parent::__construct();
-        BackendMenu::setContext('Overlander.General', 'general', 'general-supportive-pages');
+        BackendMenu::setContext('Overlander.General', 'general', 'background');
     }
+
 }

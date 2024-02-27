@@ -31,12 +31,13 @@ class Stores extends Model
         // 'longitude' => 'decimal',
         // 'latitude' => 'decimal',
         'shop_id' => 'required|unique:overlander_general_stores,shop_id',
-        'phone_number' => ['required', 'unique:overlander_general_stores,phone_number', 'regex:/(84|0[3|5|7|8|9])+([0-9]{8})/'],
+        'phone_number' => ['required', 'unique:overlander_general_stores,phone_number', 'regex:/(84|0[3|5|7|8|9])+([0-9]{8})/', 'min_digits:10'],
         'start_hour' => 'required|before:end_hour',
         'end_hour' => 'required|after:start_hour',
     ];
 
     public $customMessages = [
+        'phone_number.min_digits' => 'Phone number must have at least 10 number',
         'start_hour.before' => 'Start time must be before end time',
         'end_hour.before' => 'End time must be after start time',
     ];

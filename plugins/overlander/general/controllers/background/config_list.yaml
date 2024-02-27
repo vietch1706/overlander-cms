@@ -1,0 +1,12 @@
+list: $/overlander/general/models/background/columns.yaml
+modelClass: Overlander\General\Models\Background
+title: Background
+noRecordsMessage: 'backend::lang.list.no_records'
+showSetup: true
+showCheckboxes: true
+recordsPerPage: 20
+toolbar:
+    buttons: list_toolbar
+    search:
+        prompt: 'backend::lang.list.search_prompt'
+recordUrl: 'overlander/general/background/update/:id'

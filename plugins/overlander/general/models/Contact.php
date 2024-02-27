@@ -4,6 +4,7 @@ namespace Overlander\General\Models;
 
 use Model;
 use Lang;
+use Illuminate\Http\Request;
 
 /**
  * Model

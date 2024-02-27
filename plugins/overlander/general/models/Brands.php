@@ -1,4 +1,6 @@
-<?php namespace Overlander\General\Models;
+<?php
+
+namespace Overlander\General\Models;
 
 use Model;
 
@@ -27,4 +29,8 @@ class Brands extends Model
         'image' => 'required',
     ];
 
+    public function scopeGetById($query, $id)
+    {
+        return $query->where('id', $id)->first();
+    }
 }
