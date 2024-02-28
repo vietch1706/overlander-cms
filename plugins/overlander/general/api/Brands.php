@@ -3,13 +3,13 @@
 namespace Overlander\General\Api;
 
 use Illuminate\Http\Request;
-use Overlander\General\Models\Brands as ModelsBrands;
+use Overlander\General\Repository\Brands as RepositoryBrands;
 
 class Brands
 {
-  public ModelsBrands $brand;
+  public RepositoryBrands $brand;
 
-  public function __construct(ModelsBrands $brand)
+  public function __construct(RepositoryBrands $brand)
   {
     $this->brand = $brand;
   }

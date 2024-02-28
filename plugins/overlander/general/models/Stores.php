@@ -41,4 +41,8 @@ class Stores extends Model
         'start_hour.before' => 'Start time must be before end time',
         'end_hour.before' => 'End time must be after start time',
     ];
+    public function scopeGetById($query, $id)
+    {
+        return $query->where('id', $id)->first();
+    }
 }
