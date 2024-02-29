@@ -18,9 +18,17 @@ class Brands
   public function getApi(Request $request)
   {
     $param = $request->all();
+    $result = null;
     if (!empty($param['id'])) {
-      return $this->brand->getById($param['id']);
+      $result = $this->brand->getById($param['id']);
+      if (empty($result)) {
+        return [
+          'message' => 'empty'
+        ];
+      }
+    } else {
+      $result = $this->brand->getAll();
     }
-    return $this->brand->getAll();
+    return $result;
   }
 }

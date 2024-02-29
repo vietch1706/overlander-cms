@@ -36,31 +36,35 @@ class SupportivePages
       }
       return $data;
     } catch (Exception $th) {
-      throw new BadRequestHttpException('fail!!!');
+      throw new BadRequestHttpException($th->getMessage());
     }
   }
 
   public function getBySlug($slug)
   {
     try {
-
-      $data = $this->spPage->getBySlug($slug);
-      return $this->convertData($data);
+      $data = null;
+      $spPage = $this->spPage->getBySlug($slug)->first();
+      if (!empty($spPage)) {
+        $data = $this->convertData($spPage);
+      }
+      return $data;
     } catch (Exception $th) {
-
-      throw new BadRequestHttpException('fail!!!');
+      throw new BadRequestHttpException($th->getMessage());
     }
   }
 
   public function getById($id)
   {
     try {
-
-      $data = $this->spPage->getById($id);
-      return $this->convertData($data);
+      $data = null;
+      $spPage = $this->spPage->getById($id)->first();
+      if (!empty($spPage)) {
+        $data = $this->convertData($spPage);
+      }
+      return $data;
     } catch (Exception $th) {
-
-      throw new BadRequestHttpException('fail!!!');
+      throw new BadRequestHttpException($th->getMessage());
     }
   }
 }

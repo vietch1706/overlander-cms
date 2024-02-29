@@ -40,12 +40,14 @@ class Brands
   public function getById($id)
   {
     try {
-
-      $data = $this->brand->getById($id);
-      return $this->convertData($data);
+      $data = null;
+      $brand = $this->brand->getById($id);
+      if (!empty($brand)) {
+        $data = $this->convertData($brand);
+      }
+      return $data;
     } catch (Exception $th) {
-
-      throw new BadRequestHttpException('fail!!!');
+      throw new BadRequestHttpException($th->getMessage());
     }
   }
 }

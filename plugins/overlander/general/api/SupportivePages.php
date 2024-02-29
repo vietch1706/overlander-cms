@@ -17,12 +17,19 @@ class SupportivePages
   public function getApi(Request $request)
   {
     $param = $request->all();
+    $result = null;
     if (!empty($param['slug'])) {
-      return $this->spPage->getBySlug($param['slug']);
+      $result =  $this->spPage->getBySlug($param['slug']);
     } elseif (!empty($param['id'])) {
-      return $this->spPage->getById($param['id']);
+      $result = $this->spPage->getById($param['id']);
+    } else {
+      return $this->spPage->getAll();
     }
-
-    return $this->spPage->getAll();
+    if (empty($result)) {
+      return [
+        'message' => 'empty'
+      ];
+    }
+    return $result;
   }
 }

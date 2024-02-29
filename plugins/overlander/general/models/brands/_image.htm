@@ -1,3 +1,2 @@
-<?php if ($value): ?>
-<img src="/storage/app/media/<?php echo $value; ?>" height="100" />
-<?php endif ?>
+<?php
+echo '<img src="'.url(config('system.storage.media.path')) . $value.'"/>';

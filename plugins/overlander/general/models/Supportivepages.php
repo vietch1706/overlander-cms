@@ -37,10 +37,10 @@ class Supportivepages extends Model
     }
     public function scopeGetBySlug($query, $slug)
     {
-        return $query->where('slug', $slug)->first();
+        return $query->where('slug', $slug);
     }
     public function scopeGetById($query, $id)
     {
-        return $query->where('id', $id)->first();
+        return $query->where('id', $id);
     }
 }

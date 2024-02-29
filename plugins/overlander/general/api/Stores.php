@@ -17,9 +17,17 @@ class Stores
   public function getApi(Request $request)
   {
     $param = $request->all();
+    $result = null;
     if (!empty($param['id'])) {
-      return $this->stores->getById($param['id']);
+      $result = $this->stores->getById($param['id']);
+      if (empty($result)) {
+        return [
+          'message' => 'empty'
+        ];
+      }
+    } else {
+      $result = $this->stores->getAll();
     }
-    return $this->stores->getAll();
+    return $result;
   }
 }

@@ -11,7 +11,7 @@ Route::group([
 
   Route::get('supportive-page', [SupportivePages::class, 'getApi']);
 
-  Route::post('contact-us', [ContactUs::class, 'sendMessage']);
+  Route::post('contact-us', [ContactUs::class, 'getApi']);
 
   Route::get('brand', [Brands::class, 'getApi']);
 

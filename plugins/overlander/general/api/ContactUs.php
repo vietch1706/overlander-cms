@@ -18,12 +18,12 @@ class ContactUs
   }
 
 
-  public function sendMessage(Request $request)
+  public function getApi(Request $request)
   {
     $data = $request->all();
     $rules = [
       'name' => 'required',
-      'email' => 'required|email',
+      'email' => 'required|email|regex:/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/',
       'title' => 'required',
       'reason' => 'required|numeric|max:3',
       'message' => 'required',
@@ -32,23 +32,8 @@ class ContactUs
     $validator = Validator::make($data, $rules);
 
     if ($validator->fails()) {
-      throw new BadRequestHttpException('fail!!!');
+      throw new BadRequestHttpException($validator->messages()->first());
     }
-    try {
-      Contact::insert(
-        [
-          'name' => $request->name,
-          'email' => $request->email,
-          'title' => $request->title,
-          'reason' => $request->reason,
-          'message' => $request->message,
-        ],
-      );
-      return [
-        "Save Successful!"
-      ];
-    } catch (Exception $th) {
-      throw new BadRequestHttpException('fail!!!');
-    }
+    return $this->contact->add($data);
   }
 }
