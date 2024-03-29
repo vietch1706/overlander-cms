@@ -4,29 +4,30 @@ namespace Overlander\General\Repository;
 
 use Exception;
 use Overlander\General\Helper\General;
-use Overlander\General\Models\Brands as ModelsBrands;
+use Overlander\General\Models\Banner as ModelsBanners;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
-class Brands
+class Banners
 {
-  public ModelsBrands $brand;
-  public function __construct(ModelsBrands $brand)
+  public ModelsBanners $banner;
+  public function __construct(ModelsBanners $banner)
   {
-    $this->brand = $brand;
+    $this->banner = $banner;
   }
 
-  public function convertData($brand)
+  public function convertData($banner)
   {
     return [
-      'name' => $brand->name,
-      'image' =>  General::getBaseUrl() . $brand->image,
+      'name' => $banner->name,
+      'image' =>  General::getBaseUrl() . $banner->image,
+      'link' => $banner->link,
     ];
   }
 
   public function getAll()
   {
     try {
-      $list = $this->brand->all();
+      $list = $this->banner->all();
 
       $data = [];
 
@@ -42,9 +43,9 @@ class Brands
   {
     try {
       $data = null;
-      $brand = $this->brand->getById($id);
-      if (!empty($brand)) {
-        $data = $this->convertData($brand);
+      $banner = $this->banner->getById($id);
+      if (!empty($banner)) {
+        $data = $this->convertData($banner);
       }
       return $data;
     } catch (Exception $th) {

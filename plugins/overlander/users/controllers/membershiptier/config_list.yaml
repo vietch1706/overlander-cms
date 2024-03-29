@@ -1,0 +1,11 @@
+list: $/overlander/users/models/membershiptier/columns.yaml
+modelClass: Overlander\Users\Models\MembershipTier
+title: MembershipTier
+noRecordsMessage: 'backend::lang.list.no_records'
+showSetup: true
+showCheckboxes: true
+recordsPerPage: 20
+toolbar:
+    search:
+        prompt: 'backend::lang.list.search_prompt'
+recordUrl: 'overlander/users/membershiptier/update/:id'

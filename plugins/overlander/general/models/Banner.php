@@ -36,4 +36,9 @@ class Banner extends Model
         'published_at.before' => 'The publish date must before the expired date.',
         'expired_at.before' => 'The expired date must be one day later',
     ];
+
+    public function scopeGetById($query, $id)
+    {
+        return $query->where('id', $id);
+    }
 }

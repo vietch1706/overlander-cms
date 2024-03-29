@@ -8,7 +8,7 @@ use Seeder;
 /**
  * SupportivePageSeeders
  */
-class SupportivePageSeeders extends Seeder
+class SeedOverlanderGeneralSupportivePage extends Seeder
 {
   /**
    * run the database seeds.

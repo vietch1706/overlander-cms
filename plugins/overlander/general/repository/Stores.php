@@ -4,7 +4,7 @@ namespace Overlander\General\Repository;
 
 use Exception;
 use Overlander\General\Models\Stores as ModelsStores;
-use stdClass;
+use Overlander\General\Helper\General;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class Stores
@@ -20,7 +20,7 @@ class Stores
   {
     return [
       'name' => $stores->name,
-      'image' => $this->getBaseUrl() . $stores->image,
+      'image' => General::getBaseUrl() . $stores->image,
       'shop_id' => $stores->shop_id,
       'area' => $stores->area,
       'address' => $stores->address,
@@ -28,11 +28,6 @@ class Stores
       'start_hour' => $stores->start_hour,
       'end_hour' => $stores->end_hour,
     ];
-  }
-
-  public static function getBaseUrl()
-  {
-    return url(config('system.storage.media.path'));
   }
 
   public function getAll()

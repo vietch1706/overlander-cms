@@ -3,15 +3,15 @@
 namespace Overlander\General\Api;
 
 use Illuminate\Http\Request;
-use Overlander\General\Repository\Brands as RepositoryBrands;
+use Overlander\General\Repository\Banners as RepositoryBanner;
 
-class Brands
+class Banners
 {
-  public RepositoryBrands $brand;
+  public RepositoryBanner $banner;
 
-  public function __construct(RepositoryBrands $brand)
+  public function __construct(RepositoryBanner $banner)
   {
-    $this->brand = $brand;
+    $this->banner = $banner;
   }
 
 
@@ -20,14 +20,14 @@ class Brands
     $param = $request->all();
     $result = null;
     if (!empty($param['id'])) {
-      $result = $this->brand->getById($param['id']);
+      $result = $this->banner->getById($param['id']);
       if (empty($result)) {
         return [
           'message' => 'empty'
         ];
       }
     } else {
-      $result = $this->brand->getAll();
+      $result = $this->banner->getAll();
     }
     return $result;
   }

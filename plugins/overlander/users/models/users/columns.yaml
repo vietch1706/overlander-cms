@@ -1,0 +1,52 @@
+columns:
+    id:
+        label: ID
+        type: number
+    first_name:
+        label: 'First Name'
+        type: text
+    last_name:
+        label: 'Last name'
+        type: text
+    phone:
+        label: Phone
+        type: text
+    password:
+        label: Password
+        type: text
+    country:
+        label: Country
+        type: text
+    email:
+        label: Email
+        type: text
+    birthday:
+        label: Birthday
+        type: text
+    gender:
+        label: Gender
+        type: text
+    interest:
+        label: Interest
+        type: text
+    is_existing:
+        label: 'Is Existing'
+        type: text
+    points:
+        label: Points
+        type: number
+    membership_tier_id:
+        label: 'Membership Tier'
+        type: number
+    published_date:
+        label: 'Published Date'
+        type: text
+    expired_date:
+        label: 'Expired Date'
+        type: text
+    created_at:
+        label: 'Created At'
+        type: datetime
+    updated_at:
+        label: 'Updated At'
+        type: datetime
