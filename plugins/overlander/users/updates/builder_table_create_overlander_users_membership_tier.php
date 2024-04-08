@@ -15,7 +15,8 @@ class BuilderTableCreateOverlanderUsersMembershipTier extends Migration
             $table->string('logo');
             $table->integer('points_required');
             $table->integer('points_remain');
-            $table->string('period');
+            $table->integer('period')->unsigned();
+            $table->string('slug');
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();
         });

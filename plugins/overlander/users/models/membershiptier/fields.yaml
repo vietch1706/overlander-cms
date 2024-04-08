@@ -29,3 +29,12 @@ fields:
         span: auto
         required: 1
         type: text
+    slug:
+        label: Slug
+        span: auto
+        readOnly: 1
+        required: 1
+        preset:
+            field: name
+            type: slug
+        type: text

@@ -2,11 +2,14 @@ columns:
     id:
         label: ID
         type: number
+    vip:
+        label: VIP
+        type: text
     first_name:
         label: 'First Name'
         type: text
     last_name:
-        label: 'Last name'
+        label: 'Last Name'
         type: text
     phone:
         label: Phone
@@ -29,8 +32,11 @@ columns:
     interest:
         label: Interest
         type: text
-    is_existing:
-        label: 'Is Existing'
+    address:
+        label: Address
+        type: text
+    is_existing_member:
+        label: 'Existing Member'
         type: text
     points:
         label: Points

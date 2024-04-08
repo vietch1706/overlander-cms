@@ -1,6 +1,6 @@
-list: $/overlander/users/models/users/columns.yaml
-modelClass: Overlander\Users\Models\Users
-title: Users
+list: $/overlander/users/models/transaction/columns.yaml
+modelClass: Overlander\Users\Models\Transaction
+title: Transaction
 noRecordsMessage: 'backend::lang.list.no_records'
 showSetup: true
 showCheckboxes: true
@@ -9,4 +9,4 @@ toolbar:
     buttons: list_toolbar
     search:
         prompt: 'backend::lang.list.search_prompt'
-recordUrl: 'overlander/users/users/update/:id'
+recordUrl: 'overlander/users/transaction/update/:id'

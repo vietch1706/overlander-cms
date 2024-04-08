@@ -37,10 +37,11 @@ class Users
   {
     try {
       if (empty($data['interest'])) {
-        $data['interest'] = 'null';
+        $data['interest'] = ' ';
       }
       ModelUsers::insert(
         [
+          'vip' => $data['vip'],
           'first_name' => $data['first_name'],
           'last_name' => $data['last_name'],
           'phone' => $data['phone'],
@@ -51,9 +52,6 @@ class Users
           'gender' => $data['gender'],
           'interest' => $data['interest'],
           'address' => $data['address'],
-          'is_existing' => 'true',
-          'points' => '0',
-          'membership_tier_id' => '1',
           'published_date' => date('Y-m-d'),
           'expired_date' => date('Y-m-d', strtotime("+ 3 months", strtotime(date('Y-m-d')))),
           'created_at' => date('Y-m-d'),

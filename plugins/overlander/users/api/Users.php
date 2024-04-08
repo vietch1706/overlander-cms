@@ -21,10 +21,10 @@ class Users
     $rules = [
       'first_name' => 'required',
       'last_name' => 'required',
-      'phone' => 'required|unique:overlander_users_users,phone|regex:/(84|0[3|5|7|8|9])+([0-9]{8})/|min_digits:10',
+      'phone' => ['required', 'unique:overlander_users_users,phone', 'regex:/(\+84|0[3|5|7|8|9])+([0-9]{8})/'],
       'password' => 'required',
       'country' => 'required',
-      'email' => 'required|email|regex:/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/|unique:overlander_users_users,email',
+      'email' => ['required', 'email', 'regex:/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/', 'unique:overlander_users_users,email'],
       'birthday' => 'required',
       'gender' => 'required',
       'address' => 'required',

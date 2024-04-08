@@ -2,8 +2,8 @@ columns:
     id:
         label: Id
         type: number
-    member_id:
-        label: 'Member Id'
+    vip:
+        label: VIP
         type: number
     type:
         label: Type

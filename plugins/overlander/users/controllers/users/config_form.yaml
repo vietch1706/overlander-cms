@@ -1,0 +1,10 @@
+name: Users
+form: $/overlander/users/models/users/fields.yaml
+modelClass: Overlander\Users\Models\Users
+defaultRedirect: overlander/users/users
+create:
+    redirect: 'overlander/users/users/update/:id'
+    redirectClose: overlander/users/users
+update:
+    redirect: overlander/users/users
+    redirectClose: overlander/users/users

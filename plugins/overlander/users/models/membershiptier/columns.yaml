@@ -16,8 +16,11 @@ columns:
         label: 'Points Remain'
         type: number
     period:
-        label: Period
+        label: 'Period (Months)'
         type: number
+    slug:
+        label: slug
+        type: text
     created_at:
         label: 'Created At'
         type: datetime

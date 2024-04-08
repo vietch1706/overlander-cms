@@ -22,3 +22,7 @@ navigation:
                 label: 'Point History'
                 url: overlander/users/pointhistory
                 icon: icon-money
+            transaction:
+                label: Transaction
+                url: overlander/users/transaction
+                icon: icon-exchange

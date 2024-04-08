@@ -1,0 +1,10 @@
+name: Transaction
+form: $/overlander/users/models/transaction/fields.yaml
+modelClass: Overlander\Users\Models\Transaction
+defaultRedirect: overlander/users/transaction
+create:
+    redirect: 'overlander/users/transaction/update/:id'
+    redirectClose: overlander/users/transaction
+update:
+    redirect: overlander/users/transaction
+    redirectClose: overlander/users/transaction

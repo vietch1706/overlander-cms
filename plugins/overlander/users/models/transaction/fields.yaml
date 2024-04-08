@@ -1,0 +1,67 @@
+fields:
+    vip:
+        label: VIP
+        span: auto
+        required: 1
+        type: text
+    name:
+        label: Name
+        span: auto
+        required: 1
+        type: text
+    plc:
+        label: PLC
+        span: auto
+        required: 1
+        type: number
+    desciption:
+        label: Desciption
+        span: auto
+        required: 1
+        type: text
+    invoice:
+        label: Invoice
+        span: auto
+        required: 1
+        type: text
+    date:
+        label: Date
+        mode: date
+        span: auto
+        required: 1
+        type: datepicker
+    quantity:
+        label: Quantity
+        span: auto
+        required: 1
+        type: number
+    unit:
+        label: Unit
+        span: auto
+        required: 1
+        type: text
+    price:
+        label: Price
+        span: auto
+        required: 1
+        type: number
+    discount:
+        label: Discount
+        span: auto
+        required: 1
+        type: number
+    fprice:
+        label: FPRICE
+        span: auto
+        required: 1
+        type: number
+    shop_id:
+        label: 'Shop ID'
+        span: auto
+        required: 1
+        type: text
+    category:
+        label: Category
+        span: auto
+        required: 1
+        type: text
