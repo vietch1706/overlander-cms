@@ -1,4 +1,6 @@
-<?php namespace Overlander\General\Controllers;
+<?php
+
+namespace Overlander\General\Controllers;
 
 use Backend;
 use BackendMenu;
@@ -17,7 +19,6 @@ class Background extends Controller
     public function __construct()
     {
         parent::__construct();
-        BackendMenu::setContext('Overlander.General', 'general', 'background');
+        BackendMenu::setContext('Overlander.General', 'general', 'general-background');
     }
-
 }

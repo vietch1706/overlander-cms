@@ -2,6 +2,7 @@
 
 namespace Overlander\Users\Updates;
 
+use Overlander\General\Helper\General;
 use Overlander\Users\Models\MembershipTier;
 use Seeder;
 
@@ -23,8 +24,8 @@ class SeedOverlanderUsersMembershipTier extends Seeder
         'points_remain' => '0',
         'period' => '3',
         'slug' => 'temporary',
-        'created_at' => date("Y-m-d H:i:s"),
-        'updated_at' => date("Y-m-d H:i:s"),
+        'created_at' => General::getCurrentDay(),
+        'updated_at' => General::getCurrentDay(),
       ],
       [
         'name' => 'Ordinary',
@@ -33,8 +34,8 @@ class SeedOverlanderUsersMembershipTier extends Seeder
         'points_remain' => '0',
         'period' => '48',
         'slug' => 'ordinary',
-        'created_at' => date("Y-m-d H:i:s"),
-        'updated_at' => date("Y-m-d H:i:s"),
+        'created_at' => General::getCurrentDay(),
+        'updated_at' => General::getCurrentDay(),
       ],
       [
         'name' => 'VIP',
@@ -43,8 +44,8 @@ class SeedOverlanderUsersMembershipTier extends Seeder
         'points_remain' => '5000',
         'period' => '48',
         'slug' => 'vip',
-        'created_at' => date("Y-m-d H:i:s"),
-        'updated_at' => date("Y-m-d H:i:s"),
+        'created_at' => General::getCurrentDay(),
+        'updated_at' => General::getCurrentDay(),
       ],
       [
         'name' => 'Gold',
@@ -53,8 +54,8 @@ class SeedOverlanderUsersMembershipTier extends Seeder
         'points_remain' => '22000',
         'period' => '48',
         'slug' => 'gold',
-        'created_at' => date("Y-m-d H:i:s"),
-        'updated_at' => date("Y-m-d H:i:s"),
+        'created_at' => General::getCurrentDay(),
+        'updated_at' => General::getCurrentDay(),
       ],
       [
         'name' => 'Platinum',
@@ -63,8 +64,8 @@ class SeedOverlanderUsersMembershipTier extends Seeder
         'points_remain' => '0',
         'period' => '48',
         'slug' => 'platinum',
-        'created_at' => date("Y-m-d H:i:s"),
-        'updated_at' => date("Y-m-d H:i:s"),
+        'created_at' => General::getCurrentDay(),
+        'updated_at' => General::getCurrentDay(),
       ],
       [
         'name' => 'Premier',
@@ -73,8 +74,8 @@ class SeedOverlanderUsersMembershipTier extends Seeder
         'points_remain' => '0',
         'period' => '48',
         'slug' => 'premier',
-        'created_at' => date("Y-m-d H:i:s"),
-        'updated_at' => date("Y-m-d H:i:s"),
+        'created_at' => General::getCurrentDay(),
+        'updated_at' => General::getCurrentDay(),
       ]
     ];
     MembershipTier::insert($membershiptier);

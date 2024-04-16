@@ -1,4 +1,6 @@
-<?php namespace Overlander\Users\Updates;
+<?php
+
+namespace Overlander\Users\Updates;
 
 use Schema;
 use October\Rain\Database\Updates\Migration;
@@ -7,10 +9,9 @@ class BuilderTableCreateOverlanderUsersTransaction extends Migration
 {
     public function up()
     {
-        Schema::create('overlander_users_transaction', function($table)
-        {
+        Schema::create('overlander_users_transaction', function ($table) {
             $table->increments('id')->unsigned();
-            $table->string('vip');
+            $table->string('member_no');
             $table->string('name');
             $table->integer('plc');
             $table->string('desciption');
@@ -27,7 +28,7 @@ class BuilderTableCreateOverlanderUsersTransaction extends Migration
             $table->timestamp('updated_at')->nullable();
         });
     }
-    
+
     public function down()
     {
         Schema::dropIfExists('overlander_users_transaction');

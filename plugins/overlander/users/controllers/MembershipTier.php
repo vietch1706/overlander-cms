@@ -1,4 +1,6 @@
-<?php namespace Overlander\Users\Controllers;
+<?php
+
+namespace Overlander\Users\Controllers;
 
 use Backend;
 use BackendMenu;
@@ -17,7 +19,6 @@ class MembershipTier extends Controller
     public function __construct()
     {
         parent::__construct();
-        BackendMenu::setContext('Overlander.Users', 'Users', 'membershiptier');
+        BackendMenu::setContext('Overlander.Users', 'Users', 'users-membershiptier');
     }
-
 }

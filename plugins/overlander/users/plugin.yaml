@@ -10,19 +10,19 @@ navigation:
         url: /
         icon: icon-users
         sideMenu:
-            Users:
+            users-users:
                 label: Users
                 url: overlander/users/users
                 icon: icon-users
-            membershiptier:
+            users-membershiptier:
                 label: 'Membership Tier'
                 url: overlander/users/membershiptier
                 icon: icon-trophy
-            point-history:
+            users-point-history:
                 label: 'Point History'
                 url: overlander/users/pointhistory
                 icon: icon-money
-            transaction:
+            users-transaction:
                 label: Transaction
                 url: overlander/users/transaction
                 icon: icon-exchange

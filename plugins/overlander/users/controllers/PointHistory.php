@@ -1,4 +1,6 @@
-<?php namespace Overlander\Users\Controllers;
+<?php
+
+namespace Overlander\Users\Controllers;
 
 use Backend;
 use BackendMenu;
@@ -15,7 +17,6 @@ class PointHistory extends Controller
     public function __construct()
     {
         parent::__construct();
-        BackendMenu::setContext('Overlander.Users', 'Users', 'point-history');
+        BackendMenu::setContext('Overlander.Users', 'Users', 'users-point-history');
     }
-
 }

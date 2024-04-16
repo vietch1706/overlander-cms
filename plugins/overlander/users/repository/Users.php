@@ -2,7 +2,9 @@
 
 namespace Overlander\Users\Repository;
 
+use Carbon\Carbon;
 use Exception;
+use Overlander\General\Helper\General;
 use Overlander\Users\Models\Users as ModelUsers;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
@@ -19,6 +21,7 @@ class Users
   public function convertData($users)
   {
     return [
+      'member_no' => $users->member_no,
       'first_name' => $users->first_name,
       'last_name' => $users->last_name,
       'phone' => $users->phone,
@@ -30,38 +33,124 @@ class Users
       'points' => $users->points,
       'membership_tier_id' => $users->points,
       'address' => $users->address,
+      'is_existing_member' => $users->is_existing_member,
     ];
   }
 
-  public function add($data)
+  public function create($data)
   {
+    $users = new ModelUsers();
+    if (empty($data['interest'])) {
+      $data['interest'] = ' ';
+    }
+    $user = [
+      'member_no' => $data['member_no'],
+      'first_name' => $data['first_name'],
+      'last_name' => $data['last_name'],
+      'phone' => $data['phone'],
+      'password' => $data['password'],
+      'country' => $data['country'],
+      'email' => $data['email'],
+      'birthday' => Carbon::parse($data['birthday'])->format('Y-m-d'),
+      'gender' => $data['gender'],
+      'interest' => $data['interest'],
+      'address' => $data['address'],
+      'published_date' => General::getCurrentDay(),
+      'expired_date' => Carbon::now()->addMonth('3')->format('Y-m-d'),
+      'created_at' => General::getCurrentDay(),
+      'updated_at' => General::getCurrentDay(),
+    ];
     try {
-      if (empty($data['interest'])) {
-        $data['interest'] = ' ';
-      }
-      ModelUsers::insert(
-        [
-          'vip' => $data['vip'],
-          'first_name' => $data['first_name'],
-          'last_name' => $data['last_name'],
-          'phone' => $data['phone'],
-          'password' => $data['password'],
-          'country' => $data['country'],
-          'email' => $data['email'],
-          'birthday' => date('Y-m-d', strtotime($data['birthday'])),
-          'gender' => $data['gender'],
-          'interest' => $data['interest'],
-          'address' => $data['address'],
-          'published_date' => date('Y-m-d'),
-          'expired_date' => date('Y-m-d', strtotime("+ 3 months", strtotime(date('Y-m-d')))),
-          'created_at' => date('Y-m-d'),
-          'updated_at' => date('Y-m-d'),
-        ],
-      );
-
+      $users->fill($user);
+      $users->save();
       return [
         'message' => 'Save successfull!',
       ];
+    } catch (Exception $th) {
+      throw new BadRequestHttpException($th->getMessage());
+    }
+  }
+
+  public function update($data)
+  {
+    $users = new ModelUsers();
+    if (empty($data['interest'])) {
+      $data['interest'] = ' ';
+    }
+    $user = [
+      'first_name' => $data['first_name'],
+      'last_name' => $data['last_name'],
+      'phone' => $data['phone'],
+      'password' => $data['password'],
+      'country' => $data['country'],
+      'email' => $data['email'],
+      'birthday' => Carbon::parse($data['birthday'])->format('Y-m-d'),
+      'gender' => $data['gender'],
+      'interest' => $data['interest'],
+      'address' => $data['address'],
+      'published_date' => General::getCurrentDay(),
+      'expired_date' => Carbon::now()->addMonth('3')->format('Y-m-d'),
+      'updated_at' => General::getCurrentDay(),
+    ];
+    try {
+      $users->where('member_no', $data['member_no'])->update($user);
+      return [
+        'message' => 'Update Successfully!!!',
+      ];
+    } catch (Exception $th) {
+      throw new BadRequestHttpException($th->getMessage());
+    }
+  }
+
+  public function getByMemberNumber($memberNumber)
+  {
+    try {
+      $data = null;
+      $user = $this->users->getByMemberNumber($memberNumber)->first();
+      if (!empty($user)) {
+        $data = $this->convertData($user);
+      }
+      return $data;
+    } catch (Exception $th) {
+      throw new BadRequestHttpException($th->getMessage());
+    }
+  }
+  public function getById($id)
+  {
+    try {
+      $data = null;
+      $user = $this->users->getById($id)->first();
+      if (!empty($user)) {
+        $data = $this->convertData($user);
+      }
+      return $data;
+    } catch (Exception $th) {
+      throw new BadRequestHttpException($th->getMessage());
+    }
+  }
+
+  public function getByEmail($email)
+  {
+    try {
+      $data = null;
+      $user = $this->users->getByEmail($email)->first();
+      if (!empty($user)) {
+        $data = $this->convertData($user);
+      }
+      return $data;
+    } catch (Exception $th) {
+      throw new BadRequestHttpException($th->getMessage());
+    }
+  }
+  public function getByPhone($phone)
+  {
+    try {
+      $data = null;
+      $user = $this->users->getByPhone($phone)->first();
+      if (!empty($user)) {
+        $data = $this->convertData($user);
+      }
+      return $data;
     } catch (Exception $th) {
       throw new BadRequestHttpException($th->getMessage());
     }

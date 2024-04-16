@@ -2,8 +2,8 @@ columns:
     id:
         label: ID
         type: number
-    vip:
-        label: VIP
+    member_no:
+        label: 'Member Number'
         type: text
     first_name:
         label: 'First Name'
@@ -13,9 +13,6 @@ columns:
         type: text
     phone:
         label: Phone
-        type: text
-    password:
-        label: Password
         type: text
     country:
         label: Country
@@ -28,7 +25,8 @@ columns:
         type: text
     gender:
         label: Gender
-        type: text
+        type: partial
+        path: ~/plugins/overlander/users/models/users/_gender.htm
     interest:
         label: Interest
         type: text
@@ -36,14 +34,24 @@ columns:
         label: Address
         type: text
     is_existing_member:
-        label: 'Existing Member'
+        label: 'Is Existing Member'
+        type: partial
+        path: ~/plugins/overlander/users/models/users/_existmember.htm
+    is_active:
+        label: Activation
+        type: partial
+        path: ~/plugins/overlander/users/models/users/_isactive.htm
+    active_date:
+        label: 'Active Date'
         type: text
     points:
         label: Points
         type: number
-    membership_tier_id:
+        default: '0'
+    membership_tier_name:
         label: 'Membership Tier'
-        type: number
+        relation: membership_tier
+        select: name
     published_date:
         label: 'Published Date'
         type: text

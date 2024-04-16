@@ -17,7 +17,7 @@ class Users extends Controller
     public function __construct()
     {
         parent::__construct();
-        BackendMenu::setContext('Overlander.Users', 'Users', 'Users');
+        BackendMenu::setContext('Overlander.Users', 'Users', 'users-users');
     }
 
 }

@@ -21,9 +21,9 @@ class Transaction extends Model
      * @var array rules for validation.
      */
     public $rules = [
-        'vip' => 'exists:overlander_users_users'
+        'member_no' => 'exists:overlander_users_users'
     ];
     public $customMessages = [
-        'vip' => 'The VIP is not exist.'
+        'member_no' => 'The member number is not exist.'
     ];
 }
