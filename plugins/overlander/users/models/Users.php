@@ -2,7 +2,10 @@
 
 namespace Overlander\Users\Models;
 
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Mail as SendMail;
 use Model;
 use Overlander\Users\Models\MembershipTier;
 use Overlander\Users\Controllers\Transaction;
@@ -13,6 +16,7 @@ use Overlander\Users\Controllers\Transaction;
 class Users extends Model
 {
     use \October\Rain\Database\Traits\Validation;
+    use Notifiable;
 
     const GENDER_MALE = 0;
     const GENDER_FEMALE = 1;
@@ -23,6 +27,7 @@ class Users extends Model
 
     protected $fillable = [
         'member_no',
+        'member_prefix',
         'first_name',
         'last_name',
         'phone',
@@ -40,6 +45,8 @@ class Users extends Model
         'membership_tier_id',
         'published_date',
         'expired_date',
+        'send_mail_at',
+        'verification_code',
     ];
 
     public $attributes = [
@@ -58,6 +65,7 @@ class Users extends Model
      */
     public $rules = [
         'member_no' => ['required', 'unique:overlander_users_users,member_no'],
+        'member_no' => 'required',
         'first_name' => 'required',
         'last_name' => 'required',
         'phone' => ['required', 'unique:overlander_users_users,phone', 'regex:/(\+84|0[3|5|7|8|9])+([0-9]{8})/'],
@@ -74,6 +82,15 @@ class Users extends Model
         return [
             self::GENDER_MALE => 'Male',
             self::GENDER_FEMALE => 'Female',
+        ];
+    }
+
+    public function getMemberPrefixOptions()
+    {
+        return [
+            'A',
+            'S',
+            'P'
         ];
     }
 

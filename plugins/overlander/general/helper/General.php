@@ -15,4 +15,8 @@ class General
   {
     return url(config('system.storage.media.path'));
   }
+  public static function generateRandomCode()
+  {
+    return str_pad(mt_rand(0, 999999), 6, '0', STR_PAD_LEFT);
+  }
 }

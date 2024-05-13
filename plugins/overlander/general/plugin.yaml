@@ -1,9 +1,9 @@
 plugin:
-    name: "overlander.general::lang.plugin.name"
-    description: "overlander.general::lang.plugin.description"
+    name: 'overlander.general::lang.plugin.name'
+    description: 'overlander.general::lang.plugin.description'
     author: Overlander
     icon: oc-icon-cog
-    homepage: ""
+    homepage: ''
 navigation:
     general:
         label: General
@@ -11,11 +11,11 @@ navigation:
         icon: icon-cog
         sideMenu:
             general-supportive-pages:
-                label: "Supportive Pages"
+                label: 'Supportive Pages'
                 url: overlander/general/supportivepages
                 icon: icon-support
             general-contactus:
-                label: "Contact Us"
+                label: 'Contact Us'
                 url: overlander/general/contactus
                 icon: icon-phone
             general-brands:
@@ -34,3 +34,7 @@ navigation:
                 label: Background
                 url: overlander/general/background
                 icon: icon-image
+            general-countries:
+                label: Countries
+                url: overlander/general/countries
+                icon: icon-phone

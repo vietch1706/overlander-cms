@@ -25,6 +25,7 @@ class Users
       'first_name' => $users->first_name,
       'last_name' => $users->last_name,
       'phone' => $users->phone,
+      'password' => $users->password,
       'country' => $users->country,
       'email' => $users->email,
       'birthday' => $users->birthday,
@@ -34,17 +35,21 @@ class Users
       'membership_tier_id' => $users->points,
       'address' => $users->address,
       'is_existing_member' => $users->is_existing_member,
+      'is_active' => $users->is_active,
+      'active_date' => $users->active_date,
+      'send_mail_at' => $users->send_mail_at,
     ];
   }
 
   public function create($data)
   {
-    $users = new ModelUsers();
+    // $users = new ModelUsers();
     if (empty($data['interest'])) {
       $data['interest'] = ' ';
     }
     $user = [
       'member_no' => $data['member_no'],
+      'member_prefix' => $data['member_prefix'],
       'first_name' => $data['first_name'],
       'last_name' => $data['last_name'],
       'phone' => $data['phone'],
@@ -61,8 +66,8 @@ class Users
       'updated_at' => General::getCurrentDay(),
     ];
     try {
-      $users->fill($user);
-      $users->save();
+      $this->users->fill($user);
+      $this->users->save();
       return [
         'message' => 'Save successfull!',
       ];
@@ -73,7 +78,7 @@ class Users
 
   public function update($data)
   {
-    $users = new ModelUsers();
+    // $users = new ModelUsers();
     if (empty($data['interest'])) {
       $data['interest'] = ' ';
     }
@@ -93,7 +98,7 @@ class Users
       'updated_at' => General::getCurrentDay(),
     ];
     try {
-      $users->where('member_no', $data['member_no'])->update($user);
+      $this->users->where('member_no', $data['member_no'])->update($user);
       return [
         'message' => 'Update Successfully!!!',
       ];
@@ -142,6 +147,7 @@ class Users
       throw new BadRequestHttpException($th->getMessage());
     }
   }
+
   public function getByPhone($phone)
   {
     try {

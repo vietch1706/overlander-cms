@@ -36,4 +36,16 @@ class Plugin extends PluginBase
     public function registerSettings()
     {
     }
+
+    public function registerMailTemplates()
+    {
+        return [
+            'templates' => [
+                'overlander.general::mail.exists_verify',
+            ],
+            'partials' => [],
+            'layouts' =>
+            []
+        ];
+    }
 }

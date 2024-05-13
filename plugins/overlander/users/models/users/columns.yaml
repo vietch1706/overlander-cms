@@ -4,6 +4,9 @@ columns:
         type: number
     member_no:
         label: 'Member Number'
+        type: number
+    member_prefix:
+        label: 'Member Prefix'
         type: text
     first_name:
         label: 'First Name'
@@ -50,8 +53,8 @@ columns:
         default: '0'
     membership_tier_name:
         label: 'Membership Tier'
-        relation: membership_tier
         select: name
+        relation: membership_tier
     published_date:
         label: 'Published Date'
         type: text

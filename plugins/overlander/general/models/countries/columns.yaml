@@ -1,0 +1,28 @@
+columns:
+    id:
+        label: ID
+        type: number
+    iso:
+        label: ISO
+        type: text
+        searchable: true
+    name:
+        label: Name
+        type: text
+        searchable: true
+    iso3:
+        label: ISO3
+        type: text
+        searchable: true
+    numcode:
+        label: Numcode
+        type: text
+    phonecode:
+        label: Phonecode
+        type: text
+    created_at:
+        label: 'Created At'
+        type: datetime
+    updated_at:
+        label: 'Updated At'
+        type: datetime
