@@ -21,4 +21,13 @@ class Countries extends Model
      * @var array rules for validation.
      */
     public $rules = [];
+
+    public function scopeGetById($query, $id)
+    {
+        return $query->where('id', $id);
+    }
+    public function scopeGetByISO($query, $iso)
+    {
+        return $query->where('iso', $iso);
+    }
 }

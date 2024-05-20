@@ -21,7 +21,6 @@ class ExistUsers
   }
   public function step1Code($data)
   {
-    dd($this->users->where('send_time', '=', 3)->first());
     $user = $this->users->getByEmail($data['email'])->first();
 
     if (Carbon::now()->diffInMinutes($user['send_mail_at']) < 10 && !empty($user['verification_code'])) {

@@ -15,7 +15,7 @@ class Brands
   }
 
 
-  public function getApi(Request $request)
+  public function getAllBrands(Request $request)
   {
     $param = $request->all();
     $result = null;

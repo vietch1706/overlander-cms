@@ -10,13 +10,15 @@ Route::group([
   'prefix' => '/api/{ver}/general',
 ], function () {
 
-  Route::get('supportive-page', [SupportivePages::class, 'getApi']);
+  Route::get('supportive-page/get', 'Overlander\General\Api\SupportivePages@getAllSupportivePages');
 
-  Route::post('contact-us', [ContactUs::class, 'getApi']);
+  Route::post('contact-us', 'Overlander\General\Api\ContactUs@getAllMessages');
 
-  Route::get('brand', [Brands::class, 'getApi']);
+  Route::get('brand', 'Overlander\General\Api\Brand@getAllBrands');
 
   Route::get('store', [Stores::class, 'getApi']);
 
   Route::get('banner', [Banners::class, 'getApi']);
+
+  Route::get('phonecode/get', 'Overlander\General\Api\Country@getCountry');
 });

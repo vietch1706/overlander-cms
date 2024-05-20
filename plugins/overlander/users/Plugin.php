@@ -16,6 +16,7 @@ class Plugin extends PluginBase
      */
     public function register()
     {
+        $this->registerConsoleCommand('overlander.userCommand', \Overlander\Users\Console\UserCommand::class);
     }
 
     /**
@@ -43,13 +44,13 @@ class Plugin extends PluginBase
     {
         $schedule->call(function () {
             $users = new Users();
-            $datas = $users->where('send_time', '=', 3)->first();
+            $datas = $users->where('send_time', '=', 3)->get()->toArray();
             foreach ($datas as $key => $value) {
                 $user = new Users();
                 $updateData = [
                     'send_time' => 0,
                 ];
-                $user->where('first_name', $value->first_name)->update($updateData);
+                $user->where('member_no', $value['member_no'])->update($updateData);
             }
         })->dailyAt('00:00');
     }

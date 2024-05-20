@@ -18,7 +18,7 @@ class ContactUs
   }
 
 
-  public function getApi(Request $request)
+  public function getAllMessages(Request $request)
   {
     $data = $request->all();
     $rules = [

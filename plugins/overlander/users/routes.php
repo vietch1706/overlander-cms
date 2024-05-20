@@ -1,6 +1,5 @@
 <?php
 
-
 Route::group([
   'prefix' => '/api/{ver}/users',
 ], function () {

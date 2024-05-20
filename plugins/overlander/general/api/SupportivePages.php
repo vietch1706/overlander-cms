@@ -14,7 +14,7 @@ class SupportivePages
 
     $this->spPage = $spPage;
   }
-  public function getApi(Request $request)
+  public function getAllSupportivePages(Request $request)
   {
     $param = $request->all();
     $result = null;
