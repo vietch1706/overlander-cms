@@ -5,6 +5,7 @@ namespace Overlander\Users\Repository;
 use Carbon\Carbon;
 use Exception;
 use Overlander\General\Helper\General;
+use Overlander\General\Models\Countries;
 use Overlander\Users\Models\Users as ModelUsers;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
@@ -12,10 +13,12 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 class Users
 {
   public ModelUsers $users;
+  public Countries $countries;
 
-  public function __construct(ModelUsers $user)
+  public function __construct(ModelUsers $user, Countries $country)
   {
     $this->users = $user;
+    $this->countries = $country;
   }
 
   public function convertData($users)
@@ -26,7 +29,7 @@ class Users
       'last_name' => $users->last_name,
       'phone' => $users->phone,
       'password' => $users->password,
-      'country' => $users->country,
+      'country_id' => $users->country_id,
       'email' => $users->email,
       'birthday' => $users->birthday,
       'gender' => $users->gender,
@@ -47,24 +50,30 @@ class Users
     if (empty($data['interest'])) {
       $data['interest'] = ' ';
     }
+    $lastestUser = $this->users->first();
+
+    if (!empty($lastestUser)) {
+      $member_no = $lastestUser['member_no'] + 1;
+    } else {
+      $member_no = 1;
+    }
     $user = [
-      'member_no' => $data['member_no'],
-      'member_prefix' => $data['member_prefix'],
+      'member_no' => $member_no,
       'first_name' => $data['first_name'],
       'last_name' => $data['last_name'],
       'phone' => $data['phone'],
       'password' => $data['password'],
-      'country' => $data['country'],
+      'country_id' => $this->countries->where('name', $data['country'])->first()['id'],
       'email' => $data['email'],
       'birthday' => Carbon::parse($data['birthday'])->format('Y-m-d'),
       'gender' => $data['gender'],
       'interest' => $data['interest'],
-      'address' => $data['address'],
       'published_date' => General::getCurrentDay(),
       'expired_date' => Carbon::now()->addMonth('3')->format('Y-m-d'),
       'created_at' => General::getCurrentDay(),
       'updated_at' => General::getCurrentDay(),
     ];
+    // dd($user);
     try {
       $this->users->fill($user);
       $this->users->save();
@@ -87,12 +96,11 @@ class Users
       'last_name' => $data['last_name'],
       'phone' => $data['phone'],
       'password' => $data['password'],
-      'country' => $data['country'],
+      'country_id' => $this->countries->where('name', $data['country'])->first()['id'],
       'email' => $data['email'],
       'birthday' => Carbon::parse($data['birthday'])->format('Y-m-d'),
       'gender' => $data['gender'],
       'interest' => $data['interest'],
-      'address' => $data['address'],
       'published_date' => General::getCurrentDay(),
       'expired_date' => Carbon::now()->addMonth('3')->format('Y-m-d'),
       'updated_at' => General::getCurrentDay(),

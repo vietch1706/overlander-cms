@@ -18,8 +18,9 @@ columns:
         label: Phone
         type: text
     country:
-        label: Country
-        type: text
+        label: 'Country'
+        select: name
+        relation: country
     email:
         label: Email
         type: text
@@ -32,9 +33,6 @@ columns:
         path: ~/plugins/overlander/users/models/users/_gender.htm
     interest:
         label: Interest
-        type: text
-    address:
-        label: Address
         type: text
     is_existing_member:
         label: 'Is Existing Member'

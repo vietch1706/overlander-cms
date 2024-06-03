@@ -12,17 +12,16 @@ class BuilderTableCreateOverlanderUsersUsers extends Migration
         Schema::create('overlander_users_users', function ($table) {
             $table->increments('id')->unsigned();
             $table->integer('member_no');
-            $table->string('member_prefix');
+            $table->string('member_prefix')->default('A');
             $table->string('first_name');
             $table->string('last_name');
             $table->string('phone');
             $table->string('password');
-            $table->string('country');
+            $table->integer('country_id');
             $table->string('email');
             $table->date('birthday')->nullable();
             $table->boolean('gender');
             $table->string('interest')->nullable();
-            $table->string('address');
             $table->boolean('is_existing_member')->default(0);
             $table->boolean('is_active')->default(0);
             $table->timestamp('active_date')->nullable();

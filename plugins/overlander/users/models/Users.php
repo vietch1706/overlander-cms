@@ -2,11 +2,10 @@
 
 namespace Overlander\Users\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Mail as SendMail;
 use Model;
+use Overlander\General\Models\Countries;
 use Overlander\Users\Models\MembershipTier;
 use Overlander\Users\Controllers\Transaction;
 
@@ -24,20 +23,17 @@ class Users extends Model
     const NORMAL_MEMBER = 0;
     const ACTIVE = 1;
     const INACTIVE = 0;
-
     protected $fillable = [
         'member_no',
-        'member_prefix',
         'first_name',
         'last_name',
         'phone',
         'password',
-        'country',
+        'country_id',
         'email',
         'birthday',
         'gender',
         'interest',
-        'address',
         'is_existing_member',
         'is_active',
         'active_date',
@@ -70,7 +66,7 @@ class Users extends Model
         'last_name' => 'required',
         'phone' => ['required', 'unique:overlander_users_users,phone', 'regex:/(\+84|0[3|5|7|8|9])+([0-9]{8})/'],
         'password' => 'required',
-        'country' => 'required',
+        'country_id' => 'required',
         'email' => ['required', 'email', 'regex:/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/', 'unique:overlander_users_users,email'],
         'birthday' => 'required',
         'published_date' => ['required', 'before:expired_date'],
@@ -111,8 +107,10 @@ class Users extends Model
     }
 
     public $belongsTo = [
-        'membership_tier' => [MembershipTier::class, 'key' => 'membership_tier_id']
+        'membership_tier' => [MembershipTier::class, 'key' => 'membership_tier_id'],
+        'country' =>  [Countries::class, 'key' => 'country_id']
     ];
+
 
     public function transaction(): HasMany
     {
