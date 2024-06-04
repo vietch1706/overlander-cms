@@ -16,6 +16,7 @@ class BuilderTableCreateOverlanderGeneralCountries extends Migration
             $table->string('iso3')->nullable();
             $table->smallInteger('numcode')->nullable();
             $table->smallInteger('phonecode');
+            $table->string('flags')->nullable();
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();
         });

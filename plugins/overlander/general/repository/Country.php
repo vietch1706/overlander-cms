@@ -3,6 +3,7 @@
 namespace Overlander\General\Repository;
 
 use Exception;
+use Overlander\General\Helper\General;
 use Overlander\General\Models\Countries;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
@@ -22,6 +23,7 @@ class Country
       'name' => $countries->name,
       'iso3' => $countries->iso3,
       'phonecode' => $countries->phonecode,
+      'flags' => General::getBaseUrl() . $countries->flags,
     ];
   }
 

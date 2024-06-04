@@ -20,9 +20,13 @@ columns:
     phonecode:
         label: Phonecode
         type: text
+    flags:
+        label: Flag
+        type: partial
+        path: ~/plugins/overlander/general/models/countries/_image.htm
     created_at:
-        label: 'Created At'
+        label: "Created At"
         type: datetime
     updated_at:
-        label: 'Updated At'
+        label: "Updated At"
         type: datetime

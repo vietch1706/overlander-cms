@@ -289,6 +289,7 @@ class SeedOverlanderGeneralCountries extends Seeder
       $country->iso3 = $value['iso3'];
       $country->numcode = $value['numcode'];
       $country->phonecode = $value['phonecode'];
+      $country->flags = '/flags/' . $value['iso'] . '.png';
       $country->created_at = Carbon::now();
       $country->updated_at = Carbon::now();
       $country->save();
