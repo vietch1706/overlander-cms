@@ -40,12 +40,16 @@ fields:
         span: auto
         required: 1
         type: password
-    birthday:
-        label: Birthday
-        mode: date
+    month:
+        label: Month
         span: auto
         required: 1
-        type: datepicker
+        type: dropdown
+    year:
+        label: Year
+        span: auto
+        required: 1
+        type: dropdown
     gender:
         label: Gender
         showSearch: true
@@ -70,10 +74,15 @@ fields:
         span: auto
         required: 1
         type: datepicker
-    interest:
+    interests:
         label: Interest
+        nameFrom: name
+        descriptionFrom: description
         span: auto
-        type: text
+        required: 1
+        type: relation
+        attributes:
+            multiple: true
     points:
         label: Points
         span: auto

@@ -1,0 +1,6 @@
+fields:
+    name:
+        label: Name
+        size: tiny
+        span: auto
+        type: textarea

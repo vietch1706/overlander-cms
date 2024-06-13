@@ -29,11 +29,12 @@ class Users
       'last_name' => $users->last_name,
       'phone' => $users->phone,
       'password' => $users->password,
-      'country_id' => $users->country_id,
+      'country' => $users->country_id,
       'email' => $users->email,
-      'birthday' => $users->birthday,
+      'month' => $users->month,
+      'year' => $users->year,
       'gender' => $users->gender,
-      'interest' => $users->interest,
+      'interests' => $users->interest_id,
       'points' => $users->points,
       'membership_tier_id' => $users->points,
       'address' => $users->address,
@@ -47,15 +48,14 @@ class Users
   public function create($data)
   {
     // $users = new ModelUsers();
-    if (empty($data['interest'])) {
-      $data['interest'] = ' ';
+    if (empty($data['interests'])) {
+      $data['interests'] = ' ';
     }
-    $lastestUser = $this->users->first();
-
+    $lastestUser = $this->users->orderBy('member_no', 'desc')->first();
     if (!empty($lastestUser)) {
       $member_no = $lastestUser['member_no'] + 1;
     } else {
-      $member_no = 1;
+      $member_no = 100000;
     }
     $user = [
       'member_no' => $member_no,
@@ -65,15 +65,15 @@ class Users
       'password' => $data['password'],
       'country_id' => $this->countries->where('name', $data['country'])->first()['id'],
       'email' => $data['email'],
-      'birthday' => Carbon::parse($data['birthday'])->format('Y-m-d'),
+      'month' => $data['month'],
+      'year' => $data['year'],
       'gender' => $data['gender'],
-      'interest' => $data['interest'],
+      'interest_id' => $data['interests'],
       'published_date' => General::getCurrentDay(),
       'expired_date' => Carbon::now()->addMonth('3')->format('Y-m-d'),
       'created_at' => General::getCurrentDay(),
       'updated_at' => General::getCurrentDay(),
     ];
-    // dd($user);
     try {
       $this->users->fill($user);
       $this->users->save();
@@ -82,14 +82,15 @@ class Users
       ];
     } catch (Exception $th) {
       throw new BadRequestHttpException($th->getMessage());
+      return $th->getMessage();
     }
   }
 
   public function update($data)
   {
     // $users = new ModelUsers();
-    if (empty($data['interest'])) {
-      $data['interest'] = ' ';
+    if (empty($data['interests'])) {
+      $data['interests'] = ' ';
     }
     $user = [
       'first_name' => $data['first_name'],
@@ -98,9 +99,10 @@ class Users
       'password' => $data['password'],
       'country_id' => $this->countries->where('name', $data['country'])->first()['id'],
       'email' => $data['email'],
-      'birthday' => Carbon::parse($data['birthday'])->format('Y-m-d'),
+      'month' => $data['month'],
+      'year' => $data['year'],
       'gender' => $data['gender'],
-      'interest' => $data['interest'],
+      'interest_id' => $data['interests'],
       'published_date' => General::getCurrentDay(),
       'expired_date' => Carbon::now()->addMonth('3')->format('Y-m-d'),
       'updated_at' => General::getCurrentDay(),
@@ -112,6 +114,36 @@ class Users
       ];
     } catch (Exception $th) {
       throw new BadRequestHttpException($th->getMessage());
+    }
+  }
+
+  public function checkPassword($param)
+  {
+    $result = false;
+    if (!empty($param['member_no'])) {
+      $member_no = preg_replace('/[^0-9]/', '', $param['member_no']);
+      $member_prefix = preg_replace('/[^a-zA-Z]/', '', $param['member_no']);
+      $data = $this->users->where('member_no', $member_no)->first();
+      if ($data['member_prefix'] == $member_prefix) {
+        $result = true;
+      }
+    } elseif (!empty($param['phone'])) {
+      $data = $this->users->where('phone', $param['phone'])->first();
+      $result = true;
+    }
+    if (!$result) {
+      return [
+        'message' => 'User Not Exist',
+      ];
+    } else {
+      if ($param['password'] == $data['password']) {
+        return [
+          'message' => 'Login Successfull',
+        ];
+      }
+      return [
+        'message' => 'Wrong Password',
+      ];
     }
   }
 

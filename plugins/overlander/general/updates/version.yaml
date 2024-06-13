@@ -27,3 +27,6 @@ v1.0.9:
 v1.0.10:
     - 'Seed table overlander_general_countries'
     - seed_overlander_general_countries.php
+v1.0.11:
+    - 'Created table overlander_general_interests'
+    - builder_table_create_overlander_general_interests.php

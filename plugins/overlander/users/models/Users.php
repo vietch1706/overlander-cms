@@ -2,10 +2,12 @@
 
 namespace Overlander\Users\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 use Model;
 use Overlander\General\Models\Countries;
+use Overlander\General\Models\Interests;
 use Overlander\Users\Models\MembershipTier;
 use Overlander\Users\Controllers\Transaction;
 
@@ -23,6 +25,7 @@ class Users extends Model
     const NORMAL_MEMBER = 0;
     const ACTIVE = 1;
     const INACTIVE = 0;
+    const MONTH = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
     protected $fillable = [
         'member_no',
         'first_name',
@@ -31,7 +34,8 @@ class Users extends Model
         'password',
         'country_id',
         'email',
-        'birthday',
+        'month',
+        'year',
         'gender',
         'interest',
         'is_existing_member',
@@ -64,14 +68,20 @@ class Users extends Model
         'member_no' => 'required',
         'first_name' => 'required',
         'last_name' => 'required',
-        'phone' => ['required', 'unique:overlander_users_users,phone', 'regex:/(\+84|0[3|5|7|8|9])+([0-9]{8})/'],
+        'phone' => ['required', 'unique:overlander_users_users,phone'],
         'password' => 'required',
         'country_id' => 'required',
         'email' => ['required', 'email', 'regex:/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/', 'unique:overlander_users_users,email'],
-        'birthday' => 'required',
+        'month' => ['required', 'integer', 'between:1,12'],
+        'year' => ['required',],
         'published_date' => ['required', 'before:expired_date'],
         'expired_date' => ['required', 'after:published_date'],
     ];
+
+    public function getFullMemberNumberAttribute()
+    {
+        return $this->member_no . $this->member_prefix;
+    }
 
     public function getGenderOptions()
     {
@@ -79,6 +89,35 @@ class Users extends Model
             self::GENDER_MALE => 'Male',
             self::GENDER_FEMALE => 'Female',
         ];
+    }
+
+    public function getMonthOptions()
+    {
+        return [
+            self::MONTH[0] => 'January',
+            self::MONTH[1] => 'February',
+            self::MONTH[2] => 'March',
+            self::MONTH[3] => 'April',
+            self::MONTH[4] => 'May',
+            self::MONTH[5] => 'June',
+            self::MONTH[6] => 'July',
+            self::MONTH[7] => 'August',
+            self::MONTH[8] => 'September',
+            self::MONTH[9] => 'October',
+            self::MONTH[10] => 'November',
+            self::MONTH[11] => 'December',
+        ];
+    }
+
+    public function getYearOptions()
+    {
+        $years = [];
+        $j = 0;
+        for ($i = 1900; $i <= (((int)Carbon::now()->format('Y')) + 10); $i++) {
+            $years[$j] = $i;
+            $j++;
+        }
+        return $years;
     }
 
     public function getMemberPrefixOptions()
@@ -108,7 +147,8 @@ class Users extends Model
 
     public $belongsTo = [
         'membership_tier' => [MembershipTier::class, 'key' => 'membership_tier_id'],
-        'country' =>  [Countries::class, 'key' => 'country_id']
+        'country' =>  [Countries::class, 'key' => 'country_id'],
+        'interests' => [Interests::class, 'key' => 'interest_id']
     ];
 
 
