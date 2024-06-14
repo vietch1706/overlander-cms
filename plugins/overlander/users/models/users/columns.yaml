@@ -4,10 +4,7 @@ columns:
         type: number
     member_no:
         label: 'Member Number'
-        type: number
-    member_prefix:
-        label: 'Member Prefix'
-        type: text
+        type: concatmemberno
     first_name:
         label: 'First Name'
         type: text
@@ -24,16 +21,17 @@ columns:
     email:
         label: Email
         type: text
-    birthday:
+    month:
         label: Birthday
-        type: text
+        type: concatbirthday
     gender:
         label: Gender
         type: partial
         path: ~/plugins/overlander/users/models/users/_gender.htm
     interest:
         label: Interest
-        type: text
+        select: name
+        relation: interests
     is_existing_member:
         label: 'Is Existing Member'
         type: partial

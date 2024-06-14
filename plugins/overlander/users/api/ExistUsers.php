@@ -25,7 +25,7 @@ class ExistUsers
       $param['phone'] = preg_replace('/^0/', '+84', $param['phone']);
     }
     $rules = [
-      'phone' => ['exists:overlander_users_users', 'regex:/(\+84|0[3|5|7|8|9])+([0-9]{8})/'],
+      'phone' => ['exists:overlander_users_users'],
       'email' => ['email', 'regex:/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/', 'exists:overlander_users_users'],
       'member_no' => ['exists:overlander_users_users'],
     ];

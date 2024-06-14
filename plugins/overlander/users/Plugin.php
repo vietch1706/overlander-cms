@@ -40,6 +40,31 @@ class Plugin extends PluginBase
     {
     }
 
+    public function registerListColumnTypes()
+    {
+        return [
+
+            // Using an inline closure
+            'concatmemberno' => function ($value) {
+                $users = new Users();
+                $user = $users->where('member_no', $value)->first();
+                return $value . $user['member_prefix'];
+            },
+            'concatbirthday' => [$this, 'evalConcatBirthdayListsColumn']
+
+        ];
+    }
+
+    public function evalConcatBirthdayListsColumn($value, $column, $record)
+    {
+        $users = new Users();
+        $user = $users->where('member_no', $record->member_no)->first();
+        if ($value < 10) {
+            return '0' . $value . '-' . $user['year'];
+        }
+        return $value . '-' . $user['year'];
+    }
+
     public function registerSchedule($schedule)
     {
         $schedule->call(function () {

@@ -9,4 +9,5 @@ Route::group([
   Route::get('existing-user/step-1-validation', 'Overlander\Users\Api\ExistUsers@validationStep1');
   Route::get('user/register/send-verification-code', 'Overlander\Users\Api\Users@sendCode');
   Route::get('user/register/verify-code', 'Overlander\Users\Api\Users@verifyCode');
+  Route::post('user/login', 'Overlander\Users\Api\Users@login');
 });

@@ -13,7 +13,7 @@ navigation:
             general-supportive-pages:
                 label: 'Supportive Pages'
                 url: overlander/general/supportivepages
-                icon: icon-support
+                icon: icon-sun-o
             general-contactus:
                 label: 'Contact Us'
                 url: overlander/general/contactus
@@ -38,3 +38,7 @@ navigation:
                 label: Countries
                 url: overlander/general/countries
                 icon: icon-phone
+            general-interests:
+                label: Interests
+                url: overlander/general/interests
+                icon: icon-info
