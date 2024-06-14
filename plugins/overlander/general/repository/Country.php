@@ -23,7 +23,7 @@ class Country
       'name' => $countries->name,
       'iso3' => $countries->iso3,
       'phonecode' => $countries->phonecode,
-      'flags' => General::getBaseUrl() . $countries->flags,
+      'flags' => $countries->flags,
     ];
   }
 

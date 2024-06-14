@@ -22,8 +22,9 @@ columns:
         type: text
     flags:
         label: Flag
-        type: partial
-        path: ~/plugins/overlander/general/models/countries/_image.htm
+        type: text
+        # type: partial
+        # path: ~/plugins/overlander/general/models/countries/_image.htm
     created_at:
         label: "Created At"
         type: datetime

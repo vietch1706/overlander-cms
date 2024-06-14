@@ -10,7 +10,7 @@ Route::group([
   'prefix' => '/api/{ver}/general',
 ], function () {
 
-  Route::get('supportive-page/get', 'Overlander\General\Api\SupportivePages@getAllSupportivePages');
+  Route::get('supportive/get', 'Overlander\General\Api\SupportivePages@getAllSupportivePages');
 
   Route::post('contact-us', 'Overlander\General\Api\ContactUs@getAllMessages');
 
