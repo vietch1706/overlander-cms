@@ -28,10 +28,11 @@ columns:
         label: Gender
         type: partial
         path: ~/plugins/overlander/users/models/users/_gender.htm
-    interest:
-        label: Interest
-        select: name
-        relation: interests
+    interests_data:
+        label: 'Interest'
+        type: text
+        searchable: false
+        sortable: false
     is_existing_member:
         label: 'Is Existing Member'
         type: partial

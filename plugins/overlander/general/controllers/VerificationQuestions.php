@@ -4,7 +4,7 @@ use Backend;
 use BackendMenu;
 use Backend\Classes\Controller;
 
-class Countries extends Controller
+class VerificationQuestions extends Controller
 {
     public $implement = [
         \Backend\Behaviors\FormController::class,
@@ -17,7 +17,7 @@ class Countries extends Controller
     public function __construct()
     {
         parent::__construct();
-        BackendMenu::setContext('Overlander.General', 'general', 'general-countries');
+        BackendMenu::setContext('Overlander.General', 'general', 'general-veficication-questions');
     }
 
 }

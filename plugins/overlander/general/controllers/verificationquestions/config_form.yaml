@@ -1,0 +1,10 @@
+name: VerificationQuestions
+form: $/overlander/general/models/verificationquestions/fields.yaml
+modelClass: Overlander\General\Models\VerificationQuestions
+defaultRedirect: overlander/general/verificationquestions
+create:
+    redirect: 'overlander/general/verificationquestions/update/:id'
+    redirectClose: overlander/general/verificationquestions
+update:
+    redirect: overlander/general/verificationquestions
+    redirectClose: overlander/general/verificationquestions

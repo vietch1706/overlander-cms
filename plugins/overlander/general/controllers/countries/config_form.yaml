@@ -1,0 +1,10 @@
+name: Countries
+form: $/overlander/general/models/countries/fields.yaml
+modelClass: Overlander\General\Models\Countries
+defaultRedirect: overlander/general/countries
+create:
+    redirect: 'overlander/general/countries/update/:id'
+    redirectClose: overlander/general/countries
+update:
+    redirect: overlander/general/countries
+    redirectClose: overlander/general/countries

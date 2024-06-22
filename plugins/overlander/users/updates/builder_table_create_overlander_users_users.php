@@ -22,7 +22,7 @@ class BuilderTableCreateOverlanderUsersUsers extends Migration
             $table->integer('month')->nullable();
             $table->integer('year')->nullable();
             $table->boolean('gender')->nullable();
-            $table->integer('interest_id')->nullable();
+            $table->string('interests')->nullable();
             $table->boolean('is_existing_member')->default(0);
             $table->boolean('is_active')->default(0);
             $table->timestamp('active_date')->nullable();

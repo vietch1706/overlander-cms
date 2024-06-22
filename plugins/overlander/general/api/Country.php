@@ -7,28 +7,30 @@ use Overlander\General\Repository\Country as RepositoryCountry;
 
 class Country
 {
-  public RepositoryCountry $countries;
-  public function __construct(RepositoryCountry $country)
-  {
+    public RepositoryCountry $countries;
 
-    $this->countries = $country;
-  }
-  public function getCountry(Request $request)
-  {
-    $param = $request->all();
-    $result = null;
-    if (!empty($param['iso'])) {
-      $result =  $this->countries->getByISO($param['iso']);
-    } elseif (!empty($param['id'])) {
-      $result = $this->countries->getById($param['id']);
-    } else {
-      return $this->countries->getAll();
+    public function __construct(RepositoryCountry $country)
+    {
+
+        $this->countries = $country;
     }
-    if (empty($result)) {
-      return [
-        'message' => 'empty'
-      ];
+
+    public function getCountry(Request $request)
+    {
+        $param = $request->all();
+        $result = null;
+        if (!empty($param['iso'])) {
+            $result = $this->countries->getByISO($param['iso']);
+        } elseif (!empty($param['id'])) {
+            $result = $this->countries->getById($param['id']);
+        } else {
+            return $this->countries->getAll();
+        }
+        if (empty($result)) {
+            return [
+                'message' => 'empty'
+            ];
+        }
+        return $result;
     }
-    return $result;
-  }
 }

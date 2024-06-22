@@ -1,0 +1,25 @@
+fields:
+    iso:
+        label: ISO
+        span: auto
+        type: text
+    name:
+        label: Name
+        span: auto
+        type: text
+    iso3:
+        label: ISO3
+        span: auto
+        type: text
+    numcode:
+        label: Numcode
+        span: auto
+        type: number
+    phonecode:
+        label: Phonecode
+        span: auto
+        type: number
+    flags:
+        label: Flags
+        span: auto
+        type: text

@@ -1,6 +1,6 @@
 <div data-control="toolbar">
     <a
-        href="<?= Backend::url('overlander/general/countries/create') ?>"
+        href="<?= Backend::url('overlander/general/verificationquestions/create') ?>"
         class="btn btn-primary oc-icon-plus">
         <?= e(trans('backend::lang.form.create')) ?>
     </a>

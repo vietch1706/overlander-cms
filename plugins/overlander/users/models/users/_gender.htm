@@ -1,4 +1,4 @@
 <?php
 $gender = (new Overlander\Users\Models\Users()) ->
-getGenderOptions(); $class = [ 1 => 'text-body', 0 => 'text-body', ]; echo
+getGenderOptions(); $class = [ 1 => 'text-body', 0 => 'text-body', "" => 'text-body', ]; echo
 '<span class="'.$class[$value].'">'.$gender[$value].'</span>';

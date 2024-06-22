@@ -1,4 +1,6 @@
-<?php namespace Overlander\General\Models;
+<?php
+
+namespace Overlander\General\Models;
 
 use Model;
 
@@ -18,7 +20,18 @@ class Interests extends Model
     /**
      * @var array rules for validation.
      */
-    public $rules = [
-    ];
+    public $rules = [];
 
+    public static function getInterestName()
+    {
+        $interests = self::orderBy('name', 'asc')->get();
+        $data = [];
+
+        foreach ($interests as $interest) {
+            $name = $interest->name ?? '';
+            $data[$interest->id] = $name;
+        }
+
+        return $data;
+    }
 }
