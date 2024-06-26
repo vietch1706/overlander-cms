@@ -1,11 +1,11 @@
-<?php namespace Overlander\General\Models;
+<?php namespace Overlander\Logs\Models;
 
 use Model;
 
 /**
  * Model
  */
-class VerificationQuestions extends Model
+class Maillogs extends Model
 {
     use \October\Rain\Database\Traits\Validation;
 
@@ -13,12 +13,15 @@ class VerificationQuestions extends Model
     /**
      * @var string table in the database used by the model.
      */
-    public $table = 'overlander_general_verification_questions';
+    public $table = 'overlander_logs_maillogs';
 
     /**
      * @var array rules for validation.
      */
     public $rules = [
+        'email' => 'required|email',
+        'content' => 'required',
+        'method' => 'required'
     ];
 
 }

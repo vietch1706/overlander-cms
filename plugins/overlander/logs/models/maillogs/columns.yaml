@@ -2,12 +2,15 @@ columns:
     id:
         label: ID
         type: number
-    name:
-        label: Name
+    email:
+        label: Email
+        type: text
+    content:
+        label: Content
+        type: text
+    method:
+        label: Method
         type: text
     created_at:
         label: 'Created At'
-        type: datetime
-    updated_at:
-        label: 'Updated At'
         type: datetime

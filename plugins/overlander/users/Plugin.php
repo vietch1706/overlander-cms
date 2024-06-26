@@ -2,6 +2,7 @@
 
 namespace Overlander\Users;
 
+use Overlander\Users\Console\UserCommand;
 use Overlander\Users\Models\Users;
 use System\Classes\PluginBase;
 
@@ -15,7 +16,7 @@ class Plugin extends PluginBase
      */
     public function register()
     {
-        $this->registerConsoleCommand('overlander.userCommand', \Overlander\Users\Console\UserCommand::class);
+        $this->registerConsoleCommand('overlander.userCommand', UserCommand::class);
     }
 
     /**
@@ -58,9 +59,6 @@ class Plugin extends PluginBase
     {
         $users = new Users();
         $user = $users->where('member_no', $record->member_no)->first();
-        if ($user['year'] === 0) {
-            return '';
-        }
         if ($value < 10) {
             return '0' . $value . '-' . $user['year'];
         }

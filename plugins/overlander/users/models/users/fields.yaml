@@ -1,9 +1,4 @@
 fields:
-    member_no:
-        label: 'Member No.'
-        span: auto
-        required: 1
-        type: text
     member_prefix:
         label: 'Member Prefix'
         span: auto
@@ -95,15 +90,4 @@ fields:
         span: auto
         required: 1
         type: relation
-    published_date:
-        label: 'Published date'
-        mode: date
-        span: auto
-        required: 1
-        type: datepicker
-    expired_date:
-        label: 'Expired date'
-        mode: date
-        span: auto
-        required: 1
-        type: datepicker
+

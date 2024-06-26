@@ -1,10 +1,10 @@
-<?php namespace Overlander\General\Controllers;
+<?php namespace Overlander\Logs\Controllers;
 
 use Backend;
 use BackendMenu;
 use Backend\Classes\Controller;
 
-class VerificationQuestions extends Controller
+class Maillogs extends Controller
 {
     public $implement = [
         \Backend\Behaviors\FormController::class,
@@ -17,7 +17,7 @@ class VerificationQuestions extends Controller
     public function __construct()
     {
         parent::__construct();
-        BackendMenu::setContext('Overlander.General', 'general', 'general-veficication-questions');
+        BackendMenu::setContext('Overlander.Logs', 'logs', 'logs-maillogs');
     }
 
 }

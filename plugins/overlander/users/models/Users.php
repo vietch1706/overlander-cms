@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 use Model;
+use October\Rain\Database\Traits\Validation;
 use Overlander\General\Models\Countries;
 use Overlander\General\Models\Interests;
 use Overlander\Users\Controllers\Transaction;
@@ -15,7 +16,7 @@ use Overlander\Users\Controllers\Transaction;
  */
 class Users extends Model
 {
-    use \October\Rain\Database\Traits\Validation;
+    use Validation;
     use Notifiable;
 
     const GENDER_MALE = 0;
@@ -25,12 +26,15 @@ class Users extends Model
     const NORMAL_MEMBER = 0;
     const ACTIVE = 1;
     const INACTIVE = 0;
-    const MONTH = [null, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+    const MONTH = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+
     public $attributes = [
         'is_existing_member' => '0',
         'is_active' => '0',
         'membership_tier_id' => '1',
         'points' => 0,
+        'gender' => null,
+        'interests' => null,
     ];
     /**
      * @var string table in the database used by the model.
@@ -40,25 +44,23 @@ class Users extends Model
      * @var array rules for validation.
      */
     public $rules = [
-        'member_no' => ['required', 'unique:overlander_users_users,member_no'],
-        'member_no' => 'required',
         'first_name' => 'required',
         'last_name' => 'required',
-        'phone' => ['required', 'unique:overlander_users_users,phone'],
+        'phone' => ['required', 'unique:overlander_users_users,phone', 'integer'],
         'password' => 'required',
         'country_id' => 'required',
         'email' => ['required', 'email', 'regex:/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/', 'unique:overlander_users_users,email'],
         'month' => ['integer', 'between:0,12'],
-        'year' => [],
-        'published_date' => ['required', 'before:expired_date'],
-        'expired_date' => ['required', 'after:published_date'],
+        'year' => ['integer'],
     ];
     public $belongsTo = [
         'membership_tier' => [MembershipTier::class, 'key' => 'membership_tier_id'],
         'country' => [Countries::class, 'key' => 'country_id'],
     ];
+    /**
+     * @var mixed|string
+     */
     protected $fillable = [
-        'member_no',
         'first_name',
         'last_name',
         'phone',
@@ -74,8 +76,6 @@ class Users extends Model
         'active_date',
         'points',
         'membership_tier_id',
-        'published_date',
-        'expired_date',
         'send_mail_at',
         'verification_code',
     ];
@@ -83,6 +83,19 @@ class Users extends Model
     public function getFullMemberNumberAttribute()
     {
         return $this->member_no . $this->member_prefix;
+    }
+
+    public function beforeCreate()
+    {
+        $lastestUser = $this->orderBy('member_no', 'desc')->first();
+        $this->member_prefix = 'A';
+        if (!empty($lastestUser)) {
+            $this->member_no = $lastestUser['member_no'] + 1;
+        } else {
+            $this->member_no = 100000;
+        }
+        $this->published_date = Carbon::now()->format('Y-m-d');
+        $this->expired_date = Carbon::now()->addMonth(3)->format('Y-m-d');
     }
 
     public function getGenderOptions()
@@ -97,28 +110,26 @@ class Users extends Model
     public function getMonthOptions()
     {
         return [
-            self::MONTH[0] => 'NONE',
-            self::MONTH[1] => 'January',
-            self::MONTH[2] => 'February',
-            self::MONTH[3] => 'March',
-            self::MONTH[4] => 'April',
-            self::MONTH[5] => 'May',
-            self::MONTH[6] => 'June',
-            self::MONTH[7] => 'July',
-            self::MONTH[8] => 'August',
-            self::MONTH[9] => 'September',
-            self::MONTH[10] => 'October',
-            self::MONTH[11] => 'November',
-            self::MONTH[12] => 'December',
+            self::MONTH[0] => 'January',
+            self::MONTH[1] => 'February',
+            self::MONTH[2] => 'March',
+            self::MONTH[3] => 'April',
+            self::MONTH[4] => 'May',
+            self::MONTH[5] => 'June',
+            self::MONTH[6] => 'July',
+            self::MONTH[7] => 'August',
+            self::MONTH[8] => 'September',
+            self::MONTH[9] => 'October',
+            self::MONTH[10] => 'November',
+            self::MONTH[11] => 'December',
         ];
     }
 
     public function getYearOptions()
     {
-        $years = [0];
-        $j = 1;
-        for ($i = 1900; $i <= (((int)Carbon::now()->format('Y')) + 10); $i++) {
-            $years[$j] = $i;
+        $j = 0;
+        for ($i = ((int)Carbon::now()->format('Y')) - 80; $i <= ((int)Carbon::now()->format('Y')); $i++) {
+            $years[$i] = $i;
             $j++;
         }
         return $years;
@@ -195,4 +206,5 @@ class Users extends Model
     {
         return $query->where('phone', $phone);
     }
+
 }

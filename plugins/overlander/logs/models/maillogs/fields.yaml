@@ -1,0 +1,17 @@
+fields:
+    email:
+        label: Email
+        span: auto
+        type: textarea
+    content:
+        label: Content
+        span: auto
+        type: textarea
+    method:
+        label: Method
+        span: auto
+        type: textarea
+    created_at:
+        label: 'Created At'
+        span: auto
+        type: datepicker

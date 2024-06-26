@@ -8,4 +8,4 @@ recordsPerPage: 20
 toolbar:
     search:
         prompt: 'backend::lang.list.search_prompt'
-recordUrl: 'overlander/users/membershiptier/update/:id'
+recordUrl: 'overlander/users/membershiptier/preview/:id'

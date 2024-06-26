@@ -1,0 +1,10 @@
+name: Maillogs
+form: $/overlander/logs/models/maillogs/fields.yaml
+modelClass: Overlander\Logs\Models\Maillogs
+defaultRedirect: overlander/logs/maillogs
+create:
+    redirect: 'overlander/logs/maillogs/update/:id'
+    redirectClose: overlander/logs/maillogs
+update:
+    redirect: overlander/logs/maillogs
+    redirectClose: overlander/logs/maillogs
