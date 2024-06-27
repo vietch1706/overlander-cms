@@ -184,7 +184,7 @@ class Users
         if (empty($data['year'])) {
             $data['year'] = (int)Carbon::now()->format('Y') - 80;
         }
-        if (empty($data['gender'])) {
+        if ($data['gender'] == "") {
             $data['gender'] = null;
         }
         return $data;
