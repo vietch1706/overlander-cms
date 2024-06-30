@@ -19,9 +19,7 @@ class Country
     {
         $param = $request->all();
         $result = null;
-        if (!empty($param['iso'])) {
-            $result = $this->countries->getByISO($param['iso']);
-        } elseif (!empty($param['id'])) {
+        if (!empty($param['id'])) {
             $result = $this->countries->getById($param['id']);
         } else {
             return $this->countries->getAll();

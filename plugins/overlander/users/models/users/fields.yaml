@@ -14,15 +14,8 @@ fields:
         span: auto
         required: 1
         type: text
-    country:
-        label: 'Country'
-        nameFrom: name
-        descriptionFrom: description
-        span: auto
-        required: 1
-        type: relation
     phone:
-        label: Phone
+        label: Mobile
         span: auto
         required: 1
         type: text
@@ -35,6 +28,12 @@ fields:
         span: auto
         required: 1
         type: password
+    gender:
+        label: Gender
+        showSearch: true
+        span: auto
+        required: 1
+        type: dropdown
     month:
         label: Month
         span: auto
@@ -45,30 +44,48 @@ fields:
         span: auto
         required: 1
         type: dropdown
-    gender:
-        label: Gender
+    address:
+        label: "Detail Address"
+        span: auto
+        required: 1
+        type: text
+    district:
+        label: 'District'
+        span: auto
+        required: 1
+        type: text
+    country:
+        label: 'Region'
+        nameFrom: country
+        descriptionFrom: description
+        span: auto
+        required: 1
+        type: relation
+    e_newsletter:
+        label: 'E-newsletter'
         showSearch: true
         span: auto
         required: 1
         type: dropdown
-    is_existing_member:
-        label: 'Existing Member'
+    mail_receive:
+        label: 'Mail Receive'
         showSearch: true
         span: auto
         required: 1
         type: dropdown
-    is_active:
-        label: Activation
+    membership_tier:
+        label: 'Membership Tier'
+        nameFrom: name
+        descriptionFrom: description
+        span: auto
+        required: 1
+        type: relation
+    status:
+        label: Status
         showSearch: true
         span: auto
         required: 1
         type: dropdown
-    active_date:
-        label: 'Active date'
-        mode: date
-        span: auto
-        required: 1
-        type: datepicker
     interests:
         label: Interest
         nameFrom: name
@@ -78,16 +95,37 @@ fields:
         type: taglist
         useKey: true
         options: listInterest
-    points:
+    sales_amounts:
+        label: 'Sales Amounts'
+        span: auto
+        required: 1
+        type: number
+    points_sum:
         label: Points
         span: auto
         required: 1
         type: number
-    membership_tier:
-        label: 'Membership Tier'
-        nameFrom: name
-        descriptionFrom: description
+    is_existing_member:
+        label: 'Existing Member'
+        showSearch: true
         span: auto
         required: 1
-        type: relation
-
+        type: dropdown
+    active_date:
+        label: 'Active Date'
+        mode: date
+        span: auto
+        required: 1
+        type: datepicker
+    join_date:
+        label: 'Join Date'
+        mode: date
+        span: auto
+        required: 1
+        type: datepicker
+    validity_date:
+        label: 'Validity Date'
+        mode: date
+        span: auto
+        required: 1
+        type: datepicker

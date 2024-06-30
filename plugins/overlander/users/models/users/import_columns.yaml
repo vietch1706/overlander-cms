@@ -1,15 +1,12 @@
 columns:
-    id:
-        label: ID
-        type: number
     member_no:
-        label: 'Member Number'
+        label: 'MemberNo'
         type: concatmemberno
     last_name:
-        label: 'Last Name'
+        label: 'LastName'
         type: text
     first_name:
-        label: 'First Name'
+        label: 'FirstName'
         type: text
     phone:
         label: Mobile
@@ -22,7 +19,7 @@ columns:
         type: partial
         path: ~/plugins/overlander/users/models/users/_gender.htm
     month:
-        label: Birthday
+        label: 'Birthday (yyyy-MM-dd)'
         type: concatbirthday
     address:
         label: Address
@@ -39,46 +36,34 @@ columns:
         type: partial
         path: ~/plugins/overlander/users/models/users/_e-newsletter.htm
     mail_receive:
-        label: 'Mail Receive'
+        label: 'Mail'
         type: partial
         path: ~/plugins/overlander/users/models/users/_mailreceive.htm
-    interests_data:
-        label: 'Interest'
+    join_date:
+        label: 'JoinDate (yyyy-MM-dd)'
         type: text
-        searchable: false
-        sortable: false
-    is_existing_member:
-        label: 'Is Existing Member'
-        type: partial
-        path: ~/plugins/overlander/users/models/users/_existmember.htm
+    validity_date:
+        label: 'Validity (yyyy-MM-dd)'
+        type: text
+    membership_tier_name:
+        label: 'GradeLabel_EN'
+        select: name
+        relation: membership_tier
     status:
         label: Status
         type: partial
         path: ~/plugins/overlander/users/models/users/_status.htm
-    active_date:
-        label: 'Active Date'
+    interests_data:
+        label: 'InterestType'
         type: text
-    points_sum:
-        label: Points
-        type: number
-        default: '0'
+        searchable: false
+        sortable: false
     sales_amounts:
-        label: 'Sales Amounts'
+        label: 'SalesAmounts'
         type: number
         default: '0'
-    membership_tier_name:
-        label: 'Membership Tier'
-        select: name
-        relation: membership_tier
-    join_date:
-        label: 'Join Date'
-        type: text
-    validity_date:
-        label: 'Validity Date'
-        type: text
-    created_at:
-        label: 'Created At'
-        type: datetime
-    updated_at:
-        label: 'Updated At'
-        type: datetime
+    points_sum:
+        label: 'PointSum'
+        type: number
+        default: '0'
+

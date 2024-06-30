@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Mail;
 use Lang;
 use Overlander\General\Helper\General;
 use Overlander\General\Models\Countries;
+use Overlander\General\Models\Interests;
 use Overlander\Logs\Models\Maillogs;
 use Overlander\Users\Models\Users as ModelUsers;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -18,11 +19,13 @@ class Users
     const ACTIVE = 1;
     public ModelUsers $users;
     public Countries $countries;
+    public Interests $interests;
 
-    public function __construct(ModelUsers $user, Countries $country)
+    public function __construct(ModelUsers $user, Countries $country, Interests $interest)
     {
         $this->users = $user;
         $this->countries = $country;
+        $this->interests = $interest;
     }
 
     public static function sendCode($email, $method)
@@ -114,12 +117,12 @@ class Users
             'month' => $users->month,
             'year' => $users->year,
             'gender' => $users->gender,
-            'interests' => $users->interest_id,
+            'interests' => $users->interests,
             'points' => $users->points,
             'membership_tier_id' => $users->points,
             'address' => $users->address,
             'is_existing_member' => $users->is_existing_member,
-            'is_active' => $users->is_active,
+            'status' => $users->status,
             'active_date' => $users->active_date,
             'send_mail_at' => $users->send_mail_at,
         ];
@@ -143,17 +146,28 @@ class Users
     public function create($data)
     {
         $data = $this->checkEmptyData($data);
+        $interests = function () use ($data) {
+            $interest = [];
+            foreach ($data['interests'] as $key => $value) {
+                $interest[$key] = $this->interests->where('name', $value)->first()['id'];
+            }
+            return $interest;
+        };
         $user = [
             'first_name' => $data['first_name'],
             'last_name' => $data['last_name'],
             'phone' => $data['phone'],
             'password' => $data['password'],
-            'country_id' => $this->countries->where('name', $data['country'])->first()['id'],
+            'country_id' => $this->countries->where('country', $data['country'])->first()['id'],
             'email' => $data['email'],
             'month' => $data['month'],
             'year' => $data['year'],
             'gender' => $data['gender'],
-            'interest_id' => $data['interests'],
+            'mail_receive' => $data['mail_receive'],
+            'e_newsletter' => $data['e_newsletter'],
+            'interests' => implode(",", $interests()),
+            'join_date' => Carbon::now()->format('Y-m-d'),
+            'validity_date' => Carbon::now()->addMonth(3)->format('Y-m-d'),
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ];
@@ -208,17 +222,24 @@ class Users
     public function update($data)
     {
         $data = $this->checkEmptyData($data);
+        $interests = function () use ($data) {
+            $interest = [];
+            foreach ($data['interests'] as $key => $value) {
+                $interest[$key] = $this->interests->where('name', $value)->first()['id'];
+            }
+            return $interest;
+        };
         $updateUser = [
             'first_name' => $data['first_name'],
             'last_name' => $data['last_name'],
             'phone' => $data['phone'],
             'password' => $data['password'],
-            'country_id' => $this->countries->where('name', $data['country'])->first()['id'],
+            'country_id' => $this->countries->where('country', $data['country'])->first()['id'],
             'email' => $data['email'],
             'month' => $data['month'],
             'year' => $data['year'],
             'gender' => $data['gender'],
-            'interest_id' => $data['interests'],
+            'interest_id' => implode(",", $interests()),
             'updated_at' => General::getCurrentDay(),
         ];
         try {
@@ -247,8 +268,8 @@ class Users
         if ($user['verification_code'] == $code) {
             $user->verification_code = null;
             $user->send_mail_at = null;
-            if ($user['is_active'] != self::ACTIVE) {
-                $user->is_active = self::ACTIVE;
+            if ($user['status'] != self::ACTIVE) {
+                $user->status = self::ACTIVE;
                 $user->active_date = Carbon::now();
             }
             $user->save();

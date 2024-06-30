@@ -3,14 +3,20 @@
 namespace Overlander\General\Models;
 
 use Model;
+use October\Rain\Database\Traits\Validation;
 
 /**
  * Model
  */
 class Interests extends Model
 {
-    use \October\Rain\Database\Traits\Validation;
+    use Validation;
 
+    /**
+     * @var bool timestamps are disabled.
+     * Remove this line if timestamps are defined in the database table.
+     */
+    public $timestamps = false;
 
     /**
      * @var string table in the database used by the model.
@@ -33,5 +39,10 @@ class Interests extends Model
         }
 
         return $data;
+    }
+
+    public function scopeGetById($query, $id)
+    {
+        return $query->where('id', $id);
     }
 }

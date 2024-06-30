@@ -37,4 +37,18 @@ class Interests
             'name' => $data->name,
         ];
     }
+
+    public function getById($id)
+    {
+        try {
+            $data = null;
+            $interest = $this->interests->getById($id)->first();
+            if (!empty($interest)) {
+                $data = $this->convertData($interest);
+            }
+            return $data;
+        } catch (Exception $th) {
+            throw new BadRequestHttpException($th->getMessage());
+        }
+    }
 }

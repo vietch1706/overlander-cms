@@ -1,0 +1,11 @@
+# ===================================
+#  Import/Export Behavior Config
+# ===================================
+
+import:
+    title: Import subscribers
+    modelClass: Overlander\Users\Models\UsersImport
+    list: $/overlander/users/models/users/import_columns.yaml
+    redirect: overlander/users/users
+defaultFormatOptions:
+    fileFormat: csv

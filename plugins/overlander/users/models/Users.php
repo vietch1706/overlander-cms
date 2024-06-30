@@ -26,13 +26,16 @@ class Users extends Model
     const NORMAL_MEMBER = 0;
     const ACTIVE = 1;
     const INACTIVE = 0;
+
+    const YES = 1;
+    const NO = 0;
     const MONTH = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
     public $attributes = [
         'is_existing_member' => '0',
-        'is_active' => '0',
+        'status' => '0',
         'membership_tier_id' => '1',
-        'points' => 0,
+        'points_sum' => 0,
         'gender' => null,
         'interests' => null,
     ];
@@ -47,11 +50,12 @@ class Users extends Model
         'first_name' => 'required',
         'last_name' => 'required',
         'phone' => ['required', 'unique:overlander_users_users,phone', 'integer'],
-        'password' => 'required',
         'country_id' => 'required',
         'email' => ['required', 'email', 'regex:/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/', 'unique:overlander_users_users,email'],
         'month' => ['integer', 'between:0,12'],
         'year' => ['integer'],
+        'join_date' => ['date', 'before:validity_date', 'after:yesterday'],
+        'validity_date' => ['date', 'after:join_date',]
     ];
     public $belongsTo = [
         'membership_tier' => [MembershipTier::class, 'key' => 'membership_tier_id'],
@@ -70,14 +74,20 @@ class Users extends Model
         'month',
         'year',
         'gender',
-        'interest',
+        'interests',
         'is_existing_member',
-        'is_active',
+        'status',
         'active_date',
-        'points',
+        'points_sum',
         'membership_tier_id',
         'send_mail_at',
         'verification_code',
+        'join_date',
+        'validity_date',
+        'district',
+        'address',
+        'e_newsletter',
+        'mail_receive',
     ];
 
     public function getFullMemberNumberAttribute()
@@ -94,8 +104,6 @@ class Users extends Model
         } else {
             $this->member_no = 100000;
         }
-        $this->published_date = Carbon::now()->format('Y-m-d');
-        $this->expired_date = Carbon::now()->addMonth(3)->format('Y-m-d');
     }
 
     public function getGenderOptions()
@@ -104,6 +112,22 @@ class Users extends Model
             self::GENDER_MALE => 'Male',
             self::GENDER_FEMALE => 'Female',
             self::GENDER_OTHER => 'Other'
+        ];
+    }
+
+    public function getENewsletterOptions()
+    {
+        return [
+            self::YES => 'Yes',
+            self::NO => 'No',
+        ];
+    }
+
+    public function getMailReceiveOptions()
+    {
+        return [
+            self::YES => 'Yes',
+            self::NO => 'No',
         ];
     }
 
@@ -152,7 +176,7 @@ class Users extends Model
         ];
     }
 
-    public function getIsActiveOptions()
+    public function getStatusOptions()
     {
         return [
             self::ACTIVE => 'Active',
@@ -187,22 +211,22 @@ class Users extends Model
         return $this->hasMany(Transaction::class);
     }
 
-    public function ScopeGetByMemberNumber($query, $memberNumber)
+    public function scopeGetByMemberNumber($query, $memberNumber)
     {
         return $query->where('member_no', $memberNumber);
     }
 
-    public function ScopeGetById($query, $id)
+    public function scopeGetById($query, $id)
     {
         return $query->where('id', $id);
     }
 
-    public function ScopeGetByEmail($query, $email)
+    public function scopeGetByEmail($query, $email)
     {
         return $query->where('email', $email);
     }
 
-    public function ScopeGetByPhone($query, $phone)
+    public function scopeGetByPhone($query, $phone)
     {
         return $query->where('phone', $phone);
     }

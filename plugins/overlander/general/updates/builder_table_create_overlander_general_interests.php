@@ -2,8 +2,8 @@
 
 namespace Overlander\General\Updates;
 
-use Schema;
 use October\Rain\Database\Updates\Migration;
+use Schema;
 
 class BuilderTableCreateOverlanderGeneralInterests extends Migration
 {
@@ -11,9 +11,7 @@ class BuilderTableCreateOverlanderGeneralInterests extends Migration
     {
         Schema::create('overlander_general_interests', function ($table) {
             $table->increments('id')->unsigned();
-            $table->text('name');
-            $table->timestamp('created_at')->nullable();
-            $table->timestamp('updated_at')->nullable();
+            $table->string('name');
         });
     }
 

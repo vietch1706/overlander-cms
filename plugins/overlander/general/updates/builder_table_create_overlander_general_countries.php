@@ -2,8 +2,8 @@
 
 namespace Overlander\General\Updates;
 
-use Schema;
 use October\Rain\Database\Updates\Migration;
+use Schema;
 
 class BuilderTableCreateOverlanderGeneralCountries extends Migration
 {
@@ -11,14 +11,9 @@ class BuilderTableCreateOverlanderGeneralCountries extends Migration
     {
         Schema::create('overlander_general_countries', function ($table) {
             $table->increments('id')->unsigned();
-            $table->string('iso')->nullable();
-            $table->string('name');
-            $table->string('iso3')->nullable();
-            $table->smallInteger('numcode')->nullable();
-            $table->smallInteger('phonecode');
-            $table->string('flags')->nullable();
-            $table->timestamp('created_at')->nullable();
-            $table->timestamp('updated_at')->nullable();
+            $table->string('country')->nullable();
+            $table->SmallInteger('code')->nullable();
+            $table->string('image')->nullable();
         });
     }
 

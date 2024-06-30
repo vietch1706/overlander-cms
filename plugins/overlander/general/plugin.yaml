@@ -37,7 +37,7 @@ navigation:
             general-countries:
                 label: Countries
                 url: overlander/general/countries
-                icon: icon-phone
+                icon: icon-flag
             general-interests:
                 label: Interests
                 url: overlander/general/interests

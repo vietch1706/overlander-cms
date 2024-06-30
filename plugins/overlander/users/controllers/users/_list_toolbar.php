@@ -13,4 +13,9 @@
         data-stripe-load-indicator>
         <?= e(trans('backend::lang.list.delete_selected')) ?>
     </button>
+    <a
+        href="<?= Backend::url('overlander/users/users/import') ?>"
+        class="btn btn-default oc-icon-upload">
+        Import
+    </a>
 </div>

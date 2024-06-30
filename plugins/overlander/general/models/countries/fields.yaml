@@ -1,25 +1,13 @@
 fields:
-    iso:
-        label: ISO
+    country:
+        label: Country
         span: auto
         type: text
-    name:
-        label: Name
-        span: auto
-        type: text
-    iso3:
-        label: ISO3
-        span: auto
-        type: text
-    numcode:
-        label: Numcode
+    code:
+        label: Code
         span: auto
         type: number
-    phonecode:
-        label: Phonecode
-        span: auto
-        type: number
-    flags:
-        label: Flags
+    image:
+        label: Image
         span: auto
         type: text

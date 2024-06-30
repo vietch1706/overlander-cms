@@ -2,32 +2,12 @@ columns:
     id:
         label: ID
         type: number
-    iso:
-        label: ISO
+    country:
+        label: Country
         type: text
-        searchable: true
-    name:
-        label: Name
+    code:
+        label: Code
         type: text
-        searchable: true
-    iso3:
-        label: ISO3
+    image:
+        label: Image
         type: text
-        searchable: true
-    numcode:
-        label: Numcode
-        type: text
-    phonecode:
-        label: Phonecode
-        type: text
-    flags:
-        label: Flag
-        type: text
-        # type: partial
-        # path: ~/plugins/overlander/general/models/countries/_image.htm
-    created_at:
-        label: "Created At"
-        type: datetime
-    updated_at:
-        label: "Updated At"
-        type: datetime

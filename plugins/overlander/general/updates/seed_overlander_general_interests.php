@@ -2,7 +2,6 @@
 
 namespace Overlander\General\Updates;
 
-use Carbon\Carbon;
 use Overlander\General\Models\Interests;
 use Seeder;
 
@@ -88,8 +87,6 @@ class seed_overlander_general_interests extends Seeder
         foreach ($interests as $key => $value) {
             $interest = new Interests();
             $interest->name = $value['name'];
-            $interest->created_at = Carbon::now();
-            $interest->updated_at = Carbon::now();
             $interest->save();
         }
     }
