@@ -60,6 +60,7 @@ class Users
     public function checkExist($param)
     {
         $messages = '';
+        $data = null;
         if (!empty($param['email'])) {
             $data = $this->users->where('email', $param['email'])->first();
             if ($data != null) {
@@ -146,13 +147,6 @@ class Users
     public function create($data)
     {
         $data = $this->checkEmptyData($data);
-        $interests = function () use ($data) {
-            $interest = [];
-            foreach ($data['interests'] as $key => $value) {
-                $interest[$key] = $this->interests->where('name', $value)->first()['id'];
-            }
-            return $interest;
-        };
         $user = [
             'first_name' => $data['first_name'],
             'last_name' => $data['last_name'],
@@ -165,7 +159,7 @@ class Users
             'gender' => $data['gender'],
             'mail_receive' => $data['mail_receive'],
             'e_newsletter' => $data['e_newsletter'],
-            'interests' => implode(",", $interests()),
+            'interests' => $data['interests'],
             'join_date' => Carbon::now()->format('Y-m-d'),
             'validity_date' => Carbon::now()->addMonth(3)->format('Y-m-d'),
             'created_at' => Carbon::now(),
@@ -191,6 +185,12 @@ class Users
     {
         if (empty($data['interests'])) {
             $data['interests'] = ' ';
+        } else {
+            $interest = [];
+            foreach ($data['interests'] as $key => $value) {
+                $interest[$key] = $this->interests->where('name', $value)->first()['id'];
+            }
+            $data['interests'] = implode(',', $interest);
         }
         if (empty($data['month'])) {
             $data['month'] = 1;

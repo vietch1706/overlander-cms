@@ -18,7 +18,7 @@ columns:
         label: Gender
         type: partial
         path: ~/plugins/overlander/users/models/users/_gender.htm
-    month:
+    birthday:
         label: 'Birthday (yyyy-MM-dd)'
         type: concatbirthday
     address:
@@ -27,7 +27,7 @@ columns:
     district:
         label: District
         type: text
-    country_name:
+    country:
         label: 'Region'
         select: country
         relation: country

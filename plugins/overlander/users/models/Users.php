@@ -26,9 +26,9 @@ class Users extends Model
     const NORMAL_MEMBER = 0;
     const ACTIVE = 1;
     const INACTIVE = 0;
-
     const YES = 1;
     const NO = 0;
+
     const MONTH = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
     public $attributes = [
@@ -38,6 +38,7 @@ class Users extends Model
         'points_sum' => 0,
         'gender' => null,
         'interests' => null,
+        'password' => '123456789'
     ];
     /**
      * @var string table in the database used by the model.
@@ -51,10 +52,10 @@ class Users extends Model
         'last_name' => 'required',
         'phone' => ['required', 'unique:overlander_users_users,phone', 'integer'],
         'country_id' => 'required',
-        'email' => ['required', 'email', 'regex:/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/', 'unique:overlander_users_users,email'],
+        'email' => ['required', 'email', 'unique:overlander_users_users,email'],
         'month' => ['integer', 'between:0,12'],
         'year' => ['integer'],
-        'join_date' => ['date', 'before:validity_date', 'after:yesterday'],
+        'join_date' => ['date', 'before:validity_date',],
         'validity_date' => ['date', 'after:join_date',]
     ];
     public $belongsTo = [
@@ -98,11 +99,13 @@ class Users extends Model
     public function beforeCreate()
     {
         $lastestUser = $this->orderBy('member_no', 'desc')->first();
-        $this->member_prefix = 'A';
-        if (!empty($lastestUser)) {
-            $this->member_no = $lastestUser['member_no'] + 1;
-        } else {
-            $this->member_no = 100000;
+        if (empty($this->member_no) && empty($this->member_prefix)) {
+            $this->member_prefix = 'A';
+            if (!empty($lastestUser)) {
+                $this->member_no = $lastestUser['member_no'] + 1;
+            } else {
+                $this->member_no = 100000;
+            }
         }
     }
 
