@@ -34,6 +34,16 @@ class Users
             'email.regex' => 'The email address is already existed.',
         ];
 
+        if ($param['mail_receive'] === 'true')
+            $param['mail_receive'] = true;
+        else
+            $param['mail_receive'] = false;
+
+        if ($param['e_newsletter'] === 'true')
+            $param['e_newsletter'] = true;
+        else
+            $param['e_newsletter'] = false;
+
         $validator = Validator::make($param, $rules, $customMessages);
         if ($validator->fails()) {
             throw new BadRequestHttpException($validator->messages()->first());

@@ -41,6 +41,7 @@ class UsersImport extends ImportModel
                 }
                 return self::NO;
             };
+            $status = $data['status'] === 'Active' ? self::ACTIVE : self::NO;
             $status = function () use ($data) {
                 if ($data['status'] === 'Active') {
                     return self::ACTIVE;
@@ -55,11 +56,11 @@ class UsersImport extends ImportModel
                 }
                 return self::GENDER_OTHER;
             };
+            $birthday = explode('-', $data['birthday']);
             try {
                 $user = new Users();
                 $countries = new Countries();
                 $membership = new MembershipTier();
-                $birthday = explode('-', $data['birthday']);
                 $year = $birthday[0];
                 $month = $birthday[1];
                 $user->member_no = preg_replace('/[^0-9]/', '', $data['member_no']);
@@ -81,13 +82,11 @@ class UsersImport extends ImportModel
                 $user->membership_tier_id = $membership->where('name', $data['membership_tier_name'])->first()['id'];
                 $user->status = $status();
                 $user->active_date = Carbon::now();
-                $user->interests = $data['interests_data'];
+                $user->interests = str_replace(' ', ',', $data['interests_data']);
                 $user->sales_amounts = $data['sales_amounts'];
                 $user->points_sum = $data['points_sum'];
                 $user->created_at = Carbon::now();
                 $user->updated_at = Carbon::now();
-
-
                 $user->save();
 
                 $this->logCreated();

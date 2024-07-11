@@ -2,6 +2,7 @@
 
 namespace Overlander\Users\Repository;
 
+use Carbon\Carbon;
 use Lang;
 use Overlander\Users\Models\Users;
 use Overlander\Users\Repository\Users as RepositoryUsers;
@@ -27,22 +28,21 @@ class ExistUsers
 
     public function step1($data)
     {
-        switch (array_keys($data)[0]) {
+        switch ($data['method']) {
             case 'email':
-                $user = $this->users->where('email', $data['email'])->first();
+                $user = $this->users->where('email', $data['answer'])->first();
                 if ($user['is_existing_member'] != self::NORMAL_MEMBER) {
-                    RepositoryUsers::sendCode($data['email'], 'Transfer Member');
+                    RepositoryUsers::sendCode($data['answer'], 'Transfer Member');
                 }
                 break;
             case 'phone':
-                $phone = str_replace(' ', '+', $data['phone']);
-                $user = $this->users->where('phone', $phone)->first();
+                $user = $this->users->where('phone', $data['answer'])->first();
                 break;
             case 'member_no':
-                $user = $this->users->where('member_no', $data['member_no'])->first();
+                $user = $this->users->where('member_no', $data['answer'])->first();
                 break;
         }
-        if (!empty($user)) {
+        if (empty($user)) {
             return [
                 'message' => Lang::get('overlander.users::lang.exists_users.step1.not_found'),
             ];
@@ -74,20 +74,18 @@ class ExistUsers
 
     public function step2($param)
     {
-        $question = $param['question'];
-        $answer = $param['answer'];
-        $method = array_keys($param)[2];
+        $question = $param['question2'];
+        $answer = $param['answer2'];
         $message = null;
-        switch ($method) {
+        switch ($param['question1']) {
             case 'email':
-                $user = $this->users->where('email', $param['email'])->first();
+                $user = $this->users->where('email', $param['answer1'])->first();
                 break;
             case 'phone':
-                $phone = str_replace(' ', '+', $method);
-                $user = $this->users->where('phone', $param['phone'])->first();
+                $user = $this->users->where('phone', $param['answer1'])->first();
                 break;
             case 'member_no':
-                $user = $this->users->where('member_no', $param['member_no'])->first();
+                $user = $this->users->where('member_no', $param['answer1'])->first();
                 break;
         }
         switch ($question) {
@@ -105,7 +103,11 @@ class ExistUsers
                 }
                 break;
             case 3:
-                $message = 'Verify success with membership joint date';
+                $answer = str_replace(' ', '-', $answer);
+                $answer = Carbon::createFromFormat('Y-m', $answer);
+                if ($answer->diffInMonths($user['join_date']) == 0 && $answer->diffInYears($user['join_date']) == 0) {
+                    $message = 'Verify success with membership joint date';
+                }
                 break;
             case 4:
                 $message = 'Verify success with last purchase';
@@ -124,8 +126,7 @@ class ExistUsers
                 }
                 break;
         }
-        return [
-            'message' => $message,
-        ];
+        return $message;
+
     }
 }

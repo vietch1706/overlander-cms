@@ -85,6 +85,15 @@ class Users
                 ];
             }
         }
+        if (!empty($param['member_no'])) {
+            $data = $this->users->where('member_no', $param['member_no'])->first();
+            if (empty($data)) {
+                $messages = [
+                    'member_no' => 'The member number is not exists.',
+                ];
+            }
+        }
+
         return $messages;
     }
 
@@ -154,7 +163,7 @@ class Users
             'password' => $data['password'],
             'country_id' => $this->countries->where('country', $data['country'])->first()['id'],
             'email' => $data['email'],
-            'month' => $data['month'],
+            'month' => $data['month'] ?? '1',
             'year' => $data['year'],
             'gender' => $data['gender'],
             'mail_receive' => $data['mail_receive'],

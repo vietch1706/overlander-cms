@@ -25,7 +25,8 @@ class ExistUsers
     {
         $param = $request->all();
         $rules = [
-            'email' => ['email', 'regex:/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/'],
+            'method' => 'required',
+            'answer' => 'required',
         ];
         $validator = Validator::make($param, $rules,);
         if ($validator->fails()) {
@@ -64,10 +65,10 @@ class ExistUsers
     {
         $param = $request->all();
         $rules = [
-            'question' => 'required|integer',
-            'answer' => 'required',
-            'phone' => 'integer',
-            'email' => 'email',
+            'question1' => 'required',
+            'answer1' => 'required',
+            'question2' => 'required',
+            'answer2' => 'required',
         ];
         $validator = Validator::make($param, $rules);
         if ($validator->fails()) {
