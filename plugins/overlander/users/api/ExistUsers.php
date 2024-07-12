@@ -28,7 +28,7 @@ class ExistUsers
             'method' => 'required',
             'answer' => 'required',
         ];
-        $validator = Validator::make($param, $rules,);
+        $validator = Validator::make($param, $rules);
         if ($validator->fails()) {
             throw new BadRequestHttpException($validator->messages()->first());
         }

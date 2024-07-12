@@ -9,13 +9,13 @@ use Overlander\Users\Repository\Users as RepositoryUsers;
 
 class ExistUsers
 {
-    const EMAIL_QUESTION = 2;
-    const PHONE_QUESTION = 7;
-    const MEMBER_QUESTION = 5;
     const BIRTH_QUESTION = 1;
+    const EMAIL_QUESTION = 2;
     const MEMBERSHIP_QUESTION = 3;
     const PURCHASE_QUESTION = 4;
+    const MEMBER_QUESTION = 5;
     const CODE_QUESTION = 6;
+    const PHONE_QUESTION = 7;
 
     const ACTIVE = 1;
     const NORMAL_MEMBER = 0;
@@ -31,9 +31,6 @@ class ExistUsers
         switch ($data['method']) {
             case 'email':
                 $user = $this->users->where('email', $data['answer'])->first();
-                if ($user['is_existing_member'] != self::NORMAL_MEMBER) {
-                    RepositoryUsers::sendCode($data['answer'], 'Transfer Member');
-                }
                 break;
             case 'phone':
                 $user = $this->users->where('phone', $data['answer'])->first();
@@ -45,15 +42,20 @@ class ExistUsers
         if (empty($user)) {
             return [
                 'message' => Lang::get('overlander.users::lang.exists_users.step1.not_found'),
+                'status' => false,
             ];
         }
         if ($user['is_existing_member'] == self::NORMAL_MEMBER) {
             return [
                 'message' => Lang::get('overlander.users::lang.exists_users.step1.not_exists'),
+                'status' => false,
             ];
+        } elseif ($data['method'] === 'email') {
+            RepositoryUsers::sendCode($data['answer'], 'Transfer Member');
         }
         return [
             'message' => Lang::get('overlander.users::lang.exists_users.step1.next_step'),
+            'status' => true,
         ];
     }
 
