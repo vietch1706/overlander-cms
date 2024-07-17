@@ -1,0 +1,6 @@
+plugin:
+    name: 'legato.api::lang.plugin.name'
+    description: 'legato.api::lang.plugin.description'
+    author: Neo Huy
+    icon: oc-icon-adjust
+    homepage: 'https://gitlab.legato.co/Legato-Libraries/OctoberCMS/Plugins/api'

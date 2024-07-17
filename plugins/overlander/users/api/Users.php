@@ -88,18 +88,7 @@ class Users
 
     public function getUser(Request $request)
     {
-        $param = $request->all();
-        if (!empty($param['email'])) {
-            return $this->users->getByEmail($param['email']);
-        } elseif (!empty($param['phone'])) {
-            $phone = str_replace(' ', '+', $param['phone']);
-            return $this->users->getByPhone($phone);
-        } elseif (!empty($param['member_no'])) {
-            return $this->users->getByMemberNumber($param['member_no']);
-        }
-        return [
-            'message' => 'User not found!'
-        ];
+        return $this->users->getUser();
     }
 
     public function login(Request $request)

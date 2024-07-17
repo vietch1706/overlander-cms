@@ -19,7 +19,7 @@ Route::group([
 
     Route::post('user/check-exist', 'Overlander\Users\Api\Users@checkExistUser');
 
-    Route::post('user/login', 'Overlander\Users\Api\Users@login');
+    Route::post('user/login', \Overlander\Users\Api\Login::class);
 
     Route::post('user/reset-password', 'Overlander\Users\Api\Users@resetPassword');
 

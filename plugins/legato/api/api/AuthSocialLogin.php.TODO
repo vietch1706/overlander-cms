@@ -1,0 +1,184 @@
+<?php
+
+namespace Legato\Api\Api;
+
+use BackendAuth;
+use Kreait\Firebase\JWT\Error\IdTokenVerificationFailed;
+use Lang;
+use Config;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Validator;
+use ValidationException;
+use Event;
+use Log;
+use Carbon\Carbon;
+use Backend\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
+use Kreait\Firebase\JWT\IdTokenVerifier;
+use OpenApi\Annotations\Tag;
+use OpenApi\Annotations\Items;
+use OpenApi\Annotations\JsonContent;
+use OpenApi\Annotations\MediaType;
+use OpenApi\Annotations\Post;
+use OpenApi\Annotations\Property;
+use OpenApi\Annotations\RequestBody;
+use OpenApi\Annotations\Response;
+use OpenApi\Annotations\Schema;
+use Legato\Api\Repositories\Token;
+use Legato\Api\Repositories\User as UserRepository;
+use Legato\Api\Models\Settings;
+
+class AuthSocialLogin
+{
+    /**
+     * @var Token
+     */
+    protected $tokenRepository;
+
+    /**
+     * @var UserRepository
+     */
+    protected $userRepository;
+
+    /**
+     * Auth constructor.
+     * @param Token $tokenRepository
+     * @param UserRepository $userRepository
+     */
+    public function __construct(
+        Token $tokenRepository,
+        UserRepository $userRepository
+    ) {
+        $this->tokenRepository = $tokenRepository;
+        $this->userRepository = $userRepository;
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @Tag(
+     *     name="Auth",
+     *     description="Authentication"
+     * ),
+     * @Post(
+     *     path="/api/v1/auth/social-login",
+     *     summary="Social Login",
+     *     tags={"Auth"},
+     *     @RequestBody(
+     *          @MediaType(
+     *              mediaType="application/x-www-form-urlencoded",
+     *              @Schema(
+     *                  @Property(property="token", type="string"),
+     *                  @Property(property="push_token", type="string"),
+     *                  @Property(property="push_os", type="string"),
+     *                  @Property(property="lang", type="string", example="zh-hk")
+     *              )
+     *          ),
+     *      ),
+     *     @Response(
+     *          response="200",
+     *          description="An example resource",
+     *          @JsonContent(
+     *              @Property(property="message", type="string", example="success"),
+     *              @Property(
+     *                      property="data",
+     *                      type="object",
+     *                  @Items(@Property(property="token", type="string", example="token"),)
+     *              ),
+     *          ),
+     *     ),
+     *     @Response(response="404", ref="#/components/responses/NotFound"),
+     *     @Response(response="400", ref="#/components/responses/BadRequest"),
+     * )
+     */
+    public function socialLogin(Request $request)
+    {
+        $params = $request->all();
+        $needVerify = $isNewAccount = false;
+
+        $verifier = IdTokenVerifier::createWithProjectId(Config::get('legato.api::firebase_template_id'));
+
+        try {
+            $token = $verifier->verifyIdToken($params['token']);
+        } catch (IdTokenVerificationFailed $e) {
+            throw new AccessDeniedHttpException(Lang::get('legato.api::lang.auth.error.firebase_token_invalid'));
+        }
+
+        $data = $token->payload();
+        if (!empty($data)) {
+            $socialType = $data['firebase']->sign_in_provider;
+            $name = null;
+            $socialIdentity = $data['firebase']->identities->{$socialType}[0];
+            if (isset($data['name']) && !empty($data['name'])) {
+                $name = $data['name'];
+            }
+
+            if (isset($data['email']) && !empty($data['email'])) {
+                $email = $data['email'];
+            } else {
+                $email = $this->userRepository->generateTempEmail($socialIdentity, Config::get('legato.api::temp_email_domain'));
+                $needVerify = true;
+            }
+
+            $user = $this->userRepository->findUserBySocialIdentity($socialIdentity);
+            if (!$user) {
+                $isNewAccount = true;
+                $password = \Str::random(10);
+                $userParams = [
+                    'first_name' => $name,
+                    'email' => $email,
+                    'login' => $email,
+                    'login_type' => $socialType,
+                    'password' => $password,
+                    'password_confirmation' => $password,
+                    'social_identity' => $socialIdentity,
+                ];
+
+                Event::fire('legato.api.social_register_before', [$data, &$userParams]);
+
+                $user = BackendAuth::register($userParams, !$needVerify, true);
+
+                if (isset($userParams['role_id']) && !empty($userParams['role_id']) && empty($user->role_id)) {
+                    $user->role_id = $userParams['role_id'];
+                    $user->forceSave();
+                }
+
+                Event::fire('legato.api.social_register_after', [$data, $user]);
+            } else {
+                BackendAuth::login($user);
+            }
+
+            $loginToken = $this->tokenRepository->generateToken($user->id);
+
+            if (!empty($user->activated_at)) {
+                $activatedAt = new Carbon($user->activated_at);
+                $activatedAt = $activatedAt->format('Y-m-d H:i:s');
+            } else {
+                $activatedAt = '';
+            }
+
+            $result = [
+                'token' => $loginToken->token,
+                'remember' => false,
+                'user' => [
+                    'first_name' => $user->first_name,
+                    'last_name' => $user->last_name,
+                    'email' => $user->email,
+                    'login' => $user->login,
+                    'login_type' =>$user->login_type,
+                    'activated_at' => $activatedAt,
+                    'is_new_account' => $isNewAccount,
+                ],
+                'permissions' => $this->getPermissions($user),
+            ];
+
+            Event::fire('legato.api.login.after', [$user, &$result, $params]);
+
+            Log::info('Social Login Token: ' . $params['token']);
+
+            return $result;
+        }
+    }
+}

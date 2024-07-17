@@ -1,0 +1,17 @@
+fields:
+    login_timeout:
+        label: Login Timeout
+        comment: Login Timeout counting on seconds from last activity.
+        span: left
+
+    validate_activate:
+        label: Validate Activate
+        comment: Need validate active or not
+        span: right
+
+    concurrent_session_number:
+        label: Concurrent Session Number
+        comment: The number of concurrent session number. Set 0 is unlimited.
+        span: left
+
+

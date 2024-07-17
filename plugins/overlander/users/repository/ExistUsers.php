@@ -42,20 +42,20 @@ class ExistUsers
         if (empty($user)) {
             return [
                 'message' => Lang::get('overlander.users::lang.exists_users.step1.not_found'),
-                'status' => false,
+                'status' => 404,
             ];
         }
         if ($user['is_existing_member'] == self::NORMAL_MEMBER) {
             return [
                 'message' => Lang::get('overlander.users::lang.exists_users.step1.not_exists'),
-                'status' => false,
+                'status' => 404,
             ];
         } elseif ($data['method'] === 'email') {
             RepositoryUsers::sendCode($data['answer'], 'Transfer Member');
         }
         return [
             'message' => Lang::get('overlander.users::lang.exists_users.step1.next_step'),
-            'status' => true,
+            'status' => 200,
         ];
     }
 

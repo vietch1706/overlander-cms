@@ -10,11 +10,11 @@ use October\Rain\Database\Traits\Validation;
 use Overlander\General\Models\Countries;
 use Overlander\General\Models\Interests;
 use Overlander\Users\Controllers\Transaction;
-
+use Backend\Models\User as BackendUser;
 /**
  * Model
  */
-class Users extends Model
+class Users extends BackendUser
 {
     use Validation;
     use Notifiable;
@@ -43,7 +43,7 @@ class Users extends Model
     /**
      * @var string table in the database used by the model.
      */
-    public $table = 'overlander_users_users';
+//    public $table = 'overlander_users_users';
     /**
      * @var array rules for validation.
      */

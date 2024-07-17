@@ -2,6 +2,7 @@
 
 namespace Overlander\Users\Repository;
 
+use Backend\Facades\BackendAuth;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Mail;
@@ -341,5 +342,12 @@ class Users
         } catch (Exception $th) {
             throw new BadRequestHttpException($th->getMessage());
         }
+    }
+
+    public function getUser()
+    {
+        $user = BackendAuth::getUser();
+//        return $this->convertData($user);
+        return $user;
     }
 }

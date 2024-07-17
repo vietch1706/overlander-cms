@@ -1,0 +1,12 @@
+1.0.1:
+    - 'Create Tokens table'
+    - create_tokens_table.php
+1.0.2:
+    - 'Added last_active column into table legato_users_tokens'
+    - builder_table_update_legato_auth_tokens.php
+1.0.3:
+    - 'Added login_type column into table backend_users'
+    - update_backend_users_table.php
+1.0.4:
+    - 'Added social_identity column into table backend_users'
+    - update_backend_users_table_2.php
