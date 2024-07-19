@@ -11,6 +11,7 @@ use Overlander\General\Models\Countries;
 use Overlander\General\Models\Interests;
 use Overlander\Users\Controllers\Transaction;
 use Backend\Models\User as BackendUser;
+
 /**
  * Model
  */
@@ -43,21 +44,21 @@ class Users extends BackendUser
     /**
      * @var string table in the database used by the model.
      */
-//    public $table = 'overlander_users_users';
+    //    public $table = 'overlander_users_users';
     /**
      * @var array rules for validation.
      */
-    public $rules = [
-        'first_name' => 'required',
-        'last_name' => 'required',
-        'phone' => ['required', 'unique:overlander_users_users,phone', 'integer'],
-        'country_id' => 'required',
-        'email' => ['required', 'email', 'unique:overlander_users_users,email'],
-        'month' => ['integer', 'between:0,12'],
-        'year' => ['integer'],
-        'join_date' => ['date', 'before:validity_date',],
-        'validity_date' => ['date', 'after:join_date',]
-    ];
+    // public $rules = [
+    //     'first_name' => 'required',
+    //     'last_name' => 'required',
+    //     'phone' => ['required', 'unique:overlander_users_users,phone', 'integer'],
+    //     'country_id' => 'required',
+    //     'email' => ['required', 'email', 'unique:overlander_users_users,email'],
+    //     'month' => ['integer', 'between:0,12'],
+    //     'year' => ['integer'],
+    //     'join_date' => ['date', 'before:validity_date',],
+    //     'validity_date' => ['date', 'after:join_date',]
+    // ];
     public $belongsTo = [
         'membership_tier' => [MembershipTier::class, 'key' => 'membership_tier_id'],
         'country' => [Countries::class, 'key' => 'country_id'],
@@ -96,13 +97,18 @@ class Users extends BackendUser
         return $this->member_no . $this->member_prefix;
     }
 
+    public function beforeValidate(){
+        if (!$this->login) {
+            $this->login = str_random(10);
+        }
+    }
     public function beforeCreate()
     {
         $lastestUser = $this->orderBy('member_no', 'desc')->first();
         if (empty($this->member_no) && empty($this->member_prefix)) {
             $this->member_prefix = 'A';
             if (!empty($lastestUser)) {
-                $this->member_no = $lastestUser['member_no'] + 1;
+                $this->member_no = 100000 + 1;
             } else {
                 $this->member_no = 100000;
             }
@@ -233,5 +239,4 @@ class Users extends BackendUser
     {
         return $query->where('phone', $phone);
     }
-
 }

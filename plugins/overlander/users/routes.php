@@ -1,9 +1,10 @@
 <?php
 
 Route::group([
-    'prefix' => '/api/{ver}/users',
+    'prefix' => '/api/{ver}/user',
+    'middleware' => ['rest']
 ], function () {
-    Route::post('user/register', 'Overlander\Users\Api\Users@register');
+    Route::post('/register', 'Overlander\Users\Api\Users@register');
 
     Route::post('existing-user/step-1', 'Overlander\Users\Api\ExistUsers@step1');
 
@@ -19,7 +20,7 @@ Route::group([
 
     Route::post('user/check-exist', 'Overlander\Users\Api\Users@checkExistUser');
 
-    Route::post('user/login', \Overlander\Users\Api\Login::class);
+    Route::post('/login', \Overlander\Users\Api\Login::class);
 
     Route::post('user/reset-password', 'Overlander\Users\Api\Users@resetPassword');
 

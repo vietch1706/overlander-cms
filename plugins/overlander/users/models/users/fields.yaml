@@ -25,9 +25,15 @@ fields:
         type: text
     password:
         label: Password
-        span: auto
-        required: 1
+        span: left
         type: password
+        comment: '8 - 16 characters with numbers, upper and lower case'
+    password_confirmation:
+        label: 'Password Confirmation'
+        span: auto
+        required: 0
+        type: password
+        comment: '8 - 16 characters with numbers, upper and lower case'
     gender:
         label: Gender
         showSearch: true
@@ -111,7 +117,7 @@ fields:
         span: auto
         required: 1
         type: dropdown
-    active_date:
+    activated_at:
         label: 'Active Date'
         mode: date
         span: auto

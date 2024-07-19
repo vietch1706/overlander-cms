@@ -24,12 +24,6 @@ columns:
     month:
         label: Birthday
         type: concatbirthday
-    address:
-        label: Address
-        type: text
-    district:
-        label: District
-        type: text
     country_name:
         label: 'Region'
         select: country
