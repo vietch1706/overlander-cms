@@ -48,17 +48,17 @@ class Users extends BackendUser
     /**
      * @var array rules for validation.
      */
-    // public $rules = [
-    //     'first_name' => 'required',
-    //     'last_name' => 'required',
-    //     'phone' => ['required', 'unique:overlander_users_users,phone', 'integer'],
-    //     'country_id' => 'required',
-    //     'email' => ['required', 'email', 'unique:overlander_users_users,email'],
-    //     'month' => ['integer', 'between:0,12'],
-    //     'year' => ['integer'],
-    //     'join_date' => ['date', 'before:validity_date',],
-    //     'validity_date' => ['date', 'after:join_date',]
-    // ];
+    public $rules = [
+        'first_name' => 'required',
+        'last_name' => 'required',
+        'phone' => ['required', 'unique:overlander_users_users,phone', 'integer'],
+        'country_id' => 'required',
+        'email' => ['required', 'email', 'unique:overlander_users_users,email'],
+        'month' => ['integer', 'between:0,12'],
+        'year' => ['integer'],
+        'join_date' => ['date', 'before:validity_date',],
+        'validity_date' => ['date', 'after:join_date',]
+    ];
     public $belongsTo = [
         'membership_tier' => [MembershipTier::class, 'key' => 'membership_tier_id'],
         'country' => [Countries::class, 'key' => 'country_id'],
