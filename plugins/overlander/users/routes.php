@@ -1,29 +1,42 @@
 <?php
 
+// NOTE:: Group APIs with the same functionality
 Route::group([
     'prefix' => '/api/{ver}/user',
     'middleware' => ['rest']
 ], function () {
     Route::post('/register', 'Overlander\Users\Api\Users@register');
 
-    Route::post('existing-user/step-1', 'Overlander\Users\Api\ExistUsers@step1');
+    Route::post('/send-verification-code', 'Overlander\Users\Api\Users@sendCode');
 
-    Route::post('existing-user/step-1-verification', 'Overlander\Users\Api\ExistUsers@step1VerifyCode');
+    Route::post('/verify-code', 'Overlander\Users\Api\Users@verifyCode');
 
-    Route::post('existing-user/step-2', 'Overlander\Users\Api\ExistUsers@step2');
-
-    Route::post('user/send-verification-code', 'Overlander\Users\Api\Users@sendCode');
-
-    Route::get('user/get', 'Overlander\Users\Api\Users@getUser');
-
-    Route::post('user/verify-code', 'Overlander\Users\Api\Users@verifyCode');
-
-    Route::post('user/check-exist', 'Overlander\Users\Api\Users@checkExistUser');
+    Route::post('/check-exist', 'Overlander\Users\Api\Users@checkExistUser');
 
     Route::post('/login', \Overlander\Users\Api\Login::class);
 
-    Route::post('user/reset-password', 'Overlander\Users\Api\Users@resetPassword');
+    Route::post('/reset-password', 'Overlander\Users\Api\Users@resetPassword');
+});
 
-    Route::get('existing-user/get-questions', 'Overlander\Users\Api\ExistUsers@getQuestions');
+// NOTE:: use middleware auth for all api need authentication
+Route::group([
+    'prefix' => '/api/{ver}/user',
+    'middleware' => ['rest', 'auth']
+], function () {
+    Route::get('/me', 'Overlander\Users\Api\Users@getUser');
+    Route::get('/logout', \Overlander\Users\Api\Logout::class);
+});
 
+// NOTE:: Group APIs with the same functionality [1]
+Route::group([
+    'prefix' => '/api/{ver}/existing-user',
+    'middleware' => ['rest']
+], function () {
+    Route::post('/step-1', 'Overlander\Users\Api\ExistUsers@step1');
+
+    Route::post('/step-1-verification', 'Overlander\Users\Api\ExistUsers@step1VerifyCode');
+
+    Route::post('/step-2', 'Overlander\Users\Api\ExistUsers@step2');
+    
+    Route::get('/get-questions', 'Overlander\Users\Api\ExistUsers@getQuestions');
 });

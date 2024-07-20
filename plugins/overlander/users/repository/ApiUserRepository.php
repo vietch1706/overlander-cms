@@ -53,23 +53,13 @@ class ApiUserRepository extends ApiRepository
         }
 
         if (!$user || !$user->checkPassword($params['password'])) {
+            // TODO: add lang for this case
             throw new ForbiddenException("sai nè");
         }
 
         if ((!$user->is_activated && (bool)Settings::get('validate_activate'))) {
             throw new ForbiddenException(Lang::get('legato.api::lang.auth.login.inactive'));
         }
-
-//        if (!empty($user)) {
-//            $devices = Device::where('user_id', $user->id)->get();
-//            if (!empty($devices->first())) {
-//                foreach ($devices as $device) {
-//                    $push = new PushClasses();
-//                    $push->removeDevice($device->token);
-//                    $this->tokenRepository->delete($device->token);
-//                }
-//            }
-//        }
 
         $tokenModel = $this->tokenRepository->generateToken($user->getKey());
         UserService::loginWithToken($tokenModel->token, $remember);

@@ -347,7 +347,8 @@ class Users
     public function getUser()
     {
         $user = BackendAuth::getUser();
-//        return $this->convertData($user);
+        // TODO: update function convertData
+        // return $this->convertData($user);
         return $user;
     }
 }
