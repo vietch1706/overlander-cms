@@ -1,21 +1,13 @@
 <?php
 
-namespace Overlander\General\Api;
+namespace Overlander\General\Api\Brands;
 
 use Illuminate\Http\Request;
-use Overlander\General\Repository\Brands as RepositoryBrands;
 
-class Brands
+class GetAll extends AbstractBrands
 {
-  public RepositoryBrands $brand;
 
-  public function __construct(RepositoryBrands $brand)
-  {
-    $this->brand = $brand;
-  }
-
-
-  public function getAllBrands(Request $request)
+    public function __invoke(Request $request): array
   {
     $param = $request->all();
     $result = null;

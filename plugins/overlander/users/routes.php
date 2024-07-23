@@ -5,7 +5,7 @@ Route::group([
     'prefix' => '/api/{ver}/user',
     'middleware' => ['rest']
 ], function () {
-    Route::post('/register', 'Overlander\Users\Api\Users@register');
+    Route::post('/register', \Overlander\Users\Api\Users\Register::class);
 
     Route::post('/send-verification-code', 'Overlander\Users\Api\Users@sendCode');
 
@@ -13,7 +13,7 @@ Route::group([
 
     Route::post('/check-exist', 'Overlander\Users\Api\Users@checkExistUser');
 
-    Route::post('/login', \Overlander\Users\Api\Login::class);
+    Route::post('/login', \Overlander\Users\Api\Users\Login::class);
 
     Route::post('/reset-password', 'Overlander\Users\Api\Users@resetPassword');
 });
@@ -37,6 +37,6 @@ Route::group([
     Route::post('/step-1-verification', 'Overlander\Users\Api\ExistUsers@step1VerifyCode');
 
     Route::post('/step-2', 'Overlander\Users\Api\ExistUsers@step2');
-    
+
     Route::get('/get-questions', 'Overlander\Users\Api\ExistUsers@getQuestions');
 });

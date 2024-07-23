@@ -1,21 +1,12 @@
 <?php
 
-namespace Overlander\General\Api;
+namespace Overlander\General\Api\Interests;
 
 use Illuminate\Http\Request;
-use Overlander\General\Repository\Interests as RepositoryInterests;
 
-class Interests
+class GetAll extends AbstractInterests
 {
-    public RepositoryInterests $interests;
-
-    public function __construct(RepositoryInterests $interest)
-    {
-
-        $this->interests = $interest;
-    }
-
-    public function getInterests(Request $request)
+    public function __invoke(Request $request): array
     {
         $param = $request->all();
         $result = null;

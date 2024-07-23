@@ -1,21 +1,13 @@
 <?php
 
-namespace Overlander\General\Api;
+namespace Overlander\General\Api\Banners;
 
 use Illuminate\Http\Request;
-use Overlander\General\Repository\Banners as RepositoryBanner;
 
-class Banners
+class GetAll extends AbstractBanners
 {
-  public RepositoryBanner $banner;
 
-  public function __construct(RepositoryBanner $banner)
-  {
-    $this->banner = $banner;
-  }
-
-
-  public function getApi(Request $request)
+  public function __invoke(Request $request): array
   {
     $param = $request->all();
     $result = null;

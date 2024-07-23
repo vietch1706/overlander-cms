@@ -1,23 +1,22 @@
 <?php
 
-use Overlander\General\Api\Banners;
-use Overlander\General\Api\Stores;
-
 Route::group([
     'prefix' => '/api/{ver}/general',
 ], function () {
 
-    Route::get('supportive/get', 'Overlander\General\Api\SupportivePages@getAllSupportivePages');
+    Route::get('supportive/get', \Overlander\General\Api\SupportivePages\GetAll::class);
 
-    Route::post('contact-us', 'Overlander\General\Api\ContactUs@getAllMessages');
+    Route::post('contact-us/get', \Overlander\General\Api\ContactUs\GetAll::class);
 
-    Route::get('brand', 'Overlander\General\Api\Brand@getAllBrands');
+    Route::get('brand/get', \Overlander\General\Api\Brands\GetAll::class);
 
-    Route::get('store', [Stores::class, 'getApi']);
+    Route::get('store/get', \Overlander\General\Api\Stores\GetAll::class);
 
-    Route::get('banner', [Banners::class, 'getApi']);
+    Route::get('banner/get', \Overlander\General\Api\Banners\GetAll::class);
 
-    Route::get('phonecode/get', 'Overlander\General\Api\Country@getCountry');
-    
-    Route::get('interests/get', 'Overlander\General\Api\Interests@getInterests');
+    Route::get('country/get', \Overlander\General\Api\Countries\GetAll::class);
+
+    Route::get('interest/get', \Overlander\General\Api\Interests\GetAll::class);
+
+    Route::get('interest/get', \Overlander\General\Api\Interests\GetAll::class);
 });

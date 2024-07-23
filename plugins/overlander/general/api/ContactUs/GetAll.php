@@ -1,24 +1,16 @@
 <?php
 
-namespace Overlander\General\Api;
+namespace Overlander\General\Api\ContactUs;
 
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Overlander\General\Models\Contact;
-use Overlander\General\Repository\ContactUs as RepositoryContactUs;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
-class ContactUs
+class GetAll extends AbstractContactUs
 {
-  public RepositoryContactUs $contact;
-  public function __construct(RepositoryContactUs $contact)
-  {
-    $this->contact = $contact;
-  }
 
 
-  public function getAllMessages(Request $request)
+    public function __invoke(Request $request): array
   {
     $data = $request->all();
     $rules = [

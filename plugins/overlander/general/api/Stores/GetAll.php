@@ -1,20 +1,12 @@
 <?php
 
-namespace Overlander\General\Api;
+namespace Overlander\General\Api\Stores;
 
 use Illuminate\Http\Request;
-use Overlander\General\Repository\Stores as RepositoryStores;
 
-class Stores
+class GetAll extends AbstractStores
 {
-  public RepositoryStores $stores;
-
-  public function __construct(RepositoryStores $stores)
-  {
-
-    $this->stores = $stores;
-  }
-  public function getApi(Request $request)
+    public function __invoke(Request $request): array
   {
     $param = $request->all();
     $result = null;
