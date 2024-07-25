@@ -154,65 +154,38 @@ class Users
         }
     }
 
-    public function create($data)
-    {
-        $data = $this->checkEmptyData($data);
-        $user = [
-            'first_name' => $data['first_name'],
-            'last_name' => $data['last_name'],
-            'phone' => $data['phone'],
-            'password' => $data['password'],
-            'country_id' => $this->countries->where('country', $data['country'])->first()['id'],
-            'email' => $data['email'],
-            'month' => $data['month'] ?? '1',
-            'year' => $data['year'],
-            'gender' => $data['gender'],
-            'mail_receive' => $data['mail_receive'],
-            'e_newsletter' => $data['e_newsletter'],
-            'interests' => $data['interests'],
-            'join_date' => Carbon::now()->format('Y-m-d'),
-            'validity_date' => Carbon::now()->addMonth(3)->format('Y-m-d'),
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
-        ];
-        try {
-            $this->users->fill($user);
-            $this->users->save();
-            return [
-                'message' => 'Save successfull!',
-            ];
-        } catch (Exception $th) {
-            throw new BadRequestHttpException($th->getMessage());
-            return $th->getMessage();
-        }
-    }
-
-    /**
-     * @param $data
-     * @return mixed
-     */
-    public function checkEmptyData($data)
-    {
-        if (empty($data['interests'])) {
-            $data['interests'] = ' ';
-        } else {
-            $interest = [];
-            foreach ($data['interests'] as $key => $value) {
-                $interest[$key] = $this->interests->where('name', $value)->first()['id'];
-            }
-            $data['interests'] = implode(',', $interest);
-        }
-        if (empty($data['month'])) {
-            $data['month'] = 1;
-        }
-        if (empty($data['year'])) {
-            $data['year'] = (int)Carbon::now()->format('Y') - 80;
-        }
-        if ($data['gender'] == "") {
-            $data['gender'] = null;
-        }
-        return $data;
-    }
+//    public function register($data)
+//    {
+////        $data = $this->checkEmptyData($data);
+//        $user = [
+//            'first_name' => $data['first_name'],
+//            'last_name' => $data['last_name'],
+//            'phone' => $data['phone'],
+//            'password' => $data['password'],
+//            'country_id' => $this->countries->where('country', $data['country'])->first()['id'],
+//            'email' => $data['email'],
+//            'month' => $data['month'] ?? '1',
+//            'year' => $data['year'] ?? ((int)Carbon::now()->format('Y')),
+//            'gender' => $data['gender'] ?? null,
+//            'mail_receive' => $data['mail_receive'],
+//            'e_newsletter' => $data['e_newsletter'],
+//            'interests' => $data['interests'],
+//            'join_date' => Carbon::now()->format('Y-m-d'),
+//            'validity_date' => Carbon::now()->addMonth(3)->format('Y-m-d'),
+//            'created_at' => Carbon::now(),
+//            'updated_at' => Carbon::now(),
+//        ];
+//        try {
+//            $this->users->fill($user);
+//            $this->users->save();
+//            return [
+//                'message' => Lang::get('overlander.user::lang.users.register.success'),
+//            ];
+//        } catch (Exception $th) {
+//            throw new BadRequestHttpException($th->getMessage());
+//            return $th->getMessage();
+//        }
+//    }
 
     public function resetPassword($newPassword, $confirmPassword, $email)
     {
@@ -257,12 +230,39 @@ class Users
             $user->fill($updateUser);
             $user->save();
             return [
-                'message' => 'Update Successfully!!!',
+                'message' => Lang::get('overlander.users::lang.users.update.success'),
             ];
         } catch (Exception $th) {
             throw new BadRequestHttpException($th->getMessage());
         }
     }
+
+    /**
+     * @param $data
+     * @return mixed
+     */
+//    public function checkEmptyData($data)
+//    {
+//        if (empty($data['interests'])) {
+//            $data['interests'] = ' ';
+//        } else {
+//            $interest = [];
+//            foreach ($data['interests'] as $key => $value) {
+//                $interest[$key] = $this->interests->where('name', $value)->first()['id'];
+//            }
+//            $data['interests'] = implode(',', $interest);
+//        }
+//        if (empty($data['month'])) {
+//            $data['month'] = 1;
+//        }
+//        if (empty($data['year'])) {
+//            $data['year'] = (int)Carbon::now()->format('Y') - 80;
+//        }
+//        if ($data['gender'] == "") {
+//            $data['gender'] = null;
+//        }
+//        return $data;
+//    }
 
     public function verifyCode($email, $code)
     {
@@ -348,7 +348,7 @@ class Users
     {
         $user = BackendAuth::getUser();
         // TODO: update function convertData
-        // return $this->convertData($user);
-        return $user;
+        return $this->convertData($user);
+//        return $user;
     }
 }

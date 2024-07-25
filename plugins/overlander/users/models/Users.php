@@ -2,15 +2,14 @@
 
 namespace Overlander\Users\Models;
 
+use Backend\Models\User as BackendUser;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
-use Model;
 use October\Rain\Database\Traits\Validation;
 use Overlander\General\Models\Countries;
 use Overlander\General\Models\Interests;
 use Overlander\Users\Controllers\Transaction;
-use Backend\Models\User as BackendUser;
 
 /**
  * Model
@@ -97,18 +96,20 @@ class Users extends BackendUser
         return $this->member_no . $this->member_prefix;
     }
 
-    public function beforeValidate(){
+    public function beforeValidate()
+    {
         if (!$this->login) {
             $this->login = str_random(10);
         }
     }
+
     public function beforeCreate()
     {
         $lastestUser = $this->orderBy('member_no', 'desc')->first();
         if (empty($this->member_no) && empty($this->member_prefix)) {
             $this->member_prefix = 'A';
             if (!empty($lastestUser)) {
-                $this->member_no = 100000 + 1;
+                $this->member_no = str_pad($lastestUser['member_no'], 6, '0', STR_PAD_LEFT);
             } else {
                 $this->member_no = 100000;
             }

@@ -2,6 +2,7 @@
 
 Route::group([
     'prefix' => '/api/{ver}/general',
+    'middleware' => ['rest'],
 ], function () {
 
     Route::get('supportive/get', \Overlander\General\Api\SupportivePages\GetAll::class);
@@ -18,5 +19,4 @@ Route::group([
 
     Route::get('interest/get', \Overlander\General\Api\Interests\GetAll::class);
 
-    Route::get('interest/get', \Overlander\General\Api\Interests\GetAll::class);
 });

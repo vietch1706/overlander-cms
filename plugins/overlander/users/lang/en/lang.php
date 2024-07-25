@@ -23,6 +23,12 @@
         'reset' => [
             'success' => 'Reset Password Successful!',
             'failed' => 'Password do not match! Please try again.',
+        ],
+        'register' => [
+            'success' => 'Save Successfully!'
+        ],
+        'update' => [
+            'success' => 'Update Successfully!'
         ]
     ],
     'exists_users' => [

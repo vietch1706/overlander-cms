@@ -1,11 +1,16 @@
 <?php
 
 // NOTE:: Group APIs with the same functionality
+use Overlander\Users\Api\Logout;
+use Overlander\Users\Api\Users\Get;
+use Overlander\Users\Api\Users\Login;
+use Overlander\Users\Api\Users\Register;
+
 Route::group([
     'prefix' => '/api/{ver}/user',
     'middleware' => ['rest']
 ], function () {
-    Route::post('/register', \Overlander\Users\Api\Users\Register::class);
+    Route::post('/register', Register::class);
 
     Route::post('/send-verification-code', 'Overlander\Users\Api\Users@sendCode');
 
@@ -13,7 +18,7 @@ Route::group([
 
     Route::post('/check-exist', 'Overlander\Users\Api\Users@checkExistUser');
 
-    Route::post('/login', \Overlander\Users\Api\Users\Login::class);
+    Route::post('/login', Login::class);
 
     Route::post('/reset-password', 'Overlander\Users\Api\Users@resetPassword');
 });
@@ -23,8 +28,8 @@ Route::group([
     'prefix' => '/api/{ver}/user',
     'middleware' => ['rest', 'auth']
 ], function () {
-    Route::get('/me', 'Overlander\Users\Api\Users@getUser');
-    Route::get('/logout', \Overlander\Users\Api\Logout::class);
+    Route::get('/me', Get::class);
+    Route::get('/logout', Logout::class);
 });
 
 // NOTE:: Group APIs with the same functionality [1]

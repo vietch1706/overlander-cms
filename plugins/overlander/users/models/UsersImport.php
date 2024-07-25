@@ -29,33 +29,27 @@ class UsersImport extends ImportModel
         // TODO: Implement importData() method.
 
         foreach ($results as $row => $data) {
-            $e_newsletter = function () use ($data) {
-                if ($data['e_newsletter'] === 'Yes') {
-                    return self::YES;
-                }
-                return self::NO;
-            };
-            $mail_receive = function () use ($data) {
-                if ($data['mail_receive'] === 'Yes') {
-                    return self::YES;
-                }
-                return self::NO;
-            };
-            $status = $data['status'] === 'Active' ? self::ACTIVE : self::NO;
-            $status = function () use ($data) {
-                if ($data['status'] === 'Active') {
-                    return self::ACTIVE;
-                }
-                return self::NO;
-            };
-            $gender = function () use ($data) {
-                if ($data['gender'] === 'Male') {
-                    return self::GENDER_MALE;
-                } elseif ($data['gender'] === 'Female') {
-                    return self::GENDER_FEMALE;
-                }
-                return self::GENDER_OTHER;
-            };
+//            $e_newsletter = function () use ($data) {
+//                if ($data['e_newsletter'] === 'Yes') {
+//                    return self::YES;
+//                }
+//                return self::NO;
+//            };
+//            $mail_receive = function () use ($data) {
+//                if ($data['mail_receive'] === 'Yes') {
+//                    return self::YES;
+//                }
+//                return self::NO;
+//            };
+//            $status = $data['status'] === 'Active' ? self::ACTIVE : self::NO;
+//            $gender = function () use ($data) {
+//                if ($data['gender'] === 'Male') {
+//                    return self::GENDER_MALE;
+//                } elseif ($data['gender'] === 'Female') {
+//                    return self::GENDER_FEMALE;
+//                }
+//                return self::GENDER_OTHER;
+//            };
             $birthday = explode('-', $data['birthday']);
             try {
                 $user = new Users();
@@ -69,18 +63,22 @@ class UsersImport extends ImportModel
                 $user->last_name = $data['last_name'];
                 $user->phone = $data['phone'];
                 $user->email = $data['email'];
-                $user->gender = $gender();
+                $user->gender = match ($data['gender']) {
+                    'male' => self::GENDER_MALE,
+                    'female' => self::GENDER_FEMALE,
+                    default => self::GENDER_OTHER,
+                };
                 $user->month = $month;
                 $user->year = $year;
                 $user->address = $data['address'];
                 $user->district = $data['district'];
                 $user->country_id = $countries->where('country', $data['country'])->first()['id'];
-                $user->e_newsletter = $e_newsletter();
-                $user->mail_receive = $mail_receive();
+                $user->e_newsletter = $data['e_newsletter'] === 'Yes' ? self::YES : self::NO;
+                $user->mail_receive = $data['mail_receive'] === 'Yes' ? self::YES : self::NO;
                 $user->join_date = $data['join_date'];
                 $user->validity_date = $data['validity_date'];
                 $user->membership_tier_id = $membership->where('name', $data['membership_tier_name'])->first()['id'];
-                $user->status = $status();
+                $user->status = $data['status'] === 'Active' ? self::ACTIVE : self::NO;
                 $user->active_date = Carbon::now();
                 $user->interests = str_replace(' ', ',', $data['interests_data']);
                 $user->sales_amounts = $data['sales_amounts'];
@@ -88,7 +86,6 @@ class UsersImport extends ImportModel
                 $user->created_at = Carbon::now();
                 $user->updated_at = Carbon::now();
                 $user->save();
-
                 $this->logCreated();
             } catch (Exception $ex) {
                 $this->logError($row, $ex->getMessage());

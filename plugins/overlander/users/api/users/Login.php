@@ -39,7 +39,6 @@ class Login extends ApiLogin
 
         $data['lang'] = $lang;
 
-
         $result = $this->userRepository->apiLogin($data);
 
         return $result;

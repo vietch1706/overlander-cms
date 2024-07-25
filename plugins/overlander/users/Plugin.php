@@ -48,6 +48,9 @@ class Plugin extends PluginBase
             'concatmemberno' => function ($value) {
                 $users = new Users();
                 $user = $users->where('member_no', $value)->first();
+                if ($user['member_no'] === null) {
+                    return '';
+                }
                 return $value . $user['member_prefix'];
             },
             'concatbirthday' => [$this, 'evalConcatBirthdayListsColumn']
@@ -59,6 +62,9 @@ class Plugin extends PluginBase
     {
         $users = new Users();
         $user = $users->where('member_no', $record->member_no)->first();
+        if ($user['member_no'] === null) {
+            return '';
+        }
         if ($value < 10) {
             return '0' . $value . '-' . $user['year'];
         }
