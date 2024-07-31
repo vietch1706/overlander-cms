@@ -13,7 +13,7 @@ columns:
         type: text
     phone:
         label: Mobile
-        type: text
+        type: concatphone
     email:
         label: Email
         type: text
@@ -45,7 +45,7 @@ columns:
         label: 'Is Existing Member'
         type: partial
         path: ~/plugins/overlander/users/models/users/_existmember.htm
-    status:
+    is_activated:
         label: Status
         type: partial
         path: ~/plugins/overlander/users/models/users/_status.htm

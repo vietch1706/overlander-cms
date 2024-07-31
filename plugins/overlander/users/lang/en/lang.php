@@ -4,11 +4,12 @@
         'description' => ''
     ],
     'user' => [
-        'sendcode_message' => [
+        'send_code_message' => [
             'verify' => 'Your verification code is :code. Don\'t share it with anyone!',
             'send_times' => 'You can send verification code each 1 minutes',
             'success' => 'Verification Code Have Been Sent to your email address!',
-            'daily_limit' => 'You can only send code 3 times a day!!!'
+            'daily_limit' => 'You can only send code 3 times a day!!!',
+            'not_found' => 'User not found!',
         ],
         'verify_message' => [
             'success' => 'Verify Success!',
@@ -22,13 +23,24 @@
         ],
         'reset' => [
             'success' => 'Reset Password Successful!',
-            'failed' => 'Password do not match! Please try again.',
+            'failed' => 'Unable to reset password! Please try again.',
         ],
         'register' => [
-            'success' => 'Save Successfully!'
+            'success' => 'Save Successfully!',
+            'failed' => 'Registration Failed! Try again.',
         ],
         'update' => [
             'success' => 'Update Successfully!'
+        ],
+        'change_password' => [
+            'success' => 'Change Password Successful!',
+            'failed' => 'User not found! Please try again.',
+            'wrong' => 'Password does not match! Please try again.'
+        ],
+        'check_exist' => [
+            'email' => 'The email address already existed.',
+            'phone' => 'The phone number already existed.',
+            'member_no' => 'The member number already existed.',
         ]
     ],
     'exists_users' => [

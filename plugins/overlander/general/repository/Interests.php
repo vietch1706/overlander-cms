@@ -34,6 +34,7 @@ class Interests
     public function convertData($data)
     {
         return [
+            'id' => $data->id,
             'name' => $data->name,
         ];
     }

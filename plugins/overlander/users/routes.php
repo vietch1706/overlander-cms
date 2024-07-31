@@ -5,6 +5,11 @@ use Overlander\Users\Api\Logout;
 use Overlander\Users\Api\Users\Get;
 use Overlander\Users\Api\Users\Login;
 use Overlander\Users\Api\Users\Register;
+use Overlander\Users\Api\Users\ResetPassword;
+use Overlander\Users\Api\Users\VerificationSend;
+use Overlander\Users\Api\Users\VerificationCheck;
+use Overlander\Users\Api\Users\CheckExist;
+use Overlander\Users\Api\Users\ChangePassword;
 
 Route::group([
     'prefix' => '/api/{ver}/user',
@@ -12,15 +17,17 @@ Route::group([
 ], function () {
     Route::post('/register', Register::class);
 
-    Route::post('/send-verification-code', 'Overlander\Users\Api\Users@sendCode');
+    Route::post('/send-verification-code', VerificationSend::class);
 
-    Route::post('/verify-code', 'Overlander\Users\Api\Users@verifyCode');
+    Route::post('/verify-code', VerificationCheck::class);
 
-    Route::post('/check-exist', 'Overlander\Users\Api\Users@checkExistUser');
+    Route::post('/check-exist', CheckExist::class);
 
     Route::post('/login', Login::class);
 
-    Route::post('/reset-password', 'Overlander\Users\Api\Users@resetPassword');
+    Route::post('/reset-password', ResetPassword::class);
+
+    Route::post('/change-password', ChangePassword::class);
 });
 
 // NOTE:: use middleware auth for all api need authentication

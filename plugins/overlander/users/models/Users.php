@@ -2,10 +2,13 @@
 
 namespace Overlander\Users\Models;
 
+use Backend\Models\User;
 use Backend\Models\User as BackendUser;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
 use October\Rain\Database\Traits\Validation;
 use Overlander\General\Models\Countries;
 use Overlander\General\Models\Interests;
@@ -50,9 +53,9 @@ class Users extends BackendUser
     public $rules = [
         'first_name' => 'required',
         'last_name' => 'required',
-        'phone' => ['required', 'unique:overlander_users_users,phone', 'integer'],
+        'phone' => 'required|numeric|regex:/[0-9]/|not_regex:/[a-z]/',
         'country_id' => 'required',
-        'email' => ['required', 'email', 'unique:overlander_users_users,email'],
+        'email' => ['required', 'email', 'unique:backend_users,email'],
         'month' => ['integer', 'between:0,12'],
         'year' => ['integer'],
         'join_date' => ['date', 'before:validity_date',],
@@ -77,12 +80,9 @@ class Users extends BackendUser
         'gender',
         'interests',
         'is_existing_member',
-        'status',
-        'active_date',
         'points_sum',
         'membership_tier_id',
         'send_mail_at',
-        'verification_code',
         'join_date',
         'validity_date',
         'district',
@@ -101,6 +101,11 @@ class Users extends BackendUser
         if (!$this->login) {
             $this->login = str_random(10);
         }
+    }
+
+    public function getPhoneAreaCodeOptions()
+    {
+        return Countries::all()->lists('code', 'code');
     }
 
     public function beforeCreate()
@@ -238,6 +243,6 @@ class Users extends BackendUser
 
     public function scopeGetByPhone($query, $phone)
     {
-        return $query->where('phone', $phone);
+        return $query->where(DB::raw('concat(phone_area_code, phone)'), $phone);
     }
 }

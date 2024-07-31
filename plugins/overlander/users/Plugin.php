@@ -2,6 +2,7 @@
 
 namespace Overlander\Users;
 
+use Overlander\General\Models\Countries;
 use Overlander\Users\Console\UserCommand;
 use Overlander\Users\Models\Users;
 use System\Classes\PluginBase;
@@ -53,7 +54,16 @@ class Plugin extends PluginBase
                 }
                 return $value . $user['member_prefix'];
             },
-            'concatbirthday' => [$this, 'evalConcatBirthdayListsColumn']
+            'concatbirthday' => [$this, 'evalConcatBirthdayListsColumn'],
+            'concatphone' => function ($value) {
+                $users = new Users();
+                $user = $users->where('phone', $value)->first();
+                if ($user['phone'] === null) {
+                    return '';
+                }
+//                dd($phoneCode->where('id', $user['phone_area_code'])->first());
+                return $user['phone_area_code'] . $value;
+            },
 
         ];
     }
@@ -61,7 +71,7 @@ class Plugin extends PluginBase
     public function evalConcatBirthdayListsColumn($value, $column, $record)
     {
         $users = new Users();
-        $user = $users->where('member_no', $record->member_no)->first();
+        $user = $users->where('email', $record->email)->first();
         if ($user['member_no'] === null) {
             return '';
         }

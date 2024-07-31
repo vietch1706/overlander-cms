@@ -78,8 +78,8 @@ class UsersImport extends ImportModel
                 $user->join_date = $data['join_date'];
                 $user->validity_date = $data['validity_date'];
                 $user->membership_tier_id = $membership->where('name', $data['membership_tier_name'])->first()['id'];
-                $user->status = $data['status'] === 'Active' ? self::ACTIVE : self::NO;
-                $user->active_date = Carbon::now();
+                $user->is_activated = $data['status'] === 'Active' ? self::ACTIVE : self::NO;
+                $user->activated_at = Carbon::now();
                 $user->interests = str_replace(' ', ',', $data['interests_data']);
                 $user->sales_amounts = $data['sales_amounts'];
                 $user->points_sum = $data['points_sum'];

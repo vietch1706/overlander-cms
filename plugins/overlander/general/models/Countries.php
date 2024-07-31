@@ -2,6 +2,7 @@
 
 use Model;
 use October\Rain\Database\Traits\Validation;
+use Overlander\Users\Models\Users;
 
 /**
  * Model
@@ -26,7 +27,7 @@ class Countries extends Model
      */
     public $rules = [
     ];
-    
+
     public function scopeGetById($query, $id)
     {
         return $query->where('id', $id);

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Lang;
 use Legato\Api\Classes\UserService;
+use Legato\Api\Exceptions\BadRequestException;
 use Legato\Api\Exceptions\ForbiddenException;
 use Legato\Api\Exceptions\NotFoundException;
 use Legato\Api\Models\Settings;
@@ -17,12 +18,12 @@ use Legato\Api\Repositories\User as ApiRepository;
 use Overlander\General\Models\Countries;
 use Overlander\General\Models\Interests;
 use Overlander\Users\Models\Users as UserModel;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class ApiUserRepository extends ApiRepository
 {
 
     protected Token $tokenRepository;
-
     protected $userRepository;
     protected Countries $countries;
     protected Interests $interests;
@@ -31,7 +32,7 @@ class ApiUserRepository extends ApiRepository
         Token     $tokenRepository,
         Users     $userRepository,
         Countries $country,
-        Interests $interest
+        Interests $interest,
     )
     {
         $this->tokenRepository = $tokenRepository;
@@ -57,12 +58,12 @@ class ApiUserRepository extends ApiRepository
             // Login by phone
 //            $user = UserModel::where('phone', $params['user'])->where('phone_area_code', $params['phone_area_code'])->first();
 //            Login by email
-            throw new ForbiddenException(Lang::get('overlander.user::lang.user.login.failed'));
+            throw new ForbiddenException(Lang::get('overlander.users::lang.user.login.failed'));
 
         }
 
         if (!$user || !$user->checkPassword($params['password'])) {
-            throw new ForbiddenException(Lang::get('overlander.user::lang.user.login.wrong'));
+            throw new ForbiddenException(Lang::get('overlander.users::lang.user.login.wrong'));
         }
 
         if ((!$user->is_activated && (bool)Settings::get('validate_activate'))) {
@@ -75,6 +76,7 @@ class ApiUserRepository extends ApiRepository
         $result = $this->convertUserWithToken($user, $tokenModel, $params['lang']);
 
         Event::fire('legato.api.login.after', [$user, &$result, $tokenModel, $params]);
+
         return $result;
     }
 
@@ -109,31 +111,70 @@ class ApiUserRepository extends ApiRepository
      */
     public function apiRegister(array $params): void
     {
+        $user = new UserModel();
         Event::fire('legato.api.register.before', [&$params]);
-
         // Save user into backend_users table
-        $userParams = [
-            'login' => str_random(10),
-            'first_name' => $params['first_name'],
-            'last_name' => $params['last_name'],
-            'phone' => $params['phone'],
-            'password' => $params['password'],
-            'password_confirmation' => $params['password_confirmation'],
-            'country_id' => $this->countries->where('country', $params['country'])->first()['id'],
-            'email' => $params['email'],
-            'month' => $params['month'] ?? '1',
-            'year' => $params['year'] ?? ((int)Carbon::now()->format('Y')),
-            'gender' => $params['gender'] ?? null,
-            'mail_receive' => $params['mail_receive'],
-            'e_newsletter' => $params['e_newsletter'],
-            'interests' => $params['interests'],
-            'join_date' => Carbon::now()->format('Y-m-d'),
-            'validity_date' => Carbon::now()->addMonth(3)->format('Y-m-d'),
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
-        ];
-        $user = BackendAuth::register($userParams);
-        dd($user);
+        $user->login = str_random(10);
+        $user->first_name = $params['first_name'];
+        $user->last_name = $params['last_name'];
+        $user->phone = $params['phone'];
+        $user->phone_area_code = $params['phone_area_code'];
+        $user->password = $params['password'];
+        $user->password_confirmation = $params['password_confirmation'];
+        $user->email = $params['email'];
+        $user->country_id = $this->countries->where('country', $params['country'])->first()['id'];
+        $user->month = $params['month'] ?? '1';
+        $user->year = $params['year'] ?? ((int)Carbon::now()->format('Y'));
+        $user->gender = $params['gender'] ?? null;
+        $user->mail_receive = $params['mail_receive'];
+        $user->e_newsletter = $params['e_newsletter'];
+        $user->interests = $params['interests'];
+        $user->join_date = Carbon::now()->format('Y-m-d');
+        $user->validity_date = Carbon::now()->addMonth(3)->format('Y-m-d');
+        $user->created_at = Carbon::now();
+        $user->updated_at = Carbon::now();
+        try {
+            $user->save();
+        } catch (BadRequestException $th) {
+            throw new BadRequestException(Lang::get('overlander.users::lang.user.register.failed'));
+        }
         Event::fire('legato.api.register.after', [$user, &$result]);
+    }
+
+    public function apiPasswordReset(array $params): array
+    {
+        Event::fire('legato.api.password-reset.before', [&$params]);
+
+        if ($params['password'] == $params['password_confirmation']) {
+            $user = UserModel::where('email', $params['user'])->first();
+            $user->password = $params['password'];
+            $user->save();
+        } else {
+            throw new BadRequestException(Lang::get('overlander.users::lang.user.reset.failed'));
+        }
+        return [
+            'message' => Lang::get('overlander.users::lang.user.reset.success'),
+        ];
+    }
+
+    public function apiPasswordChange($params): array
+    {
+        $user = UserModel::where('email', $params['user'])->first();
+        if (!$user || !$user->id) {
+            // Login by phone
+//            $user = UserModel::where('phone', $params['user'])->where('phone_area_code', $params['phone_area_code'])->first();
+//            Login by email
+            throw new ForbiddenException(Lang::get('overlander.users::lang.user.change_password.failed'));
+        }
+        if (!$user || !$user->checkPassword($params['password'])) {
+            throw new ForbiddenException(Lang::get('overlander.users::lang.user.change_password.wrong'));
+        }
+
+        if ((!$user->is_activated && (bool)Settings::get('validate_activate'))) {
+            throw new ForbiddenException(Lang::get('legato.api::lang.auth.login.inactive'));
+        }
+        return [
+            'message' => Lang::get('overlander.users::lang.user.change_password.success'),
+        ];
     }
 }

@@ -2,15 +2,18 @@
 
 namespace Overlander\Users\Repository;
 
-use Backend\Facades\BackendAuth;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Mail;
 use Lang;
+use Legato\Api\Exceptions\BadRequestException;
+use Legato\Api\Exceptions\ForbiddenException;
+use Legato\Api\Models\Settings;
 use Overlander\General\Helper\General;
 use Overlander\General\Models\Countries;
 use Overlander\General\Models\Interests;
 use Overlander\Logs\Models\Maillogs;
+use Overlander\Users\Models\MembershipTier;
 use Overlander\Users\Models\Users as ModelUsers;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
@@ -32,21 +35,26 @@ class Users
     public static function sendCode($email, $method)
     {
         $user = ModelUsers::where('email', $email)->first();
+        if (empty($user)) {
+            return [
+                throw new BadRequestException(Lang::get('overlander.users:lang.user.send_code_message.not_found'))
+            ];
+        }
         $mailLog = new Maillogs();
         if ($mailLog->where('email', $email)->whereDate('created_at', Carbon::now())->count() >= 3) {
             return [
-                'message' => Lang::get('overlander.users::lang.user.sendcode_message.daily_limit')
+                'message' => Lang::get('overlander.users::lang.user.send_code_message.daily_limit')
             ];
         }
-        if (Carbon::now()->diffInMinutes($user['send_mail_at']) < 1 && $user['verification_code'] != null) {
+        if (Carbon::now()->diffInMinutes($user['send_mail_at']) < 1 && $user['activation_code'] != null) {
             return [
-                'message' => Lang::get('overlander.users::lang.user.sendcode_message.send_times')
+                'message' => Lang::get('overlander.users::lang.user.send_code_message.send_times')
             ];
         }
         $code = General::generateRandomCode();
-        $message = Lang::get('overlander.users::lang.user.sendcode_message.verify', ['code' => $code]);
+        $message = Lang::get('overlander.users::lang.user.send_code_message.verify', ['code' => $code]);
         Mail::sendTo($email, 'overlander.general::mail.exists_verify', ['content' => $message]);
-        $user->verification_code = $code;
+        $user->activation_code = $code;
         $mailLog->email = $email;
         $mailLog->content = $message;
         $mailLog->method = $method;
@@ -54,35 +62,35 @@ class Users
         $user->send_mail_at = Carbon::now()->toDateTimeString();
         $user->save();
         return [
-            'message' => Lang::get('overlander.users::lang.user.sendcode_message.success')
+            'message' => Lang::get('overlander.users::lang.user.send_code_message.success')
         ];
     }
 
     public function checkExist($param)
     {
-        $messages = '';
+        $messages = [];
         $data = null;
         if (!empty($param['email'])) {
             $data = $this->users->where('email', $param['email'])->first();
             if ($data != null) {
                 $messages = [
-                    'email' => 'The email address already existed.',
+                    'email' => Lang::get('overlander.users::lang.user.check_exist.email'),
                 ];
             }
         }
         if (!empty($param['phone']) && $data != null) {
-            if ($this->users->where('phone', $param['phone'])->first() != null) {
+            if (self::getByPhone($param['phone']) != null) {
                 $messages = [
-                    'email' => 'The email address already existed.',
-                    'phone' => 'The phone number already existed.',
+                    'email' => Lang::get('overlander.users::lang.user.check_exist.email'),
+                    'phone' => Lang::get('overlander.users::lang.user.check_exist.phone'),
                 ];
             }
         }
         if (!empty($param['phone']) && $data == null) {
-            $data = $this->users->where('phone', $param['phone'])->first();
+            $data = self::getByPhone($param['phone']);
             if (!empty($data)) {
                 $messages = [
-                    'phone' => 'The phone number already existed.',
+                    'phone' => Lang::get('overlander.users::lang.user.check_exist.phone'),
                 ];
             }
         }
@@ -90,11 +98,10 @@ class Users
             $data = $this->users->where('member_no', $param['member_no'])->first();
             if (empty($data)) {
                 $messages = [
-                    'member_no' => 'The member number is not exists.',
+                    'member_no' => Lang::get('overlander.users::lang.user.check_exist.member_no)'),
                 ];
             }
         }
-
         return $messages;
     }
 
@@ -102,7 +109,6 @@ class Users
     {
         try {
             $data = null;
-            $phone = str_replace(' ', '+', $phone);
             $user = $this->users->getByPhone($phone)->first();
             if (!empty($user)) {
                 $data = $this->convertData($user);
@@ -117,25 +123,27 @@ class Users
 
     public function convertData($users)
     {
+        $country = $this->countries->where('id', $users->country_id)->first();
+        $membershipTier = MembershipTier::where('id', $users->membership_tier_id)->first();
         return [
             'member_no' => $users->member_no . $users->member_prefix,
             'first_name' => $users->first_name,
             'last_name' => $users->last_name,
+            'phone_area_code' => $users->phone_area_code,
             'phone' => $users->phone,
             'password' => $users->password,
-            'country' => $users->country_id,
+            'country' => $country === null ? '' : $country['country'],
             'email' => $users->email,
             'month' => $users->month,
             'year' => $users->year,
-            'gender' => $users->gender,
+            'gender' => $users->gender === 0 ? 'Male' : 'Female',
             'interests' => $users->interests,
             'points' => $users->points,
-            'membership_tier_id' => $users->points,
+            'membership_tier' => $membershipTier === null ? '' : $membershipTier['name'],
             'address' => $users->address,
-            'is_existing_member' => $users->is_existing_member,
-            'status' => $users->status,
-            'active_date' => $users->active_date,
-            'send_mail_at' => $users->send_mail_at,
+            'member_type' => $users->is_existing_member === 0 ? 'Normal Member' : 'Existing Member',
+            'status' => $users->is_activated,
+            'active_date' => $users->activated_at,
         ];
     }
 
@@ -144,7 +152,6 @@ class Users
         try {
             $data = null;
             $user = $this->users->getByEmail($email)->first();
-            dd($user->member_prefix);
             if (!empty($user)) {
                 $data = $this->convertData($user);
             }
@@ -264,7 +271,7 @@ class Users
 //        return $data;
 //    }
 
-    public function verifyCode($email, $code)
+    public function checkCode($email, $code)
     {
         $user = $this->users->where('email', $email)->first();
         if (Carbon::now()->diffInMinutes($user['send_mail_at']) > 10) {
@@ -275,12 +282,12 @@ class Users
             ];
         }
 
-        if ($user['verification_code'] == $code) {
-            $user->verification_code = null;
+        if ($user['activation_code'] == $code) {
+            $user->activation_code = null;
             $user->send_mail_at = null;
-            if ($user['status'] != self::ACTIVE) {
-                $user->status = self::ACTIVE;
-                $user->active_date = Carbon::now();
+            if ($user['is_activated'] != self::ACTIVE) {
+                $user->is_activated = self::ACTIVE;
+                $user->activated_at = Carbon::now();
             }
             $user->save();
             return [
@@ -344,9 +351,9 @@ class Users
         }
     }
 
-    public function getUser()
+    public function getUser($user)
     {
-        $user = BackendAuth::getUser();
+
         // TODO: update function convertData
         return $this->convertData($user);
 //        return $user;
