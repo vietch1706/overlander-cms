@@ -18,7 +18,6 @@ use Legato\Api\Repositories\User as ApiRepository;
 use Overlander\General\Models\Countries;
 use Overlander\General\Models\Interests;
 use Overlander\Users\Models\Users as UserModel;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class ApiUserRepository extends ApiRepository
 {
@@ -123,9 +122,9 @@ class ApiUserRepository extends ApiRepository
         $user->password_confirmation = $params['password_confirmation'];
         $user->email = $params['email'];
         $user->country_id = $this->countries->where('country', $params['country'])->first()['id'];
-        $user->month = $params['month'] ?? '1';
-        $user->year = $params['year'] ?? ((int)Carbon::now()->format('Y'));
-        $user->gender = $params['gender'] ?? null;
+        $user->month = $params['month'] === "" ? '1' : $params['month'];
+        $user->year = $params['year'] === "" ? ((int)Carbon::now()->format('Y')) : $params['year'];
+        $user->gender = $params['gender'] === "" ? null : $params['gender'];
         $user->mail_receive = $params['mail_receive'];
         $user->e_newsletter = $params['e_newsletter'];
         $user->interests = $params['interests'];
