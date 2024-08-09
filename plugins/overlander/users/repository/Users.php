@@ -7,8 +7,7 @@ use Exception;
 use Illuminate\Support\Facades\Mail;
 use Lang;
 use Legato\Api\Exceptions\BadRequestException;
-use Legato\Api\Exceptions\ForbiddenException;
-use Legato\Api\Models\Settings;
+use Legato\Api\Exceptions\NotFoundException;
 use Overlander\General\Helper\General;
 use Overlander\General\Models\Countries;
 use Overlander\General\Models\Interests;
@@ -107,18 +106,13 @@ class Users
 
     public function getByPhone($phone)
     {
-        try {
-            $data = null;
-            $user = $this->users->getByPhone($phone)->first();
-            if (!empty($user)) {
-                $data = $this->convertData($user);
-            } else {
-                $data = '';
-            }
-            return $data;
-        } catch (Exception $th) {
-            throw new BadRequestHttpException($th->getMessage());
+        $user = $this->users->getByPhone($phone)->first();
+        if (!empty($user)) {
+            $data = $this->convertData($user);
+        } else {
+            throw new NotFoundException(Lang::get('overlander.general::lang.user.not_found'));
         }
+        return $data;
     }
 
     public function convertData($users)
@@ -149,16 +143,14 @@ class Users
 
     public function getByEmail($email)
     {
-        try {
-            $data = null;
-            $user = $this->users->getByEmail($email)->first();
-            if (!empty($user)) {
-                $data = $this->convertData($user);
-            }
-            return $data;
-        } catch (Exception $th) {
-            throw new BadRequestHttpException($th->getMessage());
+
+        $user = $this->users->getByEmail($email)->first();
+        if (!empty($user)) {
+            $data = $this->convertData($user);
+        } else {
+            throw new NotFoundException(Lang::get('overlander.general::lang.user.not_found'));
         }
+        return $data;
     }
 
 //    public function register($data)
@@ -325,37 +317,23 @@ class Users
 
     public function getByMemberNumber($memberNumber)
     {
-        try {
-            $data = null;
-            $user = $this->users->getByMemberNumber($memberNumber)->first();
-            if (!empty($user)) {
-                $data = $this->convertData($user);
-            }
-            return $data;
-        } catch (Exception $th) {
-            throw new BadRequestHttpException($th->getMessage());
+        $user = $this->users->getByMemberNumber($memberNumber)->first();
+        if (!empty($user)) {
+            $data = $this->convertData($user);
+        } else {
+            throw new NotFoundException(Lang::get('overlander.general::lang.user.not_found'));
         }
+        return $data;
     }
 
     public function getById($id)
     {
-        try {
-            $data = null;
-            $user = $this->users->getById($id)->first();
-            if (!empty($user)) {
-                $data = $this->convertData($user);
-            }
-            return $data;
-        } catch (Exception $th) {
-            throw new BadRequestHttpException($th->getMessage());
+        $user = $this->users->getById($id)->first();
+        if (!empty($user)) {
+            $data = $this->convertData($user);
+        } else {
+            throw new NotFoundException(Lang::get('overlander.general::lang.user.not_found'));
         }
-    }
-
-    public function getUser($user)
-    {
-
-        // TODO: update function convertData
-        return $this->convertData($user);
-//        return $user;
+        return $data;
     }
 }

@@ -2,53 +2,77 @@
 
 namespace Overlander\General\Repository;
 
-use Exception;
+use Lang;
+use Legato\Api\Exceptions\NotFoundException;
 use Overlander\General\Helper\General;
 use Overlander\General\Models\Brands as ModelsBrands;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class Brands
 {
-  public ModelsBrands $brand;
-  public function __construct(ModelsBrands $brand)
-  {
-    $this->brand = $brand;
-  }
+    public ModelsBrands $brands;
 
-  public function convertData($brand)
-  {
-    return [
-      'name' => $brand->name,
-      'image' =>  General::getBaseUrl() . $brand->image,
-    ];
-  }
-
-  public function getAll()
-  {
-    try {
-      $list = $this->brand->all();
-
-      $data = [];
-
-      foreach ($list as $key => $value) {
-        $data[] = $this->convertData($value);
-      }
-      return $data;
-    } catch (Exception $th) {
-      throw new BadRequestHttpException($th->getMessage());
+    public function __construct(ModelsBrands $brand)
+    {
+        $this->brands = $brand;
     }
-  }
-  public function getById($id)
-  {
-    try {
-      $data = null;
-      $brand = $this->brand->getById($id);
-      if (!empty($brand)) {
-        $data = $this->convertData($brand);
-      }
-      return $data;
-    } catch (Exception $th) {
-      throw new BadRequestHttpException($th->getMessage());
+
+    public function getAll()
+    {
+        $list = $this->brands->all();
+        $data = [];
+        foreach ($list as $key => $value) {
+            $data[] = $this->convertData($value);
+        }
+        if (empty($data)) {
+            throw new NotFoundException(Lang::get('overlander.general::lang.not_found'));
+        }
+        return $data;
     }
-  }
+
+    public function convertData($brand)
+    {
+        return [
+            'name' => $brand->name,
+            'description' => $brand->description,
+            'code' => $brand->code,
+            'group' => $brand->group,
+            'image' => General::getBaseUrl() . $brand->image,
+        ];
+    }
+
+    public function getById($id)
+    {
+        $data = null;
+        $brand = $this->brands->getById($id)->first();
+        if (!empty($brand)) {
+            $data = $this->convertData($brand);
+        } else {
+            throw new NotFoundException(Lang::get('overlander.general::lang.not_found'));
+        }
+        return $data;
+    }
+
+    public function getByName($name)
+    {
+        $data = null;
+        $brand = $this->brands->getByName($name)->first();
+        if (!empty($brand)) {
+            $data = $this->convertData($brand);
+        } else {
+            throw new NotFoundException(Lang::get('overlander.general::lang.not_found'));
+        }
+        return $data;
+    }
+
+    public function getByCode($code)
+    {
+        $data = null;
+        $brand = $this->brands->getByCode($code)->first();
+        if (!empty($brand)) {
+            $data = $this->convertData($brand);
+        } else {
+            throw new NotFoundException(Lang::get('overlander.general::lang.not_found'));
+        }
+        return $data;
+    }
 }

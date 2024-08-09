@@ -4,7 +4,7 @@ namespace Overlander\General\Api\SupportivePages;
 
 use Illuminate\Http\Request;
 
-class GetAll extends AbstractSpPages
+class GetSpPage extends AbstractSpPages
 {
     public function __invoke(Request $request): array
     {
