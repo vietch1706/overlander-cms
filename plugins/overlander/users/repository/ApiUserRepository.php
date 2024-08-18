@@ -111,6 +111,7 @@ class ApiUserRepository extends ApiRepository
     public function apiRegister(array $params): void
     {
         $user = new UserModel();
+        $params['interests'] = implode(",", $params['interests']);
         Event::fire('legato.api.register.before', [&$params]);
         // Save user into backend_users table
         $user->login = str_random(10);

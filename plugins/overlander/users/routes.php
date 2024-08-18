@@ -1,15 +1,18 @@
 <?php
 
 // NOTE:: Group APIs with the same functionality
-use Overlander\Users\Api\Logout;
+use Overlander\Users\Api\Users\ChangePassword;
 use Overlander\Users\Api\Users\Get;
 use Overlander\Users\Api\Users\Login;
+use Overlander\Users\Api\Users\Logout;
 use Overlander\Users\Api\Users\Register;
 use Overlander\Users\Api\Users\ResetPassword;
-use Overlander\Users\Api\Users\VerificationSend;
+use Overlander\Users\Api\Users\Update;
 use Overlander\Users\Api\Users\VerificationCheck;
-use Overlander\Users\Api\Users\CheckExist;
-use Overlander\Users\Api\Users\ChangePassword;
+use Overlander\Users\Api\Users\VerificationSend;
+use Overlander\Users\Api\ExistsMember\StepOne;
+use Overlander\Users\Api\ExistsMember\StepTwo;
+use Overlander\Users\Api\ExistsMember\GetQuestions;
 
 Route::group([
     'prefix' => '/api/{ver}/user',
@@ -21,9 +24,9 @@ Route::group([
 
     Route::post('/verify-code', VerificationCheck::class);
 
-    Route::post('/check-exist', CheckExist::class);
-
     Route::post('/login', Login::class);
+
+    Route::post('/update', Update::class);
 
     Route::post('/reset-password', ResetPassword::class);
 
@@ -44,11 +47,9 @@ Route::group([
     'prefix' => '/api/{ver}/existing-user',
     'middleware' => ['rest']
 ], function () {
-    Route::post('/step-1', 'Overlander\Users\Api\ExistUsers@step1');
+    Route::post('/step-1', StepOne::class);
 
-    Route::post('/step-1-verification', 'Overlander\Users\Api\ExistUsers@step1VerifyCode');
+    Route::post('/step-2', StepTwo::class);
 
-    Route::post('/step-2', 'Overlander\Users\Api\ExistUsers@step2');
-
-    Route::get('/get-questions', 'Overlander\Users\Api\ExistUsers@getQuestions');
+    Route::get('questions/get', GetQuestions::class);
 });

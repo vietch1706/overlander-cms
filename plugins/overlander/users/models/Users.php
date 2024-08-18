@@ -108,16 +108,12 @@ class Users extends BackendUser
         return Countries::all()->lists('code', 'code');
     }
 
-    public function beforeCreate()
+    public function afterCreate()
     {
-        $lastestUser = $this->orderBy('member_no', 'desc')->first();
         if (empty($this->member_no) && empty($this->member_prefix)) {
             $this->member_prefix = 'A';
-            if (!empty($lastestUser)) {
-                $this->member_no = str_pad($lastestUser['member_no'], 6, '0', STR_PAD_LEFT);
-            } else {
-                $this->member_no = 100000;
-            }
+            $this->member_no = str_pad($this->id, 6, '0', STR_PAD_LEFT);
+            $this->save();
         }
     }
 
@@ -191,7 +187,7 @@ class Users extends BackendUser
         ];
     }
 
-    public function getStatusOptions()
+    public function getIsActivatedOptions()
     {
         return [
             self::ACTIVE => 'Active',

@@ -16,12 +16,13 @@ class ContactUs
 
     public function add($data): array
     {
-        $this->contact->name = $data['name'];
-        $this->contact->email = $data['email'];
-        $this->contact->title = $data['title'];
-        $this->contact->reason = $data['reason'];
-        $this->contact->message = $data['message'];
-        $this->contact->save();
+        $contact = new $this->contact();
+        $contact->name = $data['name'];
+        $contact->email = $data['email'];
+        $contact->title = $data['title'];
+        $contact->reason = $data['reason'];
+        $contact->message = $data['message'];
+        $contact->save();
         return [
             'message' => Lang::get('overlander.general::lang.contact.sent'),
         ];

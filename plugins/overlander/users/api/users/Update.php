@@ -4,37 +4,24 @@ namespace Overlander\Users\Api\Users;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Legato\Api\Helpers\RestHelper;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class Update extends AbstractUsers
 {
     public function __invoke(Request $request): array
     {
-        $param = $request->all();
-
-        $rules = [
+        $params = $request->all();
+        RestHelper::validate($params, [
             'first_name' => 'required',
             'last_name' => 'required',
-            'phone' => ['unique:overlander_users_users,phone'],
+            'phone' => ['required', 'numeric', 'regex:/[0-9]/', 'not_regex:/[a-z]/'],
             'password' => 'required',
             'country' => 'required',
-            'email' => ['email', 'regex:/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/', 'unique:overlander_users_users,email'],
-        ];
-
-        $customMessages = [
-            'phone.regex' => 'The phone number is already existed.',
-            'email.regex' => 'The email address is already existed.',
-        ];
-
-        $validator = Validator::make($param, $rules, $customMessages);
-        if ($validator->fails()) {
-            throw new BadRequestHttpException($validator->messages()->first());
-//            return [
-//                'code' => new BadRequestException,
-//                'message' => $validator->messages()->first(),
-//            ];
-        }
-        return $this->users->create($param);
-
+            'email' => ['required', 'email', 'regex:/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/'],
+        ]);
+        $params['mail_receive'] = $params['mail_receive'] === 'true';
+        $params['e_newsletter'] = $params['e_newsletter'] === 'true';
+        return $this->users->update($params);
     }
 }

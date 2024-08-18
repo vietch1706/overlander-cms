@@ -3,21 +3,22 @@
 namespace Overlander\Users\Repository;
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Lang;
+use Legato\Api\Exceptions\BadRequestException;
+use Legato\Api\Exceptions\NotFoundException;
 use Overlander\Users\Models\Users;
 use Overlander\Users\Repository\Users as RepositoryUsers;
 
 class ExistUsers
 {
-    const BIRTH_QUESTION = 1;
-    const EMAIL_QUESTION = 2;
-    const MEMBERSHIP_QUESTION = 3;
-    const PURCHASE_QUESTION = 4;
-    const MEMBER_QUESTION = 5;
-    const CODE_QUESTION = 6;
-    const PHONE_QUESTION = 7;
-
-    const ACTIVE = 1;
+    const BIRTH_QUESTION = 0;
+    const EMAIL_QUESTION = 1;
+    const MEMBERSHIP_QUESTION = 2;
+    const PURCHASE_QUESTION = 3;
+    const MEMBER_QUESTION = 4;
+    const CODE_QUESTION = 5;
+    const PHONE_QUESTION = 6;
     const NORMAL_MEMBER = 0;
     public Users $users;
 
@@ -28,107 +29,122 @@ class ExistUsers
 
     public function step1($data)
     {
-        switch ($data['method']) {
+        switch ($data['question1']) {
             case 'email':
-                $user = $this->users->where('email', $data['answer'])->first();
+                $user = $this->users->where('email', $data['answer1'])->first();
                 break;
             case 'phone':
-                $user = $this->users->where('phone', $data['answer'])->first();
+                $user = $this->users->where('phone', $data['answer1'])->first();
                 break;
-            case 'member_no':
-                $user = $this->users->where('member_no', $data['answer'])->first();
+            case 'member':
+                $user = $this->users->where('member_no', $data['answer1'])->first();
                 break;
         }
         if (empty($user)) {
-            return [
-                'message' => Lang::get('overlander.users::lang.exists_users.step1.not_found'),
-                'status' => 404,
-            ];
+            throw new NotFoundException(Lang::get('overlander.users::lang.user.not_found'));
         }
         if ($user['is_existing_member'] == self::NORMAL_MEMBER) {
-            return [
-                'message' => Lang::get('overlander.users::lang.exists_users.step1.not_exists'),
-                'status' => 404,
-            ];
-        } elseif ($data['method'] === 'email') {
-            RepositoryUsers::sendCode($data['answer'], 'Transfer Member');
+            throw new BadRequestException(Lang::get('overlander.users::lang.exists_users.step1.not_exists'));
+        } elseif ($data['question1'] === 'email') {
+            RepositoryUsers::sendCode($data['answer1'], 'Transfer Member');
         }
         return [
             'message' => Lang::get('overlander.users::lang.exists_users.step1.next_step'),
-            'status' => 200,
         ];
     }
 
     public function getQuestions($previousQuestion)
     {
         $questions = [
-            self::BIRTH_QUESTION => 'When was year birth year and month?',
-            self::EMAIL_QUESTION => 'What is your email address?',
-            self::MEMBERSHIP_QUESTION => 'When did you join overlander membership?',
-            self::PURCHASE_QUESTION => 'When was your last purchase?',
-            self::MEMBER_QUESTION => 'What is your member no.?',
-            self::CODE_QUESTION => 'What is the access code?',
-            self::PHONE_QUESTION => 'What is your phone no.?'
+            [
+                'id' => self::BIRTH_QUESTION,
+                'name' => 'When was year birth year and month?',
+            ],
+            [
+                'id' => self::EMAIL_QUESTION,
+                'name' => 'What is your email address?',
+            ],
+            [
+                'id' => self::MEMBERSHIP_QUESTION,
+                'name' => 'When did you join overlander membership?',
+            ],
+            [
+                'id' => self::PURCHASE_QUESTION,
+                'name' => 'When was your last purchase?',
+            ],
+            [
+                'id' => self::MEMBER_QUESTION,
+                'name' => 'What is your member no.?',
+            ],
+            [
+                'id' => self::CODE_QUESTION,
+                'name' => 'What is the access code?',
+            ],
+            [
+                'id' => self::PHONE_QUESTION,
+                'name' => 'What is your phone no.',
+            ]
         ];
-        unset($questions[$previousQuestion]);
+        array_splice($questions, $previousQuestion, 1);
         return $questions;
     }
 
-    public function step2($param)
+    public function step2($params)
     {
-        $question = $param['question2'];
-        $answer = $param['answer2'];
-        $message = null;
-        switch ($param['question1']) {
-            case 'email':
-                $user = $this->users->where('email', $param['answer1'])->first();
+        $question = $params['question2'];
+        $answer = $params['answer2'];
+        switch ($params['question1']) {
+            case self::EMAIL_QUESTION:
+                $user = $this->users->where('email', $params['answer1'])->first();
                 break;
-            case 'phone':
-                $user = $this->users->where('phone', $param['answer1'])->first();
+            case self::PHONE_QUESTION:
+                $user = $this->users->where(DB::raw('concat(phone_area_code, phone)'), $params['answer1'])->first();
                 break;
-            case 'member_no':
-                $user = $this->users->where('member_no', $param['answer1'])->first();
+            case self::MEMBER_QUESTION:
+                $user = $this->users->where('member_no', $params['answer1'])->first();
                 break;
         }
         switch ($question) {
-            case 1:
+            case self::BIRTH_QUESTION:
                 $answer = explode(' ', $answer);
                 $year = $answer[0];
                 $month = $answer[1];
-                if ($user['year'] == $year && $user['month'] == $month) {
-                    $message = 'Verify success with birthdate';
+                if ((string)$user['year'] !== $year || (string)$user['month'] !== $month) {
+                    throw new BadRequestException(Lang::get('overlander.users::lang.exists_users.step2.failed'));
                 }
                 break;
-            case 2:
+            case self::EMAIL_QUESTION:
                 if ($answer == $user['email']) {
                     RepositoryUsers::sendCode($answer, 'Transfer Member');
                 }
                 break;
-            case 3:
+            case self::MEMBERSHIP_QUESTION:
                 $answer = str_replace(' ', '-', $answer);
                 $answer = Carbon::createFromFormat('Y-m', $answer);
-                if ($answer->diffInMonths($user['join_date']) == 0 && $answer->diffInYears($user['join_date']) == 0) {
-                    $message = 'Verify success with membership joint date';
+                if ($answer->diffInMonths($user['join_date']) != 0 && $answer->diffInYears($user['join_date']) != 0) {
+                    throw new BadRequestException(Lang::get('overlander.users::lang.exists_users.step2.failed'));
                 }
                 break;
-            case 4:
+            case self::PURCHASE_QUESTION:
                 $message = 'Verify success with last purchase';
                 break;
-            case 5:
-                if ($answer == $user['member_no']) {
-                    $message = 'Verify success with member no';
+            case self::MEMBER_QUESTION:
+                if ($answer != $user['member_no']) {
+                    throw new BadRequestException(Lang::get('overlander.users::lang.exists_users.step2.failed'));
                 }
                 break;
-            case 6:
+            case self::CODE_QUESTION:
                 $message = 'Verify success with access code';
                 break;
-            case 7:
+            case self::PHONE_QUESTION:
                 if ($answer == $user['phone']) {
                     $message = 'Verify success with phone no';
                 }
                 break;
         }
-        return $message;
+        return [
+            'message' => Lang::get('overlander.users::lang.exists_users.step2.success'),
+        ];
 
     }
 }

@@ -45,8 +45,12 @@
     ],
     'exists_users' => [
         'step1' => [
-            'not_exists' => 'You are not a Existing Account. Please login!!!',
-            'next_step' => 'Continue to step 2!',
+            'not_exists' => 'Normal Account. Please login!!!',
+            'next_step' => 'Success! Continue to next step!',
         ],
+        'step2' => [
+            'success' => 'Step 2 Verification Successful!',
+            'failed' => 'Wrong Information! Please try again.',
+        ]
     ],
 ];

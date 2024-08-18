@@ -1,6 +1,6 @@
 <?php
 
-namespace Overlander\Users\Api;
+namespace Overlander\Users\Api\Users;
 
 use Illuminate\Http\Request;
 use Legato\Api\Api\AuthLogout as ApiLogout;
