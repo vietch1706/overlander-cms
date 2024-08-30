@@ -84,15 +84,7 @@ class Plugin extends PluginBase
     public function registerSchedule($schedule)
     {
         $schedule->call(function () {
-            $users = new Users();
-            $datas = $users->where('send_time', '=', 3)->get()->toArray();
-            foreach ($datas as $key => $value) {
-                $user = new Users();
-                $updateData = [
-                    'send_time' => 0,
-                ];
-                $user->where('member_no', $value['member_no'])->update($updateData);
-            }
+
         })->dailyAt('00:00');
     }
 }

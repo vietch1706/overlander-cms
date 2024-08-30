@@ -27,29 +27,7 @@ class UsersImport extends ImportModel
     public function importData($results, $sessionKey = null)
     {
         // TODO: Implement importData() method.
-
         foreach ($results as $row => $data) {
-//            $e_newsletter = function () use ($data) {
-//                if ($data['e_newsletter'] === 'Yes') {
-//                    return self::YES;
-//                }
-//                return self::NO;
-//            };
-//            $mail_receive = function () use ($data) {
-//                if ($data['mail_receive'] === 'Yes') {
-//                    return self::YES;
-//                }
-//                return self::NO;
-//            };
-//            $status = $data['status'] === 'Active' ? self::ACTIVE : self::NO;
-//            $gender = function () use ($data) {
-//                if ($data['gender'] === 'Male') {
-//                    return self::GENDER_MALE;
-//                } elseif ($data['gender'] === 'Female') {
-//                    return self::GENDER_FEMALE;
-//                }
-//                return self::GENDER_OTHER;
-//            };
             $birthday = explode('-', $data['birthday']);
             try {
                 $user = new Users();

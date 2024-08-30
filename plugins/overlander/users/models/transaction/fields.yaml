@@ -60,6 +60,11 @@ fields:
         span: auto
         required: 1
         type: text
+    loyalty_balance:
+        label: 'Loyalty Balance'
+        span: auto
+        required: 1
+        type: double
     category:
         label: Category
         span: auto

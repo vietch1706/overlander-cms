@@ -15,3 +15,21 @@ v1.0.5:
 v1.0.6:
     - 'Created table overlander_users_transaction'
     - builder_table_create_overlander_users_transaction.php
+v1.0.7:
+    - 'Created table overlander_users_invoices'
+    - builder_table_create_overlander_users_invoices.php
+v1.0.8:
+    - 'Created table overlander_users_invoice_details'
+    - builder_table_create_overlander_users_invoice_details.php
+v1.0.9:
+    - 'Updated table overlander_users_invoice_details'
+    - builder_table_update_overlander_users_invoice_details.php
+v1.0.10:
+    - 'Updated table overlander_users_transaction'
+    - builder_table_update_overlander_users_transaction.php
+v1.0.11:
+    - 'Updated table overlander_users_transaction'
+    - builder_table_update_overlander_users_transaction_2.php
+v1.0.12:
+    - 'Updated table overlander_users_invoice_details'
+    - builder_table_update_overlander_users_invoice_details_2.php

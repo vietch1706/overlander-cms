@@ -122,7 +122,7 @@ class ApiUserRepository extends ApiRepository
         $user->password = $params['password'];
         $user->password_confirmation = $params['password_confirmation'];
         $user->email = $params['email'];
-        $user->country_id = $this->countries->where('country', $params['country'])->first()['id'];
+        $user->country_id = $this->countries->where('country', $params['country'])->first()->id;
         $user->month = $params['month'] === "" ? '1' : $params['month'];
         $user->year = $params['year'] === "" ? ((int)Carbon::now()->format('Y')) : $params['year'];
         $user->gender = $params['gender'] === "" ? null : $params['gender'];

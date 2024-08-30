@@ -20,6 +20,7 @@ class ExistUsers
     const CODE_QUESTION = 5;
     const PHONE_QUESTION = 6;
     const NORMAL_MEMBER = 0;
+    const EXIST_MEMBER = 1;
     public Users $users;
 
     public function __construct(Users $user)
@@ -27,30 +28,34 @@ class ExistUsers
         $this->users = $user;
     }
 
-    public function step1($data)
+    public function step1($params)
     {
-        switch ($data['question1']) {
-            case 'email':
-                $user = $this->users->where('email', $data['answer1'])->first();
-                break;
-            case 'phone':
-                $user = $this->users->where('phone', $data['answer1'])->first();
-                break;
-            case 'member':
-                $user = $this->users->where('member_no', $data['answer1'])->first();
-                break;
+        try {
+            $user = $this->users->where('is_existing_member', self::EXIST_MEMBER);
+            switch ($params['question1']) {
+                case 'email':
+                    $user->where('email', $params['answer1']);
+                    break;
+                case 'phone':
+                    $user->where(DB::raw('concat(phone_area_code, phone)'), $params['answer1']);
+                    break;
+                case 'member':
+                    $user->where('member_no', $params['answer1']);
+                    break;
+            }
+            $result = $user->first();
+            if (empty($result)) {
+                throw new NotFoundException(Lang::get('overlander.users::lang.user.not_found'));
+            } elseif ($params['question1'] == 'email') {
+                RepositoryUsers::sendCode($params['answer1'], 'Transfer Member');
+            }
+            return [
+                'message' => Lang::get('overlander.users::lang.exists_users.step1.next_step'),
+            ];
+        } catch (\Exception $th) {
+            throw new BadRequestException($th->getMessage());
         }
-        if (empty($user)) {
-            throw new NotFoundException(Lang::get('overlander.users::lang.user.not_found'));
-        }
-        if ($user['is_existing_member'] == self::NORMAL_MEMBER) {
-            throw new BadRequestException(Lang::get('overlander.users::lang.exists_users.step1.not_exists'));
-        } elseif ($data['question1'] === 'email') {
-            RepositoryUsers::sendCode($data['answer1'], 'Transfer Member');
-        }
-        return [
-            'message' => Lang::get('overlander.users::lang.exists_users.step1.next_step'),
-        ];
+
     }
 
     public function getQuestions($previousQuestion)
@@ -93,15 +98,16 @@ class ExistUsers
     {
         $question = $params['question2'];
         $answer = $params['answer2'];
+        $user = $this->users->where('is_existing_member', self::EXIST_MEMBER);
         switch ($params['question1']) {
             case self::EMAIL_QUESTION:
-                $user = $this->users->where('email', $params['answer1'])->first();
+                $user->where('email', $params['answer1']);
                 break;
             case self::PHONE_QUESTION:
-                $user = $this->users->where(DB::raw('concat(phone_area_code, phone)'), $params['answer1'])->first();
+                $user->where(DB::raw('concat(phone_area_code, phone)'), $params['answer1']);
                 break;
             case self::MEMBER_QUESTION:
-                $user = $this->users->where('member_no', $params['answer1'])->first();
+                $user->where('member_no', $params['answer1']);
                 break;
         }
         switch ($question) {
@@ -109,42 +115,40 @@ class ExistUsers
                 $answer = explode(' ', $answer);
                 $year = $answer[0];
                 $month = $answer[1];
-                if ((string)$user['year'] !== $year || (string)$user['month'] !== $month) {
-                    throw new BadRequestException(Lang::get('overlander.users::lang.exists_users.step2.failed'));
-                }
+                $user->where('year', $year)->where('month', $month);
                 break;
             case self::EMAIL_QUESTION:
-                if ($answer == $user['email']) {
-                    RepositoryUsers::sendCode($answer, 'Transfer Member');
-                }
+                $user->where('email', $answer);
                 break;
             case self::MEMBERSHIP_QUESTION:
-                $answer = str_replace(' ', '-', $answer);
-                $answer = Carbon::createFromFormat('Y-m', $answer);
-                if ($answer->diffInMonths($user['join_date']) != 0 && $answer->diffInYears($user['join_date']) != 0) {
-                    throw new BadRequestException(Lang::get('overlander.users::lang.exists_users.step2.failed'));
-                }
+                $answer = explode(' ', $answer);
+                $year = $answer[0];
+                $month = $answer[1];
+                $user->whereYear('join_date', '=', $year)
+                    ->whereMonth('join_date', '=', $month);
                 break;
             case self::PURCHASE_QUESTION:
                 $message = 'Verify success with last purchase';
                 break;
             case self::MEMBER_QUESTION:
-                if ($answer != $user['member_no']) {
-                    throw new BadRequestException(Lang::get('overlander.users::lang.exists_users.step2.failed'));
-                }
+                $user->where('member_no', $answer);
                 break;
             case self::CODE_QUESTION:
                 $message = 'Verify success with access code';
                 break;
             case self::PHONE_QUESTION:
-                if ($answer == $user['phone']) {
-                    $message = 'Verify success with phone no';
-                }
+                $user->where(DB::raw('concat(phone_area_code, phone)'), $answer);
                 break;
         }
+        $result = $user->first();
+        if (!$result) {
+            throw new NotFoundException(Lang::get('overlander.users::lang.exists_users.step2.failed'));
+        }
+        if ($answer == self::EMAIL_QUESTION) {
+            RepositoryUsers::sendCode($result->email, 'Transfer Member');
+        }
         return [
-            'message' => Lang::get('overlander.users::lang.exists_users.step2.success'),
+            'data' => RepositoryUsers::convertData($result),
         ];
-
     }
 }

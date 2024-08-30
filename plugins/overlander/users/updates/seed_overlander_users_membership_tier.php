@@ -30,8 +30,8 @@ class SeedOverlanderUsersMembershipTier extends Seeder
       [
         'name' => 'Ordinary',
         'logo' => '/MembershipTier/Ordinary.png',
-        'points_required' => '0',
-        'points_remain' => '0',
+        'points_required' => '1',
+        'points_remain' => '1',
         'period' => '48',
         'slug' => 'ordinary',
         'created_at' => General::getCurrentDay(),

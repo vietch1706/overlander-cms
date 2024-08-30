@@ -3,11 +3,11 @@ columns:
         label: ID
         type: number
     vip:
-        label: VIP
+        label: 'Member No'
         type: number
     type:
         label: Type
-        type: text
+        type: dropdown
     amount:
         label: Amount
         type: number

@@ -26,3 +26,11 @@ navigation:
                 label: Transaction
                 url: overlander/users/transaction
                 icon: icon-exchange
+            user-invoices:
+                label: Invoices
+                url: overlander/users/invoices
+                icon: icon-list
+            user-invoice-details:
+                label: 'Invoice Details'
+                url: overlander/users/invoicedetails
+                icon: icon-sitemap

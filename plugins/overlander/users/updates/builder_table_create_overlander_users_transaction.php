@@ -14,7 +14,7 @@ class BuilderTableCreateOverlanderUsersTransaction extends Migration
             $table->string('member_no');
             $table->string('name');
             $table->integer('plc');
-            $table->string('desciption');
+            $table->string('description');
             $table->string('invoice');
             $table->date('date');
             $table->smallInteger('quantity');

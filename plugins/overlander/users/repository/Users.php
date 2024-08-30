@@ -6,7 +6,6 @@ use Backend\Facades\BackendAuth;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Mail;
 use Lang;
 use Legato\Api\Exceptions\BadRequestException;
@@ -17,9 +16,6 @@ use Overlander\General\Models\Interests;
 use Overlander\Logs\Models\Maillogs;
 use Overlander\Users\Models\MembershipTier;
 use Overlander\Users\Models\Users as ModelUsers;
-use Overlander\Users\Models\Users as UserModel;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-
 
 class Users
 {
@@ -38,18 +34,17 @@ class Users
     public static function sendCode($email, $method)
     {
         $user = ModelUsers::where('email', $email)->first();
-        if (empty($user)) {
-            throw new BadRequestException(Lang::get('overlander.users:lang.user.send_code_message.not_found'));
-
-        }
-        $mailLog = new Maillogs();
-        if ($mailLog->where('email', $email)->whereDate('created_at', Carbon::now())->count() >= 3) {
-            throw new BadRequestException(Lang::get('overlander.users::lang.user.send_code_message.daily_limit'));
-        }
-        if (Carbon::now()->diffInMinutes($user['send_mail_at']) < 1 && $user['activation_code'] != null) {
-            throw new BadRequestException(Lang::get('overlander.users::lang.user.send_code_message.send_times'));
-        }
         try {
+            if (empty($user)) {
+                throw new BadRequestException(Lang::get('overlander.users::lang.user.not_found'));
+            }
+            $mailLog = new Maillogs();
+            if ($mailLog->where('email', $email)->whereDate('created_at', Carbon::now())->count() >= 3) {
+                throw new BadRequestException(Lang::get('overlander.users::lang.user.send_code_message.daily_limit'));
+            }
+            if (Carbon::now()->diffInMinutes($user->send_mail_at) < 1 && $user->activation_code != null) {
+                throw new BadRequestException(Lang::get('overlander.users::lang.user.send_code_message.send_times'));
+            }
             $code = General::generateRandomCode();
             $message = Lang::get('overlander.users::lang.user.send_code_message.verify', ['code' => $code]);
             Mail::sendTo($email, 'overlander.general::mail.exists_verify', ['content' => $message]);
@@ -68,29 +63,31 @@ class Users
         }
     }
 
-    public function convertData($users)
+    public static function convertData($users)
     {
-        $country = $this->countries->where('id', $users->country_id)->first();
+        $country = Countries::where('id', $users->country_id)->first();
         $membershipTier = MembershipTier::where('id', $users->membership_tier_id)->first();
         return [
             'member_no' => $users->member_no . $users->member_prefix,
             'first_name' => $users->first_name,
             'last_name' => $users->last_name,
-            'phone_area_code' => $users->phone_area_code,
+            'phone_area_code' => '+' . $users->phone_area_code,
             'phone' => $users->phone,
             'password' => $users->password,
-            'country' => $country === null ? '' : $country['country'],
+            'country' => $country === null ? '' : $country->country,
             'email' => $users->email,
-            'month' => $users->month,
-            'year' => $users->year,
-            'gender' => $users->gender === 0 ? 'Male' : 'Female',
-            'interests' => $users->interests,
+            'month' => strval($users->month),
+            'year' => strval($users->year),
+            'gender' => str($users->gender),
+            'interests' => array_map('intval', explode(",", $users->interests)),
             'points' => $users->points,
-            'membership_tier' => $membershipTier === null ? '' : $membershipTier['name'],
+            'membership_tier' => $membershipTier === null ? '' : $membershipTier->name,
             'address' => $users->address,
-            'member_type' => $users->is_existing_member === 0 ? 'Normal Member' : 'Existing Member',
+            'member_type' => $users->is_existing_member,
             'status' => $users->is_activated,
             'active_date' => $users->activated_at,
+            'e_newsletter' => $users->e_newsletter === 1,
+            'mail_receive' => $users->mail_receive === 1,
         ];
     }
 
@@ -135,22 +132,19 @@ class Users
     public function checkCode($email, $code)
     {
         $user = $this->users->where('email', $email)->first();
-        if (Carbon::now()->diffInMinutes($user['send_mail_at']) > 10) {
-            $user->send_mail_at = null;
-            $user->save();
-            throw new NotFoundException(Lang::get('overlander.users::lang.user.verify_message.expired'));
-        }
-
-        if ($user['activation_code'] != $code) {
-            throw new BadRequestException(Lang::get('overlander.users::lang.user.verify_message.failed'));
-        }
-        $user->activation_code = null;
-        $user->send_mail_at = null;
-        if ($user['is_activated'] != self::ACTIVE) {
-            $user->is_activated = self::ACTIVE;
-            $user->activated_at = Carbon::now();
-        }
         try {
+            if (Carbon::now()->diffInMinutes($user->send_mail_at) > 10) {
+                throw new BadRequestException(Lang::get('overlander.users::lang.user.verify_message.expired'));
+            }
+            if ($user->activation_code != $code) {
+                throw new BadRequestException(Lang::get('overlander.users::lang.user.verify_message.failed'));
+            }
+            if ($user->is_activated != self::ACTIVE) {
+                $user->is_activated = self::ACTIVE;
+                $user->activated_at = Carbon::now();
+            }
+            $user->activation_code = null;
+            $user->send_mail_at = null;
             $user->save();
         } catch (Exception $th) {
             throw new BadRequestException($th->getMessage());

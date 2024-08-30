@@ -18,7 +18,7 @@
         ],
         'login' => [
             'success' => 'Login Successful!',
-            'wrong' => 'Wrong Password! Please try again.',
+            'wrong' => '',
             'failed' => 'User Not Exist. Please sign up first!'
         ],
         'reset' => [
@@ -45,7 +45,6 @@
     ],
     'exists_users' => [
         'step1' => [
-            'not_exists' => 'Normal Account. Please login!!!',
             'next_step' => 'Success! Continue to next step!',
         ],
         'step2' => [
