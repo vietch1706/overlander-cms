@@ -4,8 +4,8 @@
 
 import:
     title: Import transactions
-    modelClass: Overlander\Users\Models\TransactionImport
-    list: $/overlander/users/models/transaction/import_columns.yaml
-    redirect: overlander/users/transaction
+    modelClass: Overlander\Transaction\Models\TransactionImport
+    list: $/overlander/transaction/models/transaction/import_columns.yaml
+    redirect: overlander/transaction/transaction
 defaultFormatOptions:
     fileFormat: csv

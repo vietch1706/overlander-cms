@@ -1,0 +1,28 @@
+columns:
+    id:
+        label: Id
+        type: number
+    vip:
+        label: VIP
+        type: text
+    name:
+        label: Name
+        type: text
+    invoice_code:
+        label: Invoice
+        type: text
+    date:
+        label: Date
+        type: text
+    loyalty_balance:
+        label: 'Loyalty Balance'
+        type: text
+    shop_id:
+        label: Shop
+        type: text
+    created_at:
+        label: 'Created At'
+        type: datetime
+    updated_at:
+        label: 'Updated At'
+        type: datetime

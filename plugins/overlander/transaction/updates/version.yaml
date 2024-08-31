@@ -1,0 +1,11 @@
+v1.0.1:
+    - 'Initialize plugin'
+v1.0.2:
+    - 'Created table overlander_transaction_transaction'
+    - builder_table_create_overlander_transaction_transaction.php
+v1.0.3:
+    - 'Created table overlander_transaction_invoice_details'
+    - builder_table_create_overlander_transaction_invoice_details.php
+v1.0.4:
+    - 'Updated table overlander_transaction_invoice_details'
+    - builder_table_update_overlander_transaction_invoice_details.php

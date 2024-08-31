@@ -1,0 +1,31 @@
+fields:
+    vip:
+        label: Vip
+        span: auto
+        type: text
+    name:
+        label: Name
+        span: auto
+        type: text
+    invoice_code:
+        label: 'Invoice code'
+        span: auto
+        type: text
+    loyalty_balance:
+        label: 'Loyalty balance'
+        span: auto
+        type: number
+    shop_id:
+        label: 'Shop id'
+        span: auto
+        type: text
+    date:
+        label: Date
+        span: auto
+        type: datepicker
+    detail:
+        span: full
+        path: $/overlander/transaction/models/transaction/field_detail.htm
+        context:
+            - preview
+        type: partial

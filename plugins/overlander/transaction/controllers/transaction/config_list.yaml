@@ -1,6 +1,6 @@
-list: $/overlander/users/models/invoices/columns.yaml
-modelClass: Overlander\Users\Models\Invoices
-title: Invoices
+list: $/overlander/transaction/models/transaction/columns.yaml
+modelClass: Overlander\Transaction\Models\Transaction
+title: Transaction
 noRecordsMessage: 'backend::lang.list.no_records'
 showSetup: true
 showCheckboxes: true
@@ -9,3 +9,4 @@ toolbar:
     buttons: list_toolbar
     search:
         prompt: 'backend::lang.list.search_prompt'
+recordUrl: 'overlander/transaction/transaction/preview/:id'

@@ -1,6 +1,6 @@
 <?php Block::put('breadcrumb') ?>
 <ul>
-    <li><a href="<?= Backend::url('overlander/users/transaction') ?>">Transaction</a></li>
+    <li><a href="<?= Backend::url('overlander/transaction/transaction') ?>">Transaction</a></li>
     <li><?= e($this->pageTitle) ?></li>
 </ul>
 <?php Block::endPut() ?>
@@ -31,7 +31,8 @@
 <?php endif ?>
 
 <p>
-    <a href="<?= Backend::url('overlander/users/transaction') ?>" class="btn btn-default oc-icon-chevron-left">
+    <a href="<?= Backend::url('overlander/transaction/transaction') ?>"
+       class="btn btn-default oc-icon-chevron-left">
         <?= e(trans('backend::lang.form.return_to_list')) ?>
     </a>
 </p>

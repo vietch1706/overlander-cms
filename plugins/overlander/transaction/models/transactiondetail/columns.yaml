@@ -1,0 +1,70 @@
+columns:
+    id:
+        label: Id
+        type: number
+    invoice_no:
+        label: invoice_no
+        type: number
+    plc:
+        label: plc
+        type: text
+    price:
+        label: price
+        type: text
+    quantity:
+        label: quantity
+        type: text
+    brand_code:
+        label: brand_code
+        type: text
+    description:
+        label: description
+        type: text
+    unit:
+        label: unit
+        type: text
+    discount:
+        label: discount
+        type: text
+    fprice:
+        label: fprice
+        type: text
+    category:
+        label: category
+        type: text
+    act01:
+        label: act01
+        type: text
+    act02:
+        label: act02
+        type: text
+    act03:
+        label: act03
+        type: text
+    act04:
+        label: act04
+        type: text
+    act05:
+        label: act05
+        type: text
+    act06:
+        label: act06
+        type: text
+    act07:
+        label: act07
+        type: text
+    act08:
+        label: act08
+        type: text
+    act09:
+        label: act09
+        type: text
+    act10:
+        label: act10
+        type: text
+    created_at:
+        label: created_at
+        type: datetime
+    updated_at:
+        label: updated_at
+        type: datetime

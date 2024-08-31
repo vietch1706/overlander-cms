@@ -1,12 +1,11 @@
-<?php namespace Overlander\Users\Models;
+<?php namespace Overlander\Transaction\Models;
 
 use Model;
-use Overlander\General\Models\Countries;
 
 /**
  * Model
  */
-class Invoices extends Model
+class TransactionDetail extends Model
 {
     use \October\Rain\Database\Traits\Validation;
 
@@ -14,7 +13,7 @@ class Invoices extends Model
     /**
      * @var string table in the database used by the model.
      */
-    public $table = 'overlander_users_invoices';
+    public $table = 'overlander_transaction_invoice_details';
 
     /**
      * @var array rules for validation.
@@ -22,7 +21,4 @@ class Invoices extends Model
     public $rules = [
     ];
 
-    public $hasMany = [
-        'number' => InvoiceDetails::class
-    ];
 }
