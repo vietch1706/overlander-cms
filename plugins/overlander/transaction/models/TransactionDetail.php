@@ -1,6 +1,9 @@
 <?php namespace Overlander\Transaction\Models;
 
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Model;
+use Overlander\Users\Models\Users;
 
 /**
  * Model
@@ -21,4 +24,26 @@ class TransactionDetail extends Model
     public $rules = [
     ];
 
+    public function afterCreate()
+    {
+        $transaction = Transaction::where('id', $this->transaction_id)->first();
+        $user = Users::where(DB::raw('concat(member_no, member_prefix)'), $transaction->vip)->first();
+        if (!empty($user)) {
+            $pointHistory = new PointHistory();
+            $pointHistory->member_no = $transaction->vip;
+            $pointHistory->type = $this->quantity < 0 ? PointHistory::TYPE_GAIN : PointHistory::TYPE_LOSS;
+            $point = PointHistory::pointMultiplier($this, $transaction);
+            $pointHistory->amount = $this->fprice;
+            $pointHistory->reason = $this->description;
+            $pointHistory->expired_date = Carbon::create($transaction->date)->addYear(PointHistory::EXPIRED_DATE_YEAR);
+            $pointHistory->created_at = Carbon::now();
+            $pointHistory->updated_at = Carbon::now();
+            $pointHistory->save();
+        }
+    }
+
+    public static function testFunction()
+    {
+
+    }
 }

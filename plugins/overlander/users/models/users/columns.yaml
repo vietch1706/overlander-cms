@@ -49,7 +49,7 @@ columns:
         label: Status
         type: partial
         path: ~/plugins/overlander/users/models/users/_status.htm
-    active_date:
+    activated_at:
         label: 'Active Date'
         type: text
     points_sum:

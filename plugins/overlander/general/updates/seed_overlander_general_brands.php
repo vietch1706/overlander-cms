@@ -9,7 +9,7 @@ use Seeder;
 /**
  * BrandsSeeders
  */
-class seed_overlander_general_brands extends Seeder
+class SeedOverlanderGeneralBrands extends Seeder
 {
     /**
      * run the database seeds.

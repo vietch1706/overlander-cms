@@ -5,7 +5,7 @@ namespace Overlander\General\Updates;
 use Overlander\General\Models\Interests;
 use Seeder;
 
-class seed_overlander_general_interests extends Seeder
+class SeedOverlanderGeneralInterests extends Seeder
 {
     /**
      * InterestsSeeders

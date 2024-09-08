@@ -1,4 +1,6 @@
-<?php namespace Overlander\Transaction\Updates;
+<?php
+
+namespace Overlander\Transaction\Updates;
 
 use October\Rain\Database\Updates\Migration;
 use Schema;
@@ -9,7 +11,7 @@ class BuilderTableCreateOverlanderTransactionInvoiceDetails extends Migration
     {
         Schema::create('overlander_transaction_invoice_details', function ($table) {
             $table->increments('id')->unsigned();
-            $table->string('invoice_no', 255);
+            $table->integer('transaction_id');
             $table->string('plc');
             $table->double('price', 10, 0);
             $table->smallInteger('quantity');

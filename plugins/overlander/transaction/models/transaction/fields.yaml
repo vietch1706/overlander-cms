@@ -7,7 +7,7 @@ fields:
         label: Name
         span: auto
         type: text
-    invoice_code:
+    invoice_no:
         label: 'Invoice code'
         span: auto
         type: text
@@ -16,7 +16,7 @@ fields:
         span: auto
         type: number
     shop_id:
-        label: 'Shop id'
+        label: 'Shop Id'
         span: auto
         type: text
     date:

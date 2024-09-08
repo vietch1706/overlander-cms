@@ -2,17 +2,15 @@
 
 namespace Overlander\Users\Models;
 
-use Backend\Models\User;
 use Backend\Models\User as BackendUser;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
 use October\Rain\Database\Traits\Validation;
 use Overlander\General\Models\Countries;
 use Overlander\General\Models\Interests;
-use Overlander\Users\Controllers\Transaction;
+use Overlander\General\Models\MembershipTier;
+
 
 /**
  * Model
@@ -22,9 +20,15 @@ class Users extends BackendUser
     use Validation;
     use Notifiable;
 
+    const ROLE_ADMIN_ID = 1;
+    const ROLE_ADMIN_CODE = 'admin';
+    const ROLE_EMPLOYEE_ID = 2;
+    const ROLE_EMPLOYEE_CODE = 'employee';
+    const ROLE_CUSTOMER_ID = 3;
+    const ROLE_CUSTOMER_CODE = 'customer';
     const GENDER_MALE = 0;
     const GENDER_FEMALE = 1;
-    const GENDER_OTHER = '';
+    const GENDER_OTHER = null;
     const EXIST_MEMBER = 1;
     const NORMAL_MEMBER = 0;
     const ACTIVE = 1;
@@ -110,11 +114,14 @@ class Users extends BackendUser
 
     public function afterCreate()
     {
+        $this->role_id = self::ROLE_CUSTOMER_ID;
         if (empty($this->member_no) && empty($this->member_prefix)) {
             $this->member_prefix = 'A';
             $this->member_no = str_pad($this->id, 6, '0', STR_PAD_LEFT);
             $this->save();
         }
+        $this->member_no = str_pad($this->id, 6, '0', STR_PAD_LEFT);
+        $this->save();
     }
 
     public function getGenderOptions()
@@ -163,20 +170,12 @@ class Users extends BackendUser
     public function getYearOptions()
     {
         $j = 0;
-        for ($i = ((int)Carbon::now()->format('Y')) - 80; $i <= ((int)Carbon::now()->format('Y')); $i++) {
-            $years[$i] = $i;
+        $years = [];
+        for ($i = ((int)Carbon::now()->format('Y')); $i >= ((int)Carbon::now()->format('Y') - 80); $i--) {
+            $years[$j] = $i;
             $j++;
         }
         return $years;
-    }
-
-    public function getMemberPrefixOptions()
-    {
-        return [
-            'A',
-            'S',
-            'P'
-        ];
     }
 
     public function getIsExistingMemberOptions()
@@ -215,11 +214,6 @@ class Users extends BackendUser
             }
         }
         return title_case($result);
-    }
-
-    public function transaction(): HasMany
-    {
-        return $this->hasMany(Transaction::class);
     }
 
     public function scopeGetByMemberNumber($query, $memberNumber)

@@ -1,4 +1,6 @@
-<?php namespace Overlander\Transaction\Updates;
+<?php
+
+namespace Overlander\Transaction\Updates;
 
 use October\Rain\Database\Updates\Migration;
 use Schema;

@@ -14,7 +14,7 @@ navigation:
                 label: Transaction
                 url: overlander/transaction/transaction
                 icon: icon-money
-            side-menu-item2:
-                label: 'Menu Item'
-                icon: icon-sitemap
-                url: /
+            side-menu-item:
+                label: 'Point History'
+                url: overlander/transaction/pointhistory
+                icon: icon-trophy

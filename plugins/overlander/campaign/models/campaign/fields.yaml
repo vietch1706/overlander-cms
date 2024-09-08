@@ -1,0 +1,96 @@
+fields:
+    title:
+        label: Title
+        span: full
+        required: 1
+        type: text
+    target:
+        label: Target
+        span: full
+        required: 1
+        type: dropdown
+        path: $/overlander/campaign/models/campaign/_target.htm
+        placeholder: Select A Target
+    sku:
+        label: SKU
+        span: full
+        type: text
+        trigger:
+            action: show
+            field: target
+            condition: value[3]
+    brand:
+        label: Brand
+        nameFrom: name
+        span: full
+        type: relation
+        placeholder: Select A Brand
+        trigger:
+            action: show
+            field: target
+            condition: value[2]
+    shop:
+        label: Shop
+        span: full
+        type: text
+        trigger:
+            action: show
+            field: target
+            condition: value[1]
+    membership_tier:
+        label: 'Membership Tier'
+        nameFrom: name
+        span: full
+        type: relation
+        placeholder: Select A Membership Tier
+        trigger:
+            action: show
+            field: target
+            condition: value[0]
+    short_description:
+        label: 'Short Description'
+        span: auto
+        required: 1
+        type: textarea
+    detail_description:
+        label: 'Detail Description'
+        span: auto
+        required: 1
+        type: textarea
+    t_c:
+        label: 'T&C'
+        span: auto
+        required: 1
+        type: text
+    image:
+        label: Image
+        mode: file
+        required: 1
+        thumbOptions:
+            mode: crop
+            extension: auto
+        span: auto
+        type: mediafinder
+    multiplier:
+        label: Multiplier
+        span: auto
+        required: 1
+        type: number
+    status:
+        label: Status
+        showSearch: true
+        span: auto
+        required: 1
+        type: dropdown
+    start_date:
+        label: 'Start Date'
+        mode: date
+        required: 1
+        span: auto
+        type: datepicker
+    end_date:
+        label: 'End Date'
+        mode: date
+        required: 1
+        span: auto
+        type: datepicker

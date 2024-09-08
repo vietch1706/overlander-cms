@@ -13,8 +13,8 @@ use Legato\Api\Exceptions\NotFoundException;
 use Overlander\General\Helper\General;
 use Overlander\General\Models\Countries;
 use Overlander\General\Models\Interests;
+use Overlander\General\Models\MembershipTier;
 use Overlander\Logs\Models\Maillogs;
-use Overlander\Users\Models\MembershipTier;
 use Overlander\Users\Models\Users as ModelUsers;
 
 class Users

@@ -8,6 +8,9 @@ columns:
     plc:
         label: PLC
         type: number
+    brand_code:
+        label: BRAND CODE
+        type: number
     description:
         label: DESCRIPTION
         type: text
@@ -15,7 +18,7 @@ columns:
         label: INVOICE
         type: text
     date:
-        label: DATE (dd/MM/yyyy)
+        label: DATE
         type: text
     quantity:
         label: QUANTITY

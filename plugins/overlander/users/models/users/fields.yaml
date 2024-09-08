@@ -3,7 +3,10 @@ fields:
         label: 'Member Prefix'
         span: auto
         required: 1
-        type: dropdown
+        type: text
+        attributes:
+            maxlength: 1
+
     first_name:
         label: 'First name'
         span: auto

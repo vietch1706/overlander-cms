@@ -1,5 +1,6 @@
 <?php namespace Overlander\Transaction;
 
+use Overlander\Transaction\console\GradeDailyCheck;
 use System\Classes\PluginBase;
 
 /**
@@ -12,6 +13,8 @@ class Plugin extends PluginBase
      */
     public function register()
     {
+        $this->registerConsoleCommand('overlander.gradeDailyCheck', GradeDailyCheck::class);
+
     }
 
     /**

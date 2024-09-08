@@ -1,0 +1,10 @@
+name: Campaign
+form: $/overlander/campaign/models/campaign/fields.yaml
+modelClass: Overlander\Campaign\Models\Campaign
+defaultRedirect: overlander/campaign/campaign
+create:
+    redirect: 'overlander/campaign/campaign/update/:id'
+    redirectClose: overlander/campaign/campaign
+update:
+    redirect: overlander/campaign/campaign
+    redirectClose: overlander/campaign/campaign

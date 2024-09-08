@@ -6,6 +6,7 @@ use Backend\Models\ImportModel;
 use Carbon\Carbon;
 use Exception;
 use Overlander\General\Models\Countries;
+use Overlander\General\Models\MembershipTier;
 
 class UsersImport extends ImportModel
 {
@@ -53,8 +54,8 @@ class UsersImport extends ImportModel
                 $user->country_id = $countries->where('country', $data['country'])->first()['id'];
                 $user->e_newsletter = $data['e_newsletter'] === 'Yes' ? self::YES : self::NO;
                 $user->mail_receive = $data['mail_receive'] === 'Yes' ? self::YES : self::NO;
-                $user->join_date = $data['join_date'];
-                $user->validity_date = $data['validity_date'];
+                $user->join_date = Carbon::createFromFormat('d/m/Y', $data['join_date'])->toDate();;
+                $user->validity_date = Carbon::createFromFormat('d/m/Y', $data['validity_date'])->toDate();
                 $user->membership_tier_id = $membership->where('name', $data['membership_tier_name'])->first()['id'];
                 $user->is_activated = $data['status'] === 'Active' ? self::ACTIVE : self::NO;
                 $user->activated_at = Carbon::now();

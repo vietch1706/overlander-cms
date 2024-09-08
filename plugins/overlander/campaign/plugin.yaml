@@ -1,0 +1,16 @@
+plugin:
+    name: 'overlander.campaign::lang.plugin.name'
+    description: 'overlander.campaign::lang.plugin.description'
+    author: Overlander
+    icon: oc-icon-calendar-o
+    homepage: ''
+navigation:
+    Campaign:
+        label: 'overlander.campaign::lang.plugin.name'
+        url: /
+        icon: icon-calendar
+        sideMenu:
+            campaign:
+                label: Campaign
+                url: overlander/campaign/campaign
+                icon: icon-calendar-o

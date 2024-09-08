@@ -1,0 +1,29 @@
+fields:
+    member_no:
+        label: 'Member No'
+        span: auto
+        type: text
+    type:
+        label: Type
+        span: auto
+        type: text
+    amount:
+        label: Amount
+        span: auto
+        type: number
+    reason:
+        label: Reason
+        span: auto
+        type: textarea
+    expired_date:
+        label: 'Expired Date'
+        span: auto
+        type: datepicker
+    created_at:
+        label: 'Created At'
+        span: auto
+        type: datepicker
+    updated_at:
+        label: 'Updated At'
+        span: auto
+        type: datepicker

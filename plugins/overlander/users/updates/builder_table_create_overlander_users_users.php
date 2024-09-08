@@ -28,7 +28,7 @@ class BuilderTableCreateOverlanderUsersUsers extends Migration
             $table->boolean('status')->default(0);
             $table->string('interests')->nullable();
             $table->integer('sales_amounts')->nullable();
-            $table->integer('points_sum')->default(0);
+            $table->double('points_sum', 10, 0)->default(0);
             $table->timestamp('send_mail_at')->nullable();
             $table->boolean('is_existing_member')->default(0);
         });
