@@ -3,11 +3,7 @@
 namespace Overlander\Transaction\console;
 
 use Carbon\Carbon;
-use Lang;
 use Illuminate\Console\Command;
-use Overlander\General\Models\MembershipTier;
-use Overlander\Transaction\Models\PointHistory;
-use Overlander\Users\Models\Users;
 
 class GradeDailyCheck extends Command
 {

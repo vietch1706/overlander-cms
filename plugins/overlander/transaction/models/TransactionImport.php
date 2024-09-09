@@ -1,11 +1,10 @@
 <?php
 
-namespace Overlander\Transaction\Models;
+namespace Overlander\Transaction\models;
 
 use Backend\Models\ImportModel;
 use Carbon\Carbon;
 use Exception;
-use Overlander\Users\Models\Users;
 
 class TransactionImport extends ImportModel
 {

@@ -1,10 +1,9 @@
-<?php namespace Overlander\Transaction\Models;
+<?php
 
-use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
+namespace Overlander\Transaction\models;
+
 use Model;
 use October\Rain\Database\Traits\Validation;
-use Overlander\Users\Models\Users;
 
 /**
  * Model
@@ -13,12 +12,10 @@ class Transaction extends Model
 {
     use Validation;
 
-
     /**
      * @var string table in the database used by the model.
      */
     public $table = 'overlander_transaction_transaction';
-
     /**
      * @var array rules for validation.
      */
@@ -30,5 +27,8 @@ class Transaction extends Model
             TransactionDetail::class,
             'key' => 'transaction_id'
         ]
+    ];
+    protected $jsonable = [
+        'campaign',
     ];
 }

@@ -4,8 +4,9 @@ namespace Overlander\Users\Updates;
 
 use Backend\Models\UserRole;
 use Overlander\Users\Models\Users;
+use Seeder;
 
-class seed_user_roles extends \Seeder
+class seed_user_roles extends Seeder
 {
     public function run()
     {

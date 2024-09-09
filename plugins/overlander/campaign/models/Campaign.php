@@ -1,8 +1,8 @@
 <?php namespace Overlander\Campaign\Models;
 
 use Model;
+use October\Rain\Database\Traits\Validation;
 use Overlander\General\Models\Brands;
-use Overlander\General\Models\Countries;
 use Overlander\General\Models\MembershipTier;
 
 /**
@@ -10,7 +10,7 @@ use Overlander\General\Models\MembershipTier;
  */
 class Campaign extends Model
 {
-    use \October\Rain\Database\Traits\Validation;
+    use Validation;
 
     public const STATUS_ACTIVATE = 1;
     public const STATUS_SUSPEND = 0;
@@ -18,7 +18,7 @@ class Campaign extends Model
     public const TARGET_SHOP = 1;
     public const TARGET_BRAND = 2;
     public const TARGET_SKU = 3;
-
+    public const DEFAULT_POINT_MULTIPLIER = 1.0;
     /**
      * @var string table in the database used by the model.
      */
@@ -38,6 +38,7 @@ class Campaign extends Model
         'membership_tier' => [MembershipTier::class, 'key' => 'membership_tier_id'],
         'brand' => [Brands::class, 'key' => 'brand_id'],
     ];
+
     public function getStatusOptions()
     {
         return [
