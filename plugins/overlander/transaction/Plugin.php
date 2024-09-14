@@ -1,6 +1,9 @@
 <?php namespace Overlander\Transaction;
 
 use Overlander\Transaction\console\GradeDailyCheck;
+use Overlander\Transaction\Models\PointHistory;
+use Overlander\Transaction\Models\TransactionDetail;
+use Overlander\Users\Models\Users;
 use System\Classes\PluginBase;
 
 /**
@@ -36,5 +39,15 @@ class Plugin extends PluginBase
      */
     public function registerSettings()
     {
+    }
+    public function registerListColumnTypes()
+    {
+        return [
+            'virtual_columns' => [$this, 'evalVirtualListsColumns'],
+        ];
+    }
+    public function evalVirtualListsColumns($value, $column, $record)
+    {
+        return PointHistory::where('transaction_id', $record->id)->first()->amount;
     }
 }

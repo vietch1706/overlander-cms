@@ -1,6 +1,6 @@
 <?php
 
-namespace Overlander\Transaction\models;
+namespace Overlander\Transaction\Models;
 
 use Model;
 use October\Rain\Database\Traits\Validation;
@@ -11,6 +11,9 @@ use October\Rain\Database\Traits\Validation;
 class Transaction extends Model
 {
     use Validation;
+
+    public const IS_CHECKED_CHECK = 1;
+    public const IS_CHECKED_UNCHECK = 0;
 
     /**
      * @var string table in the database used by the model.
@@ -28,7 +31,15 @@ class Transaction extends Model
             'key' => 'transaction_id'
         ]
     ];
+    public $hasOne = [
+        'point_history' => [
+            PointHistory::class,
+            'key' => 'transaction_id'
+        ]
+    ];
+
     protected $jsonable = [
         'campaign',
+
     ];
 }

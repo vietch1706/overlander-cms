@@ -11,15 +11,6 @@ use Overlander\General\Models\MembershipTier;
 
 class UsersImport extends ImportModel
 {
-    const GENDER_MALE = 0;
-    const GENDER_FEMALE = 1;
-    const GENDER_OTHER = '';
-    const EXIST_MEMBER = 1;
-    const NORMAL_MEMBER = 0;
-    const ACTIVE = 1;
-    const INACTIVE = 0;
-    const YES = 1;
-    const NO = 0;
     /**
      * @inheritDoc
      */
@@ -35,7 +26,6 @@ class UsersImport extends ImportModel
             if (empty($existUser)) {
                 try {
                     $user = new Users();
-                    $countries = new Countries();
                     $year = $birthday[2];
                     $month = $birthday[1];
                     $user->member_no = preg_replace('/[^0-9]/', '', $data['member_no']);
@@ -45,21 +35,22 @@ class UsersImport extends ImportModel
                     $user->phone = $data['phone'];
                     $user->email = $data['email'];
                     $user->gender = match ($data['gender']) {
-                        'Male' => self::GENDER_MALE,
-                        'Female' => self::GENDER_FEMALE,
-                        default => self::GENDER_OTHER,
+                        'Male' => Users::GENDER_MALE,
+                        'Female' => Users::GENDER_FEMALE,
+                        default => Users::GENDER_OTHER,
                     };
                     $user->month = $month;
                     $user->year = $year;
                     $user->address = $data['address'];
                     $user->district = $data['district'];
-                    $user->country_id = $countries->where('country', $data['country'])->first()['id'];
-                    $user->e_newsletter = $data['e_newsletter'] === 'Yes' ? self::YES : self::NO;
-                    $user->mail_receive = $data['mail_receive'] === 'Yes' ? self::YES : self::NO;
+                    $user->country_id = Countries::where('country', $data['country'])->first()['id'];
+                    $user->e_newsletter = $data['e_newsletter'] === 'Yes' ? Users::YES : Users::NO;
+                    $user->mail_receive = $data['mail_receive'] === 'Yes' ? Users::YES : Users::NO;
                     $user->join_date = Carbon::createFromFormat('d/m/Y', $data['join_date'])->toDate();
                     $user->validity_date = Carbon::createFromFormat('d/m/Y', $data['validity_date'])->toDate();
                     $user->membership_tier_id = MembershipTier::where('name', $data['membership_tier_name'])->first()->id;
-                    $user->is_activated = $data['status'] === 'Active' ? self::ACTIVE : self::NO;
+                    $user->status = $data['status'] === 'Active' ? Users::STATUS_ACTIVE : Users::STATUS_INACTIVE;
+                    $user->is_activated = Users::STATUS_ACTIVE;
                     $user->activated_at = Carbon::now();
                     $user->interests = $data['interests_data'];
                     $user->sales_amounts = $data['sales_amounts'];

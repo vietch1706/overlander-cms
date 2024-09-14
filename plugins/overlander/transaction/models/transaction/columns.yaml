@@ -11,6 +11,11 @@ columns:
     invoice_no:
         label: Invoice
         type: text
+    total_point:
+        label: 'Total Point'
+        type: text
+        relation: point_history
+        select: amount
     date:
         label: Date
         type: text
@@ -26,3 +31,8 @@ columns:
     updated_at:
         label: 'Updated At'
         type: datetime
+    point_history:
+        label: 'Point History'
+        type: partial
+        path: $/overlander/transaction/models/transaction/_button.htm
+

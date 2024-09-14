@@ -26,6 +26,9 @@ columns:
     fprice:
         label: Fprice
         type: text
+    point:
+        label: Point
+        type: text
     category:
         label: Category
         type: text

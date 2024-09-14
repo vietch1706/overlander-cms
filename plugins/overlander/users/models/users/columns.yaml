@@ -45,10 +45,14 @@ columns:
         label: 'Is Existing Member'
         type: partial
         path: ~/plugins/overlander/users/models/users/_existmember.htm
-    is_activated:
+    status:
         label: Status
         type: partial
         path: ~/plugins/overlander/users/models/users/_status.htm
+    is_activated:
+        label: 'Is Activated'
+        type: partial
+        path: ~/plugins/overlander/users/models/users/_isactivated.htm
     activated_at:
         label: 'Active Date'
         type: text

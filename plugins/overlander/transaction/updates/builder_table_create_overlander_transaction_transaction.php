@@ -18,6 +18,7 @@ class BuilderTableCreateOverlanderTransactionTransaction extends Migration
             $table->double('loyalty_balance', 10, 0);
             $table->string('shop_id');
             $table->text('campaign')->nullable();
+            $table->boolean('is_checked')->default(0);
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();
         });

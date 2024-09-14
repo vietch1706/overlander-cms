@@ -1,0 +1,4 @@
+<?php
+$id = (new Overlander\Transaction\Models\PointHistory()) ->
+getPointHistory($record->id);
+echo '<a class="btn btn-info" href="' . Backend::url("overlander/transaction/pointhistory/preview/$id") . '">' . e(trans('overlander.transaction::lang.list.btn_goto')) . '</a>';

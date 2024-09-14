@@ -19,7 +19,6 @@ use Overlander\Users\Models\Users as ModelUsers;
 
 class Users
 {
-    const ACTIVE = 1;
     public ModelUsers $users;
     public Countries $countries;
     public Interests $interests;
@@ -84,7 +83,8 @@ class Users
             'membership_tier' => $membershipTier === null ? '' : $membershipTier->name,
             'address' => $users->address,
             'member_type' => $users->is_existing_member,
-            'status' => $users->is_activated,
+            'status' => $users->status,
+            'is_activated' => $users->is_activated,
             'active_date' => $users->activated_at,
             'e_newsletter' => $users->e_newsletter === 1,
             'mail_receive' => $users->mail_receive === 1,
@@ -139,8 +139,8 @@ class Users
             if ($user->activation_code != $code) {
                 throw new BadRequestException(Lang::get('overlander.users::lang.user.verify_message.failed'));
             }
-            if ($user->is_activated != self::ACTIVE) {
-                $user->is_activated = self::ACTIVE;
+            if ($user->status != ModelUsers::STATUS_INACTIVE) {
+                $user->status = ModelUsers::STATUS_ACTIVE;
                 $user->activated_at = Carbon::now();
             }
             $user->activation_code = null;

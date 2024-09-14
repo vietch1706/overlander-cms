@@ -1,4 +1,8 @@
 fields:
+    id:
+        label: Id
+        span: auto
+        type: text
     member_no:
         label: 'Member No'
         span: auto
@@ -6,7 +10,7 @@ fields:
     type:
         label: Type
         span: auto
-        type: text
+        type: dropdown
     amount:
         label: Amount
         span: auto

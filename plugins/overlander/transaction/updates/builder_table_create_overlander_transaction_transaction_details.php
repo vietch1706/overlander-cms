@@ -5,11 +5,11 @@ namespace Overlander\Transaction\Updates;
 use October\Rain\Database\Updates\Migration;
 use Schema;
 
-class BuilderTableCreateOverlanderTransactionInvoiceDetails extends Migration
+class BuilderTableCreateOverlanderTransactionTransactionDetails extends Migration
 {
     public function up()
     {
-        Schema::create('overlander_transaction_invoice_details', function ($table) {
+        Schema::create('overlander_transaction_transaction_details', function ($table) {
             $table->increments('id')->unsigned();
             $table->integer('transaction_id');
             $table->string('plc');
@@ -21,6 +21,7 @@ class BuilderTableCreateOverlanderTransactionInvoiceDetails extends Migration
             $table->double('discount', 10, 0);
             $table->double('fprice', 10, 0);
             $table->string('category');
+            $table->double('point', 10, 0);
             $table->smallInteger('act01')->nullable();
             $table->smallInteger('act02')->nullable();
             $table->smallInteger('act03')->nullable();
@@ -31,6 +32,7 @@ class BuilderTableCreateOverlanderTransactionInvoiceDetails extends Migration
             $table->smallInteger('act08')->nullable();
             $table->smallInteger('act09')->nullable();
             $table->smallInteger('act10')->nullable();
+            $table->text('campaign')->nullable();
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();
         });
@@ -38,6 +40,6 @@ class BuilderTableCreateOverlanderTransactionInvoiceDetails extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('overlander_transaction_invoice_details');
+        Schema::dropIfExists('overlander_transaction_transaction_details');
     }
 }

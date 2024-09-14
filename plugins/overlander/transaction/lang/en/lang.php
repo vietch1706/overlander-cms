@@ -3,6 +3,10 @@
         'name' => 'Transaction',
         'description' => ''
     ],
+    'list' => [
+        'btn_goto' => 'Go to Point History',
+        'btn_return' => 'Return Transaction'
+    ],
     'transaction' => [
         'upgrade' => [
             'ordinary' => 'Upgrade Membership to Ordinary',

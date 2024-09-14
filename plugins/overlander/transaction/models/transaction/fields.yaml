@@ -1,4 +1,8 @@
 fields:
+    id:
+        label: Id
+        span: auto
+        type: text
     vip:
         label: Vip
         span: auto

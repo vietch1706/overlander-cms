@@ -94,8 +94,14 @@ fields:
         span: auto
         required: 1
         type: relation
-    is_activated:
+    status:
         label: Status
+        showSearch: true
+        span: auto
+        required: 1
+        type: dropdown
+    is_activated:
+        label: 'Is Activated'
         showSearch: true
         span: auto
         required: 1

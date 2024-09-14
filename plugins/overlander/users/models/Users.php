@@ -31,8 +31,8 @@ class Users extends BackendUser
     const GENDER_OTHER = null;
     const EXIST_MEMBER = 1;
     const NORMAL_MEMBER = 0;
-    const ACTIVE = 1;
-    const INACTIVE = 0;
+    const STATUS_ACTIVE = 1;
+    const STATUS_INACTIVE = 0;
     const YES = 1;
     const NO = 0;
 
@@ -124,6 +124,13 @@ class Users extends BackendUser
         $this->save();
     }
 
+    public function getIsActivatedOptions()
+    {
+        return [
+            self::STATUS_ACTIVE => 'Activate',
+            self::STATUS_INACTIVE => 'Suspend',
+        ];
+    }
     public function getGenderOptions()
     {
         return [
@@ -186,11 +193,11 @@ class Users extends BackendUser
         ];
     }
 
-    public function getIsActivatedOptions()
+    public function getStatusOptions()
     {
         return [
-            self::ACTIVE => 'Active',
-            self::INACTIVE => 'Inactive',
+            self::STATUS_ACTIVE => 'Active',
+            self::STATUS_INACTIVE => 'Inactive',
         ];
     }
 

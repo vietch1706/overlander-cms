@@ -1,6 +1,6 @@
 <?php
 
-namespace Overlander\Transaction\models;
+namespace Overlander\Transaction\Models;
 
 use Backend\Models\ImportModel;
 use Carbon\Carbon;
@@ -61,6 +61,7 @@ class TransactionImport extends ImportModel
                 $transactionDetail->price = $data['price'];
                 $transactionDetail->discount = $data['discount'];
                 $transactionDetail->fprice = $data['fprice'];
+                $transactionDetail->point = TransactionDetail::DEFAULT_POINT_VALUE;
                 $transactionDetail->category = $data['category'];
                 $transactionDetail->act01 = $data['act01'] === '' ? null : $data['act01'];
                 $transactionDetail->act02 = $data['act02'] === '' ? null : $data['act02'];
@@ -78,6 +79,7 @@ class TransactionImport extends ImportModel
                 $this->logError($row, $ex->getMessage());
             }
         }
+        PointHistory::calculatePoint();
         PointHistory::upgradeMembership();
     }
 }

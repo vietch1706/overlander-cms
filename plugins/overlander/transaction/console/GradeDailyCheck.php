@@ -4,6 +4,8 @@ namespace Overlander\Transaction\console;
 
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Database\Eloquent\Collection;
+use Overlander\Users\Models\Users;
 
 class GradeDailyCheck extends Command
 {
@@ -21,12 +23,13 @@ class GradeDailyCheck extends Command
      */
     public function handle()
     {
-        $start_date = Carbon::create('2024', '09', '01');
-        $end_date = Carbon::create('2024', '09', '30');
-        $today = Carbon::create('2024', '09', '07');
-        if ($today->between($start_date, $end_date)) {
-            $this->output->writeln("In If");
-        }
-
+        #TODO: user where status is_active validity_date(<=) role_id chunkById/chunk
+        $users = Users::where('status', Users::STATUS_ACTIVE)->where('is_activated', Users::STATUS_ACTIVE)->where('role_id', Users::ROLE_CUSTOMER_ID)->where(function ($query) {
+            $query->whereBetween('validity_date', [Carbon::now()->subMonth(1), Carbon::now()]);
+        })->chunkById(100, function (Collection $users) {
+            foreach ($users as $user) {
+                dd($users);
+            }
+        });
     }
 }
