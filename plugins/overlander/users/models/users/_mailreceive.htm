@@ -1,0 +1,4 @@
+<?php
+$mailReceive = (new Overlander\Users\Models\Users()) ->
+getMailReceiveOptions(); $class = [ 1 => 'text-body', 0 => 'text-body', ]; echo
+'<span class="'.$class[$value].'">'.$mailReceive[$value].'</span>';

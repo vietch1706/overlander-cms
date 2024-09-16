@@ -1,0 +1,16 @@
+plugin:
+    name: 'overlander.logs::lang.plugin.name'
+    description: 'overlander.logs::lang.plugin.description'
+    author: Overlander
+    icon: oc-icon-file-text-o
+    homepage: ''
+navigation:
+    logs:
+        label: Logs
+        url: /
+        icon: icon-file-text-o
+        sideMenu:
+            logs-maillogs:
+                label: 'Mail Logs'
+                url: overlander/logs/maillogs
+                icon: icon-mail-forward

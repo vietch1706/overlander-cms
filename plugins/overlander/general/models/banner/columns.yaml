@@ -1,0 +1,32 @@
+columns:
+    id:
+        label: ID
+        type: number
+    name:
+        label: Name
+        type: text
+        searchable: true
+        sortable: true
+    image:
+        label: Image
+        type: partial
+        path: ~/plugins/overlander/general/models/banner/_image.htm
+    link:
+        label: Link
+        type: text
+    published_at:
+        label: "Published At"
+        type: date
+        sortable: true
+        searchable: true
+    expired_at:
+        label: "Expired At"
+        type: date
+        sortable: true
+        searchable: true
+    created_at:
+        label: "Created At"
+        type: datetime
+    updated_at:
+        label: "Updated At"
+        type: datetime

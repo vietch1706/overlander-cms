@@ -1,0 +1,29 @@
+columns:
+    id:
+        label: ID
+        type: number
+    name:
+        label: Name
+        type: text
+    logo:
+        label: Logo
+        type: partial
+        path: ~/plugins/overlander/users/models/membershiptier/_image.htm
+    points_required:
+        label: 'Points Required'
+        type: number
+    points_remain:
+        label: 'Points Remain'
+        type: number
+    period:
+        label: 'Period (Months)'
+        type: number
+    slug:
+        label: slug
+        type: text
+    created_at:
+        label: 'Created At'
+        type: datetime
+    updated_at:
+        label: 'Updated At'
+        type: datetime

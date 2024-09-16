@@ -1,0 +1,13 @@
+fields:
+    country:
+        label: Country
+        span: auto
+        type: text
+    code:
+        label: Code
+        span: auto
+        type: number
+    image:
+        label: Image
+        span: auto
+        type: text

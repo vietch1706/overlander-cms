@@ -1,0 +1,25 @@
+columns:
+    id:
+        label: ID
+        type: number
+        sortable: true
+    name:
+        label: Name
+        type: text
+        searchable: true
+        sortable: true
+    email:
+        label: Email
+        type: text
+        searchable: true
+        sortable: true
+    reason:
+        label: Reason
+        type: partial
+        path: ~/plugins/overlander/general/models/contact/_status.htm
+    title:
+        label: Title
+        type: text
+    message:
+        label: Message
+        type: text

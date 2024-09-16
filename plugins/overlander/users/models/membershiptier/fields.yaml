@@ -1,0 +1,40 @@
+fields:
+    name:
+        label: Name
+        span: full
+        hidden: 0
+        required: 1
+        type: text
+    logo:
+        label: Logo
+        mode: file
+        thumbOptions:
+            mode: crop
+            extension: auto
+        span: auto
+        required: 1
+        type: mediafinder
+    points_required:
+        label: 'Points Required'
+        span: auto
+        required: 1
+        type: number
+    points_remain:
+        label: 'Points Remain'
+        span: auto
+        required: 1
+        type: number
+    period:
+        label: Period
+        span: auto
+        required: 1
+        type: text
+    slug:
+        label: Slug
+        span: auto
+        readOnly: 1
+        required: 1
+        preset:
+            field: name
+            type: slug
+        type: text

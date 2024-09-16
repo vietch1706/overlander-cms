@@ -1,0 +1,13 @@
+columns:
+    id:
+        label: ID
+        type: number
+    country:
+        label: Country
+        type: text
+    code:
+        label: Code
+        type: text
+    image:
+        label: Image
+        type: text

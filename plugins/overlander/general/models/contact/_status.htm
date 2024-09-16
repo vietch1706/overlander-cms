@@ -1,0 +1,5 @@
+<?php
+$status = (new Overlander\General\Models\Contact()) ->
+getReasonOptions(); $class = [ 1 => 'text-body', 2 => 'text-body', 3 =>
+'text-body' ] ; echo '<span class="'.$class[$value].'">'.$status[$value].'</span
+>';

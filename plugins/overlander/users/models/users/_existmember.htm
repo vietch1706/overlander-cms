@@ -1,0 +1,4 @@
+<?php
+$existmember = (new Overlander\Users\Models\Users()) ->
+getIsExistingMemberOptions(); $class = [ 1 => 'text-body', 0 => 'text-body', ]; echo
+'<span class="'.$class[$value].'">'.$existmember[$value].'</span>';

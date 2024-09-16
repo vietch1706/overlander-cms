@@ -1,0 +1,28 @@
+plugin:
+    name: 'overlander.users::lang.plugin.name'
+    description: 'overlander.users::lang.plugin.description'
+    author: Overlander
+    icon: oc-icon-users
+    homepage: ''
+navigation:
+    Users:
+        label: 'overlander.users::lang.plugin.name'
+        url: /
+        icon: icon-users
+        sideMenu:
+            users-users:
+                label: Users
+                url: overlander/users/users
+                icon: icon-users
+            users-membershiptier:
+                label: 'Membership Tier'
+                url: overlander/users/membershiptier
+                icon: icon-trophy
+            users-point-history:
+                label: 'Point History'
+                url: overlander/users/pointhistory
+                icon: icon-money
+            users-transaction:
+                label: Transaction
+                url: overlander/users/transaction
+                icon: icon-exchange

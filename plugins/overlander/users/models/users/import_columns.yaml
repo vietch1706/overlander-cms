@@ -1,0 +1,69 @@
+columns:
+    member_no:
+        label: 'MemberNo'
+        type: concatmemberno
+    last_name:
+        label: 'LastName'
+        type: text
+    first_name:
+        label: 'FirstName'
+        type: text
+    phone:
+        label: Mobile
+        type: text
+    email:
+        label: Email
+        type: text
+    gender:
+        label: Gender
+        type: partial
+        path: ~/plugins/overlander/users/models/users/_gender.htm
+    birthday:
+        label: 'Birthday (yyyy-MM-dd)'
+        type: concatbirthday
+    address:
+        label: Address
+        type: text
+    district:
+        label: District
+        type: text
+    country:
+        label: 'Region'
+        select: country
+        relation: country
+    e_newsletter:
+        label: 'E-Newsletter'
+        type: partial
+        path: ~/plugins/overlander/users/models/users/_e-newsletter.htm
+    mail_receive:
+        label: 'Mail'
+        type: partial
+        path: ~/plugins/overlander/users/models/users/_mailreceive.htm
+    join_date:
+        label: 'JoinDate (yyyy-MM-dd)'
+        type: text
+    validity_date:
+        label: 'Validity (yyyy-MM-dd)'
+        type: text
+    membership_tier_name:
+        label: 'GradeLabel_EN'
+        select: name
+        relation: membership_tier
+    status:
+        label: Status
+        type: partial
+        path: ~/plugins/overlander/users/models/users/_status.htm
+    interests_data:
+        label: 'InterestType'
+        type: text
+        searchable: false
+        sortable: false
+    sales_amounts:
+        label: 'SalesAmounts'
+        type: number
+        default: '0'
+    points_sum:
+        label: 'PointSum'
+        type: number
+        default: '0'
+

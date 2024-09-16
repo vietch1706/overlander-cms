@@ -1,0 +1,17 @@
+v1.0.1:
+    - 'Initialize plugin'
+v1.0.2:
+    - 'Created table overlander_users_users'
+    - builder_table_create_overlander_users_users.php
+v1.0.3:
+    - 'Created table overlander_users_membership_tier'
+    - builder_table_create_overlander_users_membership_tier.php
+v1.0.4:
+    - 'Created table overlander_users_point_history'
+    - builder_table_create_overlander_users_point_history.php
+v1.0.5:
+    - 'Seed overlander_users_membership_tier'
+    - seed_overlander_users_membership_tier.php
+v1.0.6:
+    - 'Created table overlander_users_transaction'
+    - builder_table_create_overlander_users_transaction.php

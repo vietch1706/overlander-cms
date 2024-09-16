@@ -1,0 +1,44 @@
+plugin:
+    name: 'overlander.general::lang.plugin.name'
+    description: 'overlander.general::lang.plugin.description'
+    author: Overlander
+    icon: oc-icon-cog
+    homepage: ''
+navigation:
+    general:
+        label: General
+        url: /
+        icon: icon-cog
+        sideMenu:
+            general-supportive-pages:
+                label: 'Supportive Pages'
+                url: overlander/general/supportivepages
+                icon: icon-sun-o
+            general-contactus:
+                label: 'Contact Us'
+                url: overlander/general/contactus
+                icon: icon-phone
+            general-brands:
+                label: Brands
+                url: overlander/general/brands
+                icon: icon-picture-o
+            general-banner:
+                label: Banner
+                url: overlander/general/banner
+                icon: icon-newspaper-o
+            general-stores:
+                label: Store
+                url: overlander/general/stores
+                icon: icon-shopping-cart
+            general-background:
+                label: Background
+                url: overlander/general/background
+                icon: icon-image
+            general-countries:
+                label: Countries
+                url: overlander/general/countries
+                icon: icon-flag
+            general-interests:
+                label: Interests
+                url: overlander/general/interests
+                icon: icon-info

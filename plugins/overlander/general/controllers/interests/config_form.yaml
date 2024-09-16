@@ -1,0 +1,10 @@
+name: Interests
+form: $/overlander/general/models/interests/fields.yaml
+modelClass: Overlander\General\Models\Interests
+defaultRedirect: overlander/general/interests
+create:
+    redirect: 'overlander/general/interests/update/:id'
+    redirectClose: overlander/general/interests
+update:
+    redirect: overlander/general/interests
+    redirectClose: overlander/general/interests

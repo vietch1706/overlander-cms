@@ -1,0 +1,22 @@
+columns:
+    id:
+        label: ID
+        type: number
+    name:
+        label: Name
+        type: text
+    splash_screen:
+        label: 'Splash Screen'
+        type: text
+    publish_date:
+        label: 'Publish Date'
+        type: text
+    end_date:
+        label: 'End Date'
+        type: text
+    created_at:
+        label: 'Created At'
+        type: datetime
+    updated_at:
+        label: 'Updated At'
+        type: datetime

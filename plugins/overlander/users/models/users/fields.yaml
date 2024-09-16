@@ -1,0 +1,137 @@
+fields:
+    member_prefix:
+        label: 'Member Prefix'
+        span: auto
+        required: 1
+        type: dropdown
+    first_name:
+        label: 'First name'
+        span: auto
+        required: 1
+        type: text
+    last_name:
+        label: 'Last name'
+        span: auto
+        required: 1
+        type: text
+    phone:
+        label: Mobile
+        span: auto
+        required: 1
+        type: text
+    email:
+        label: Email
+        span: auto
+        type: text
+    password:
+        label: Password
+        span: left
+        type: password
+        comment: '8 - 16 characters with numbers, upper and lower case'
+    password_confirmation:
+        label: 'Password Confirmation'
+        span: auto
+        required: 0
+        type: password
+        comment: '8 - 16 characters with numbers, upper and lower case'
+    gender:
+        label: Gender
+        showSearch: true
+        span: auto
+        required: 1
+        type: dropdown
+    month:
+        label: Month
+        span: auto
+        required: 1
+        type: dropdown
+    year:
+        label: Year
+        span: auto
+        required: 1
+        type: dropdown
+    address:
+        label: "Detail Address"
+        span: auto
+        required: 1
+        type: text
+    district:
+        label: 'District'
+        span: auto
+        required: 1
+        type: text
+    country:
+        label: 'Region'
+        nameFrom: country
+        descriptionFrom: description
+        span: auto
+        required: 1
+        type: relation
+    e_newsletter:
+        label: 'E-newsletter'
+        showSearch: true
+        span: auto
+        required: 1
+        type: dropdown
+    mail_receive:
+        label: 'Mail Receive'
+        showSearch: true
+        span: auto
+        required: 1
+        type: dropdown
+    membership_tier:
+        label: 'Membership Tier'
+        nameFrom: name
+        descriptionFrom: description
+        span: auto
+        required: 1
+        type: relation
+    status:
+        label: Status
+        showSearch: true
+        span: auto
+        required: 1
+        type: dropdown
+    interests:
+        label: Interest
+        nameFrom: name
+        descriptionFrom: description
+        span: auto
+        required: 1
+        type: taglist
+        useKey: true
+        options: listInterest
+    sales_amounts:
+        label: 'Sales Amounts'
+        span: auto
+        required: 1
+        type: number
+    points_sum:
+        label: Points
+        span: auto
+        required: 1
+        type: number
+    is_existing_member:
+        label: 'Existing Member'
+        showSearch: true
+        span: auto
+        required: 1
+        type: dropdown
+    activated_at:
+        label: 'Active Date'
+        mode: date
+        span: auto
+        required: 1
+        type: datepicker
+    join_date:
+        label: 'Join Date'
+        mode: date
+        span: auto
+        required: 1
+        type: datepicker
+    validity_date:
+        label: 'Validity Date'
+        mode: date
+        span: auto
+        required: 1
+        type: datepicker

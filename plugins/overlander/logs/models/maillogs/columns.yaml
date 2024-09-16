@@ -1,0 +1,16 @@
+columns:
+    id:
+        label: ID
+        type: number
+    email:
+        label: Email
+        type: text
+    content:
+        label: Content
+        type: text
+    method:
+        label: Method
+        type: text
+    created_at:
+        label: 'Created At'
+        type: datetime

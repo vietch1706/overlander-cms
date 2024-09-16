@@ -1,0 +1,12 @@
+list: $/overlander/logs/models/maillogs/columns.yaml
+modelClass: Overlander\Logs\Models\Maillogs
+title: Maillogs
+noRecordsMessage: 'backend::lang.list.no_records'
+showSetup: true
+showCheckboxes: true
+recordsPerPage: 20
+toolbar:
+#    buttons: list_toolbar
+    search:
+        prompt: 'backend::lang.list.search_prompt'
+recordUrl: 'overlander/logs/maillogs/preview/:id'

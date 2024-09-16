@@ -1,0 +1,4 @@
+<?php
+$status = (new Overlander\Users\Models\Users()) ->
+getStatusOptions(); $class = [ 1 => 'text-success', 0 => 'text-danger', ]; echo
+'<span class="oc-icon-circle '.$class[$value].'">'.$status[$value].'</span>';

@@ -1,0 +1,11 @@
+name: "Supportive Pages"
+modelClass: Overlander\General\Models\Supportivepages
+form: $/overlander/general/models/supportivepages/fields.yaml
+defaultRedirect: overlander/general/supportivepages
+create:
+    redirect: "overlander/general/supportivepages/update/:id"
+    redirectClose: overlander/general/supportivepages
+update:
+    redirect: overlander/general/supportivepages
+    redirectClose: overlander/general/supportivepages
+preview: {}

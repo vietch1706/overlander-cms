@@ -1,0 +1,19 @@
+columns:
+    id:
+        label: "ID"
+        type: number
+        sortable: true
+    name:
+        label: "Name"
+        type: text
+        searchable: true
+    image:
+        label: "Logo"
+        type: partial
+        path: ~/plugins/overlander/general/models/brands/_image.htm
+    created_at:
+        label: "Created At"
+        type: datetime
+    updated_at:
+        label: "Updated At"
+        type: datetime

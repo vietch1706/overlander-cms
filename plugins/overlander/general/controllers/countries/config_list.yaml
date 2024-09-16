@@ -1,0 +1,11 @@
+list: $/overlander/general/models/countries/columns.yaml
+modelClass: Overlander\General\Models\Countries
+title: Countries
+noRecordsMessage: 'backend::lang.list.no_records'
+showSetup: true
+showCheckboxes: true
+recordsPerPage: 20
+toolbar:
+    search:
+        prompt: 'backend::lang.list.search_prompt'
+recordUrl: 'overlander/general/countries/preview/:id'

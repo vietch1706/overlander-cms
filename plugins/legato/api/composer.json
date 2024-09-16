@@ -1,0 +1,26 @@
+{
+    "name": "legato/oc-api-plugin",
+    "description": "The Api for October CMS",
+    "type": "october-plugin",
+    "homepage": "https://gitlab.legato.co/Legato-Libraries/OctoberCMS/Plugins/api",
+    "authors": [
+        {
+            "name": "Neo Thai",
+            "email": "neo.thai@legato.co",
+            "role": "Author"
+        },
+        {
+            "name": "Dustin",
+            "email": "duy.tran@legato.co",
+            "role": "Author"
+        }
+    ],
+    "require": {
+        "october/rain": "^1.1|^2.0|^3.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.0|^9.0",
+        "fzaninotto/faker": "~1.9"
+    },
+    "license": "MIT"
+}

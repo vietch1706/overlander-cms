@@ -1,0 +1,10 @@
+name: Stores
+form: $/overlander/general/models/stores/fields.yaml
+modelClass: Overlander\General\Models\Stores
+defaultRedirect: overlander/general/stores
+create:
+    redirect: "overlander/general/stores/update/:id"
+    redirectClose: overlander/general/stores
+update:
+    redirect: overlander/general/stores
+    redirectClose: overlander/general/stores
