@@ -16,6 +16,8 @@ class BuilderTableCreateOverlanderTransactionPointHistory extends Migration
             $table->double('amount', 10, 0);
             $table->text('reason');
             $table->integer('transaction_id')->nullable();
+            $table->boolean('is_used')->default(0);
+            $table->boolean('is_halted')->default(0);
             $table->date('expired_date')->nullable();
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();

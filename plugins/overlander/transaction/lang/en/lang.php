@@ -21,7 +21,7 @@
     'point_history' => [
         'gain_reason' => [
             'invoice' => 'Point from invoice no: :invoice_no',
-
+            'remain' => 'Point remain from invoice no::invoice_no',
         ]
     ]
 ];

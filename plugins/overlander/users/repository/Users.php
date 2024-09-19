@@ -37,21 +37,31 @@ class Users
             if (empty($user)) {
                 throw new BadRequestException(Lang::get('overlander.users::lang.user.not_found'));
             }
-            $mailLog = new Maillogs();
-            if ($mailLog->where('email', $email)->whereDate('created_at', Carbon::now())->count() >= 3) {
+            $mailLogDailyLimit = Maillogs::where('email', $email)
+                ->whereDate('created_at', Carbon::now())
+                ->count();
+            if ($mailLogDailyLimit >= 3) {
                 throw new BadRequestException(Lang::get('overlander.users::lang.user.send_code_message.daily_limit'));
             }
-            if (Carbon::now()->diffInMinutes($user->send_mail_at) < 1 && $user->activation_code != null) {
+
+            if (
+                Carbon::now()->diffInMinutes($user->send_mail_at) < 1 &&
+                $user->activation_code != null
+            ) {
                 throw new BadRequestException(Lang::get('overlander.users::lang.user.send_code_message.send_times'));
             }
+
             $code = General::generateRandomCode();
             $message = Lang::get('overlander.users::lang.user.send_code_message.verify', ['code' => $code]);
+
             Mail::sendTo($email, 'overlander.general::mail.exists_verify', ['content' => $message]);
-            $user->activation_code = $code;
+            $mailLog = new Maillogs();
             $mailLog->email = $email;
             $mailLog->content = $message;
             $mailLog->method = $method;
             $mailLog->save();
+
+            $user->activation_code = $code;
             $user->send_mail_at = Carbon::now()->toDateTimeString();
             $user->save();
             return [
@@ -139,8 +149,8 @@ class Users
             if ($user->activation_code != $code) {
                 throw new BadRequestException(Lang::get('overlander.users::lang.user.verify_message.failed'));
             }
-            if ($user->status != ModelUsers::STATUS_INACTIVE) {
-                $user->status = ModelUsers::STATUS_ACTIVE;
+            if ($user->status != $this->users::STATUS_INACTIVE) {
+                $user->status = $this->users::STATUS_ACTIVE;
                 $user->activated_at = Carbon::now();
             }
             $user->activation_code = null;

@@ -17,6 +17,10 @@ class PointHistory extends Model
 {
     use Validation;
 
+    public const IS_USED_USABLE = 0;
+    public const IS_USED_UNUSABLE = 1;
+    public const IS_HALTED_TRUE = 1;
+    public const IS_HALTED_FALSE = 0;
     public const DEFAULT_POINT_MULTIPLIER = 1;
     public const POINT_MULTIPLIER_COUNTER = 0;
     public const TYPE_GAIN = 0;
@@ -33,6 +37,40 @@ class PointHistory extends Model
     public $rules = [
     ];
 
+    public static function gradeDailyCheck($user, $currentMembership, $reason)
+    {
+        if ($user->points_sum >= $currentMembership->points_remain) {
+            $currentPoint = match ($currentMembership->slug) {
+                MembershipTier::SLUG_GOLD => Users::DEFAULT_POINTS_SUM,
+                default => $user->points_sum - $currentMembership->points_remain,
+            };
+            $preparePointHistory = [
+                'member_no' => $user->member_no . $user->member_prefix,
+                'type' => self::TYPE_LOSS,
+                'amount' => match ($currentMembership->slug) {
+                    MembershipTier::SLUG_GOLD => $user->points_sum,
+                    default => $currentMembership->points_remain,
+                },
+                'transaction_id' => null,
+                'reason' => $reason,
+                'expired_date' => null,
+            ];
+            self::addPointHistory($preparePointHistory);
+
+            $user->points_sum = $currentPoint;
+            $user->membership_tier_id = $currentMembership->id;
+            $user->validity_date = Carbon::now()->addMonth($currentMembership->period);
+            $user->save();
+        } else {
+            $previousMembership = MembershipTier::getPreviousMembership($currentMembership->id);
+            if (!empty($previousMembership)) {
+                $user->membership_tier_id = $previousMembership->id;
+                $user->validity_date = Carbon::now()->addMonth($previousMembership->period);
+                $user->save();
+            }
+        }
+    }
+
     public function getTypeOptions()
     {
         return [
@@ -41,53 +79,47 @@ class PointHistory extends Model
         ];
     }
 
-    public function getPointHistory($id)
-    {
-        return $this->where('transaction_id', $id)->first()->id;
-    }
-
 
     public static function upgradeMembership()
     {
         $users = Users::where('status', Users::STATUS_ACTIVE)
             ->where('is_activated', Users::STATUS_ACTIVE)
-            ->where('role_id', Users::ROLE_CUSTOMER_ID)->get();
+            ->where('role_id', Users::ROLE_CUSTOMER_ID)
+            ->get();
         foreach ($users as $key => $user) {
             $point = $user->points_sum;
-            $membershipTiers = MembershipTier::where('group', MembershipTier::GROUP_AUTOMATIC)->get();
-            foreach ($membershipTiers as $key => $membershipTier) {
-                if (
-                    $point > $membershipTier->points_required &&
-                    $membershipTier->points_required != 0 &&
-                    $user->membership_tier_id != $membershipTier->id
-                ) {
-                    $reason = match ($membershipTier->slug) {
-                        MembershipTier::SLUG_ORDINARY => Lang::get('overlander.transaction::lang.transaction.upgrade', ['membership' => $membershipTier->name]),
-                        MembershipTier::SLUG_VIP => Lang::get('overlander.transaction::lang.transaction.upgrade', ['membership' => $membershipTier->name]),
-                        MembershipTier::SLUG_GOLD => Lang::get('overlander.transaction::lang.transaction.upgrade', ['membership' => $membershipTier->name]),
-                        default => '',
-                    };
-
-                    $pointHistory = new PointHistory();
-                    $pointHistory->member_no = $user->member_no . $user->member_prefix;
-                    $pointHistory->type = self::TYPE_LOSS;
-                    $pointHistory->amount = $membershipTier->points_remain;
-                    $pointHistory->reason = $reason;
-                    $pointHistory->expired_date = null;
-                    $pointHistory->save();
-
-                    if ($membershipTier->slug == MembershipTier::SLUG_GOLD) {
-                        $user->points_sum = 0;
-                    } else {
-                        $user->points_sum = $user->points_sum - $membershipTier->points_remain;
-                    }
-
-                    $user->membership_tier_id = $membershipTier->id;
-                    $user->join_date = Carbon::now();
-                    $user->validity_date = Carbon::now()->addMonth($membershipTier->period);
-                    $user->save();
-                }
+            $membershipTier = MembershipTier::select('id', 'name', 'slug', 'points_required', 'period')
+                ->where('group', MembershipTier::GROUP_AUTOMATIC)
+                ->whereNot('slug', MembershipTier::SLUG_TEMPORARY)
+                ->whereNot('id', $user->membership_tier_id)
+                ->where('id', '>', $user->membership_tier_id)
+                ->where('points_required', '<=', $point)
+                ->orderBy('id', 'desc')
+                ->first();
+            if (empty($membershipTier)) {
+                continue;
             }
+            $pointHistory = [
+                'member_no' => $user->member_no . $user->member_prefix,
+                'type' => self::TYPE_LOSS,
+                'amount' => $membershipTier->points_required,
+                'transaction_id' => null,
+                'reason' => Lang::get('overlander.transaction::lang.transaction.upgrade', ['membership' => $membershipTier->name]),
+                'expired_date' => null,
+            ];
+            self::addPointHistory($pointHistory);
+            if ($membershipTier->slug == MembershipTier::SLUG_GOLD) {
+                $user->points_sum = Users::DEFAULT_POINTS_SUM;
+//                self::checkPointExpiredDate(Users::DEFAULT_POINTS_SUM, $user->member_no . $user->member_prefix);
+            } else {
+                $user->points_sum = $user->points_sum - $membershipTier->points_required;
+//                self::checkPointExpiredDate($membershipTier->points_required, $user->member_no . $user->member_prefix);
+            }
+
+            $user->membership_tier_id = $membershipTier->id;
+            $user->join_date = Carbon::now();
+            $user->validity_date = Carbon::now()->addMonth($membershipTier->period);
+            $user->save();
         }
     }
 
@@ -136,9 +168,11 @@ class PointHistory extends Model
                 $pointMultiplier = self::POINT_MULTIPLIER_COUNTER;
                 $campaignUsed = [];
                 $brandCampaign = self::getCampaign(Campaign::TARGET_BRAND)
-                    ->where('brand_id', $transactionDetail->brand_code)->first();
+                    ->where('brand_id', $transactionDetail->brand_code)
+                    ->first();
                 $skuCampaign = self::getCampaign(Campaign::TARGET_SKU)
-                    ->where('sku', $transactionDetail->plc)->first();
+                    ->where('sku', $transactionDetail->plc)
+                    ->first();
 
                 if (!empty($brandCampaign) && $brandCampaign->brand_id == $transactionDetail->brand_code) {
                     $pointArray = self::calculatePointMultiplier($transaction->date, $brandCampaign, $pointMultiplier);
@@ -164,12 +198,16 @@ class PointHistory extends Model
             $pointMultiplier = self::POINT_MULTIPLIER_COUNTER;
             $campaignUsed = [];
 
-            $user = Users::where(DB::raw('concat(member_no, member_prefix)'), $transaction->vip)->first();
+            $user = Users::select('membership_tier_id')
+                ->where(DB::raw('concat(member_no, member_prefix)'), $transaction->vip)
+                ->first();
 
             $membershipCampaign = self::getCampaign(Campaign::TARGET_MEMBERSHIP)
-                ->where('membership_tier_id', $user->membership_tier_id)->first();
+                ->where('membership_tier_id', $user->membership_tier_id)
+                ->first();
             $shopCampaign = self::getCampaign(Campaign::TARGET_SHOP)
-                ->where('shop', $transaction->shop_id)->first();
+                ->where('shop', $transaction->shop_id)
+                ->first();
 
             if (!empty($membershipCampaign) && $membershipCampaign->membership_tier_id == $user->membership_tier_id) {
                 $pointArray = self::calculatePointMultiplier($transaction->date, $membershipCampaign, $pointMultiplier);
@@ -187,35 +225,92 @@ class PointHistory extends Model
                 $pointMultiplier = self::DEFAULT_POINT_MULTIPLIER;
             }
 
-            $totalPoint = TransactionDetail::where('transaction_id', $transaction->id)->sum('point') * $pointMultiplier;
+            $totalPoint = TransactionDetail::where('transaction_id', $transaction->id)
+                    ->sum('point') * $pointMultiplier;
 
-//            $pointHistory = new PointHistory();
-//            $pointHistory->member_no = $transaction->vip;
-//            $pointHistory->type = $totalPoint < 0 ? self::TYPE_LOSS : self::TYPE_GAIN;
-//            $pointHistory->amount = $totalPoint;
-//            $pointHistory->transaction_id = $transaction->id;
-//            $pointHistory->reason = Lang::get('overlander.transaction::lang.point_history.gain_reason.invoice', ['invoice_no' => $transaction->invoice_no]);
-//            $pointHistory->expired_date = Carbon::now()->addYear(self::EXPIRED_DATE_YEAR);
-//            $pointHistory->save();
-            $reason = Lang::get('overlander.transaction::lang.point_history.gain_reason.invoice', ['invoice_no' => $transaction->invoice_no]);
-            self::addPointHistory($transaction->vip, $totalPoint, $transaction->id, $reason);
+            $pointHistory = [
+                'member_no' => $transaction->vip,
+                'type' => $totalPoint > 0 ? self::TYPE_GAIN : self::TYPE_LOSS,
+                'amount' => $totalPoint,
+                'transaction_id' => $transaction->id,
+                'reason' => Lang::get('overlander.transaction::lang.point_history.gain_reason.invoice', ['invoice_no' => $transaction->invoice_no]),
+                'expired_date' => Carbon::now()->addYear(self::EXPIRED_DATE_YEAR),
+            ];
+            self::addPointHistory($pointHistory);
             $transaction->is_checked = Transaction::IS_CHECKED_CHECK;
             $transaction->campaign = array_filter($campaignUsed);;
             $transaction->save();
         }
     }
 
-    public static function addPointHistory($member_no, $points, $transaction_id, $reason)
+    /**
+     * Class Constructor.
+     * @param array $pointHistory = [
+     *      'member_no' => (string) Member Number. Required.
+     *      'type' => (boolean) Point History Type. Required.
+     *      'amount' => (double) Point Used Amount. Required.
+     *      'transaction_id' => (int) Transaction.
+     *      'Reason' => (string) History Reason. Required.
+     *      'expired_date' => (datetime) History Date.
+     * ]
+     * @return void
+     */
+    public static function addPointHistory(array $pointHistory): void
     {
-        $pointHistory = new PointHistory();
-        $pointHistory->member_no = $member_no;
-        $pointHistory->type = $points < 0 ? self::TYPE_LOSS : self::TYPE_GAIN;
-        $pointHistory->amount = $points;
-        $pointHistory->transaction_id = $transaction_id;
-        $pointHistory->reason = $reason;
-        $pointHistory->expired_date = Carbon::now()->addYear(self::EXPIRED_DATE_YEAR);
-        $pointHistory->save();
+        $history = new self();
+        $history->member_no = $pointHistory['member_no'];
+        $history->type = $pointHistory['type'];
+        $history->amount = $pointHistory['amount'];
+        $history->transaction_id = $pointHistory['transaction_id'];
+        $history->reason = $pointHistory['reason'];
+        $history->expired_date = $pointHistory['expired_date'];
+        $history->save();
+    }
 
+    public static function updateHiddenPoint($point, $userMemberNo, $currentMembership)
+    {
+        if ($currentMembership->slug == MembershipTier::SLUG_GOLD) {
+            $updatePointHistory = self::where('member_no', $userMemberNo)
+                ->where('type', self::TYPE_GAIN)
+                ->update(
+                    [
+                        'is_halted' => self::IS_HALTED_TRUE,
+                        'is_used' => self::IS_USED_UNUSABLE,
+                    ]
+                );
+            return;
+        }
+        #TODO: sua lai cot is_hidden (su dung cho api va backend), cot is_used (su dung query tinh diem)
+        $pointHistory = self::where('member_no', $userMemberNo)
+            ->where('type', self::TYPE_GAIN)
+            ->where('is_used', self::IS_USED_USABLE)
+            ->where('is_halted', self::IS_HALTED_FALSE)
+            ->orderBy('expired_date', 'asc')
+            ->get();
+        foreach ($pointHistory as $key => $history) {
+            if ($point >= $history->amount) {
+                $point -= $history->amount;
+                $history->is_halted = self::IS_HALTED_TRUE;
+                $history->is_used = self::IS_USED_UNUSABLE;
+                $history->save();
+            } else {
+                $newPoint = $history->amount - $point;
+                $invoiceNo = substr($history->reason, strpos($history->reason, ':') + 1);
+                $preparePointHistory = [
+                    'member_no' => $history->member_no,
+                    'type' => self::TYPE_GAIN,
+                    'amount' => $newPoint,
+                    'transaction_id' => $history->transaction_id,
+                    'reason' => Lang::get('overlander.transaction::lang.point_history.gain_reason.remain', ['invoice_no' => $invoiceNo]),
+                    'expired_date' => $history->expired_date,
+                ];
+                self::addPointHistory($preparePointHistory);
+                $history->is_halted = self::IS_HALTED_TRUE;
+                $history->save();
+                break;
+            }
+
+        }
     }
 
     public static function getCampaign($target)
@@ -228,7 +323,7 @@ class PointHistory extends Model
     public function afterCreate()
     {
         $user = Users::where('member_no', substr($this->member_no, 0, -1))->first();
-        if (!empty($user)) {
+        if (!empty($user) && $this->type == self::TYPE_GAIN) {
             $user->points_sum += $this->amount;
             $user->save();
         }

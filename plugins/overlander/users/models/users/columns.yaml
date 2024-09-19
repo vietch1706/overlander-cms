@@ -2,18 +2,18 @@ columns:
     id:
         label: ID
         type: number
-    member_no:
+    full_member_no:
         label: 'Member Number'
-        type: concatmemberno
+        type: text
     last_name:
         label: 'Last Name'
         type: text
     first_name:
         label: 'First Name'
         type: text
-    phone:
+    phone_number:
         label: Mobile
-        type: concatphone
+        type: text
     email:
         label: Email
         type: text
@@ -21,9 +21,9 @@ columns:
         label: Gender
         type: partial
         path: ~/plugins/overlander/users/models/users/_gender.htm
-    month:
+    birthday:
         label: Birthday
-        type: concatbirthday
+        type: text
     country_name:
         label: 'Region'
         select: country

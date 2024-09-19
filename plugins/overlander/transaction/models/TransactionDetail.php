@@ -1,10 +1,7 @@
 <?php namespace Overlander\Transaction\Models;
 
-use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 use Model;
 use October\Rain\Database\Traits\Validation;
-use Overlander\Users\Models\Users;
 
 /**
  * Model

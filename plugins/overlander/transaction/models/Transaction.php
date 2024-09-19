@@ -42,4 +42,18 @@ class Transaction extends Model
         'campaign',
 
     ];
+
+    public function getPointHistoryPreview($id)
+    {
+        return PointHistory::where('is_halted', PointHistory::IS_HALTED_FALSE)
+            ->where('is_used', PointHistory::IS_USED_USABLE)
+            ->where('transaction_id', $id)->first()->id;
+    }
+    public function getTotalPointAttribute()
+    {
+        return PointHistory::select('amount')
+            ->where('is_halted', PointHistory::IS_HALTED_FALSE)
+            ->where('is_used', PointHistory::IS_USED_USABLE)
+            ->where('transaction_id', $this->id)->get()->sum('amount');
+    }
 }

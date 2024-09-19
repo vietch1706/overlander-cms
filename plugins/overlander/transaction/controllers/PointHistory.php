@@ -1,8 +1,7 @@
 <?php namespace Overlander\Transaction\Controllers;
 
-use Backend;
-use BackendMenu;
 use Backend\Classes\Controller;
+use BackendMenu;
 
 class PointHistory extends Controller
 {
@@ -20,4 +19,13 @@ class PointHistory extends Controller
         BackendMenu::setContext('Overlander.Transaction', 'transaction', 'side-menu-item');
     }
 
+    public function listExtendQuery($query)
+    {
+        $query->where(function ($query) {
+            $query
+                ->where('is_halted', \Overlander\Transaction\Models\PointHistory::IS_HALTED_FALSE)
+                ->where('is_used', \Overlander\Transaction\Models\PointHistory::IS_USED_USABLE);
+
+        });
+    }
 }

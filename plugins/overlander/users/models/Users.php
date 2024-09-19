@@ -20,23 +20,28 @@ class Users extends BackendUser
     use Validation;
     use Notifiable;
 
-    const ROLE_ADMIN_ID = 1;
-    const ROLE_ADMIN_CODE = 'admin';
-    const ROLE_EMPLOYEE_ID = 2;
-    const ROLE_EMPLOYEE_CODE = 'employee';
-    const ROLE_CUSTOMER_ID = 3;
-    const ROLE_CUSTOMER_CODE = 'customer';
-    const GENDER_MALE = 0;
-    const GENDER_FEMALE = 1;
-    const GENDER_OTHER = null;
-    const EXIST_MEMBER = 1;
-    const NORMAL_MEMBER = 0;
-    const STATUS_ACTIVE = 1;
-    const STATUS_INACTIVE = 0;
-    const YES = 1;
-    const NO = 0;
+    public const ROLE_ADMIN_ID = 1;
+    public const ROLE_ADMIN_CODE = 'admin';
+    public const ROLE_EMPLOYEE_ID = 2;
+    public const ROLE_EMPLOYEE_CODE = 'employee';
+    public const ROLE_CUSTOMER_ID = 3;
+    public const ROLE_CUSTOMER_CODE = 'customer';
+    public const GENDER_MALE = 0;
+    public const GENDER_FEMALE = 1;
+    public const GENDER_OTHER = null;
+    public const EXIST_MEMBER = 1;
+    public const NORMAL_MEMBER = 0;
+    public const STATUS_ACTIVE = 1;
+    public const STATUS_INACTIVE = 0;
 
-    const MONTH = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+    public const IS_ACTIVATED_ACTIVATE = 1;
+    public const IS_ACTIVATED_SUSPEND = 0;
+
+    public const YES = 1;
+    public const NO = 0;
+    public const DEFAULT_POINTS_SUM = 0;
+
+    public const MONTH = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
     public $attributes = [
         'is_existing_member' => '0',
@@ -95,9 +100,22 @@ class Users extends BackendUser
         'mail_receive',
     ];
 
-    public function getFullMemberNumberAttribute()
+    public function getFullMemberNoAttribute()
     {
         return $this->member_no . $this->member_prefix;
+    }
+
+    public function getPhoneNumberAttribute()
+    {
+        return $this->phone_area_code . $this->phone;
+    }
+
+    public function getBirthdayAttribute()
+    {
+        if ($this->month == null || $this->year == null) {
+            return '';
+        }
+        return $this->month . '-' .$this->year;
     }
 
     public function beforeValidate()
@@ -127,8 +145,8 @@ class Users extends BackendUser
     public function getIsActivatedOptions()
     {
         return [
-            self::STATUS_ACTIVE => 'Activate',
-            self::STATUS_INACTIVE => 'Suspend',
+            self::IS_ACTIVATED_ACTIVATE => 'Activate',
+            self::IS_ACTIVATED_SUSPEND => 'Suspend',
         ];
     }
     public function getGenderOptions()

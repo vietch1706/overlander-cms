@@ -14,8 +14,6 @@ columns:
     total_point:
         label: 'Total Point'
         type: text
-        relation: point_history
-        select: amount
     date:
         label: Date
         type: text
