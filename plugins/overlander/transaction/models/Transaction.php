@@ -45,15 +45,17 @@ class Transaction extends Model
 
     public function getPointHistoryPreview($id)
     {
-        return PointHistory::where('is_halted', PointHistory::IS_HALTED_FALSE)
-            ->where('is_used', PointHistory::IS_USED_USABLE)
-            ->where('transaction_id', $id)->first()->id;
+        $pointHistoryId = PointHistory::where('transaction_id', $id)
+            ->first();
+        if (empty($pointHistoryId)) {
+            return null;
+        }
+        return $pointHistoryId->id;
     }
+
     public function getTotalPointAttribute()
     {
         return PointHistory::select('amount')
-            ->where('is_halted', PointHistory::IS_HALTED_FALSE)
-            ->where('is_used', PointHistory::IS_USED_USABLE)
             ->where('transaction_id', $this->id)->get()->sum('amount');
     }
 }

@@ -21,7 +21,7 @@ class BuilderTableCreateOverlanderTransactionTransactionDetails extends Migratio
             $table->double('discount', 10, 0);
             $table->double('fprice', 10, 0);
             $table->string('category');
-            $table->double('point', 10, 0);
+            $table->integer('point');
             $table->smallInteger('act01')->nullable();
             $table->smallInteger('act02')->nullable();
             $table->smallInteger('act03')->nullable();

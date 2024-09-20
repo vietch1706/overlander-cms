@@ -10,11 +10,6 @@
     'transaction' => [
         'delete' => 'Account deleted because of no purchase record!',
 
-        'upgrade' => 'Upgrade Membership to :membership.',
-
-        'downgrade' => 'Downgrade Membership to :membership.',
-
-        'remain' => 'Remain current Membership: :membership.',
 
         'archived' => 'Account archived!'
     ],
@@ -22,6 +17,12 @@
         'gain_reason' => [
             'invoice' => 'Point from invoice no: :invoice_no',
             'remain' => 'Point remain from invoice no::invoice_no',
+        ],
+        'loss_reason' => [
+            'expired' => 'Expired Point',
+            'upgrade' => 'Upgrade Membership to :membership.',
+            'downgrade' => 'Downgrade Membership to :membership.',
+            'remain' => 'Remain current Membership: :membership.',
         ]
     ]
 ];

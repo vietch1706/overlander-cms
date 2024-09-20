@@ -1,13 +1,15 @@
 <?php namespace Overlander\Transaction\Controllers;
 
+use Backend\Behaviors\FormController;
+use Backend\Behaviors\ListController;
 use Backend\Classes\Controller;
 use BackendMenu;
 
 class PointHistory extends Controller
 {
     public $implement = [
-        \Backend\Behaviors\FormController::class,
-        \Backend\Behaviors\ListController::class
+        FormController::class,
+        ListController::class
     ];
 
     public $formConfig = 'config_form.yaml';
@@ -23,9 +25,7 @@ class PointHistory extends Controller
     {
         $query->where(function ($query) {
             $query
-                ->where('is_halted', \Overlander\Transaction\Models\PointHistory::IS_HALTED_FALSE)
-                ->where('is_used', \Overlander\Transaction\Models\PointHistory::IS_USED_USABLE);
-
+                ->where('is_hidden', \Overlander\Transaction\Models\PointHistory::IS_HIDDEN_FALSE);
         });
     }
 }
