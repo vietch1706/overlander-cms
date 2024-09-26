@@ -14,6 +14,7 @@ use Overlander\General\Helper\General;
 use Overlander\General\Models\Countries;
 use Overlander\General\Models\Interests;
 use Overlander\General\Models\MembershipTier;
+use Overlander\General\Repository\MembershipTier as MembershipTierRepository;
 use Overlander\Logs\Models\Maillogs;
 use Overlander\Users\Models\Users as ModelUsers;
 
@@ -72,32 +73,35 @@ class Users
         }
     }
 
-    public static function convertData($users)
+    public static function convertData($user)
     {
-        $country = Countries::where('id', $users->country_id)->first();
-        $membershipTier = MembershipTier::where('id', $users->membership_tier_id)->first();
+        $country = Countries::where('id', $user->country_id)->first();
+        $membershipTier = MembershipTier::where('id', $user->membership_tier_id)->first();
         return [
-            'member_no' => $users->member_no . $users->member_prefix,
-            'first_name' => $users->first_name,
-            'last_name' => $users->last_name,
-            'phone_area_code' => '+' . $users->phone_area_code,
-            'phone' => $users->phone,
-            'password' => $users->password,
+            'member_no' => $user->member_no . $user->member_prefix,
+            'first_name' => $user->first_name,
+            'last_name' => $user->last_name,
+            'phone_area_code' => '+' . $user->phone_area_code,
+            'phone' => $user->phone,
+            'password' => $user->password,
             'country' => $country === null ? '' : $country->country,
-            'email' => $users->email,
-            'month' => strval($users->month),
-            'year' => strval($users->year),
-            'gender' => str($users->gender),
-            'interests' => array_map('intval', explode(",", $users->interests)),
-            'points' => $users->points,
-            'membership_tier' => $membershipTier === null ? '' : $membershipTier->name,
-            'address' => $users->address,
-            'member_type' => $users->is_existing_member,
-            'status' => $users->status,
-            'is_activated' => $users->is_activated,
-            'active_date' => $users->activated_at,
-            'e_newsletter' => $users->e_newsletter === 1,
-            'mail_receive' => $users->mail_receive === 1,
+            'district' => $user->district,
+            'email' => $user->email,
+            'month' => strval($user->month),
+            'year' => strval($user->year),
+            'gender' => str($user->gender),
+            'interests' => array_map('intval', explode(",", $user->interests)),
+            'points' => $user->points,
+            'membership_tier' => $membershipTier === null ? '' : MembershipTierRepository::convertData($membershipTier),
+            'address' => $user->address,
+            'member_type' => $user->is_existing_member,
+            'status' => $user->status,
+            'is_activated' => $user->is_activated,
+            'active_date' => $user->activated_at,
+            'e_newsletter' => $user->e_newsletter === 1,
+            'mail_receive' => $user->mail_receive === 1,
+            'join_date' => $user->join_date,
+            'validity_date' => Carbon::parse($user->validity_date)->format("d M Y"),
         ];
     }
 
@@ -163,11 +167,10 @@ class Users
             'message' => Lang::get('overlander.users::lang.user.verify_message.success')
         ];
     }
-
-
     public function getUser()
     {
         $user = BackendAuth::getUser();
-        return $user;
+        return self::convertData($user);
     }
+
 }

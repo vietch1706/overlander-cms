@@ -31,10 +31,9 @@ class Login extends ApiLogin
         $data = $request->all();
         RestHelper::validate($data, [
             'user' => 'required',
-            'password' => 'required',
+            'password' => 'required|regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/',
 //            'phone_area_code' => 'required|numeric|regex:/[0-9]/|not_regex:/[a-z]/',
         ]);
-
         $lang = !empty(Input::get('lang')) ? Input::get('lang') : 'zh-hk';
 
         $data['lang'] = $lang;

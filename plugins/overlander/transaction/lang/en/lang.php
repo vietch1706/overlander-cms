@@ -9,11 +9,10 @@
     ],
     'transaction' => [
         'delete' => 'Account deleted because of no purchase record!',
-
-
         'archived' => 'Account archived!'
     ],
     'point_history' => [
+        'not_found' => 'No Transaction History found!',
         'gain_reason' => [
             'invoice' => 'Point from invoice no: :invoice_no',
             'remain' => 'Point remain from invoice no::invoice_no',

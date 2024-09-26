@@ -1,6 +1,9 @@
 <?php
 
 // NOTE:: Group APIs with the same functionality
+use Overlander\Users\Api\ExistsMember\GetQuestions;
+use Overlander\Users\Api\ExistsMember\StepOne;
+use Overlander\Users\Api\ExistsMember\StepTwo;
 use Overlander\Users\Api\Users\ChangePassword;
 use Overlander\Users\Api\Users\Get;
 use Overlander\Users\Api\Users\Login;
@@ -8,11 +11,9 @@ use Overlander\Users\Api\Users\Logout;
 use Overlander\Users\Api\Users\Register;
 use Overlander\Users\Api\Users\ResetPassword;
 use Overlander\Users\Api\Users\Update;
+use Overlander\Users\Api\Users\UpdateByToken;
 use Overlander\Users\Api\Users\VerificationCheck;
 use Overlander\Users\Api\Users\VerificationSend;
-use Overlander\Users\Api\ExistsMember\StepOne;
-use Overlander\Users\Api\ExistsMember\StepTwo;
-use Overlander\Users\Api\ExistsMember\GetQuestions;
 
 Route::group([
     'prefix' => '/api/{ver}/user',
@@ -31,6 +32,8 @@ Route::group([
     Route::post('/reset-password', ResetPassword::class);
 
     Route::post('/change-password', ChangePassword::class);
+
+    Route::post('/update-information', UpdateByToken::class);
 });
 
 // NOTE:: use middleware auth for all api need authentication

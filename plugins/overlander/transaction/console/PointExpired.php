@@ -4,8 +4,10 @@ namespace Overlander\Transaction\console;
 
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Lang;
 use Overlander\Transaction\Models\PointHistory;
+use Overlander\Users\Models\Users;
 
 class PointExpired extends Command
 {
@@ -31,13 +33,19 @@ class PointExpired extends Command
                 foreach ($pointHistories as $pointHistory) {
                     $pointHistory->is_used = PointHistory::IS_USED_UNUSABLE;
                     $pointHistory->save();
+
+                    $user = Users::find($pointHistory->user_id)->first();
+                    if (!empty($user)) {
+                        $user->points_sum = $user->points_sum - $pointHistory->amount;
+                        $user->save();
+                    }
                     PointHistory::addPointHistory(
-                        $pointHistory->member_no,
+                        $pointHistory->user_id,
                         PointHistory::TYPE_LOSS,
                         $pointHistory->amount,
-                        $pointHistory->transaction_id,
-                        PointHistory::IS_HIDDEN_FALSE,
+                        null,
                         PointHistory::IS_USED_UNUSABLE,
+                        PointHistory::IS_HIDDEN_FALSE,
                         Lang::get('overlander.transaction::lang.point_history.loss_reason.expired'),
                         null
                     );

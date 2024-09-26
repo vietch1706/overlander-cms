@@ -15,7 +15,6 @@ Route::group([
 
     Route::get('supportive/get', GetSpPage::class);
 
-
     Route::get('brand/get', GetBrand::class);
 
     Route::get('store/get', GetStore::class);

@@ -30,7 +30,9 @@ class ChangePassword extends ApiPasswordChange
         $params = $request->all();
         RestHelper::validate($params, [
             'email' => 'email|regex:/^[\w\.]+@([\w-]+\.)+[\w-]{2,4}$/',
-            'password' => 'string|regex:/^[\w-]+$/',
+            'current_password' => 'required|regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/',
+            'new_password' => 'required|regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/',
+            'password_confirmation' => 'required|regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/',
         ]);
         return $this->userRepository->apiPasswordChange($params);
     }

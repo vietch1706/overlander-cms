@@ -31,6 +31,7 @@ class Transaction extends Model
             'key' => 'transaction_id'
         ]
     ];
+
     public $hasOne = [
         'point_history' => [
             PointHistory::class,
@@ -45,7 +46,8 @@ class Transaction extends Model
 
     public function getPointHistoryPreview($id)
     {
-        $pointHistoryId = PointHistory::where('transaction_id', $id)
+        $pointHistoryId = PointHistory::where('is_hidden', PointHistory::IS_HIDDEN_FALSE)
+            ->where('transaction_id', $id)
             ->first();
         if (empty($pointHistoryId)) {
             return null;

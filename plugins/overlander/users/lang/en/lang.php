@@ -18,7 +18,7 @@
         ],
         'login' => [
             'success' => 'Login Successful!',
-            'wrong' => '',
+            'wrong' => 'Incorrect email address or password, please try again.',
             'failed' => 'User Not Exist. Please sign up first!'
         ],
         'reset' => [
@@ -30,12 +30,12 @@
             'failed' => 'Registration Failed! Try again.',
         ],
         'update' => [
-            'success' => 'Update Successfully!'
+            'success' => 'You have updated your profile'
         ],
         'change_password' => [
             'success' => 'Change Password Successful!',
             'failed' => 'User not found! Please try again.',
-            'wrong' => 'Password does not match! Please try again.'
+            'wrong' => 'Incorrect password'
         ],
         'check_exist' => [
             'email' => 'The email address already existed.',

@@ -4,7 +4,7 @@ columns:
         type: number
     member_no:
         label: 'Member No'
-        type: number
+        type: text
     type:
         label: Type
         type: partial

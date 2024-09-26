@@ -4,6 +4,7 @@ namespace Overlander\Users\Repository;
 
 use Backend\Facades\BackendAuth;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Lang;
@@ -50,7 +51,6 @@ class ApiUserRepository extends ApiRepository
         Event::fire('legato.api.login.before', [&$params]);
 
         $remember = $params['remember'] ?? true;
-
         $user = UserModel::where('email', $params['user'])->first();
 
         if (!$user || !$user->id) {
@@ -60,15 +60,12 @@ class ApiUserRepository extends ApiRepository
             throw new ForbiddenException(Lang::get('overlander.users::lang.user.login.failed'));
 
         }
-
         if (!$user || !$user->checkPassword($params['password'])) {
             throw new ForbiddenException(Lang::get('overlander.users::lang.user.login.wrong'));
         }
-
         if ((!$user->is_activated && (bool)Settings::get('validate_activate'))) {
             throw new ForbiddenException(Lang::get('legato.api::lang.auth.login.inactive'));
         }
-
         $tokenModel = $this->tokenRepository->generateToken($user->getKey());
         UserService::loginWithToken($tokenModel->token, $remember);
 
@@ -101,7 +98,7 @@ class ApiUserRepository extends ApiRepository
 
         Event::fire('legato.api.logout', [$params]);
 
-        $this->tokenRepository->delete($request->input('push_token'));
+        $this->tokenRepository->delete($request->input('token'));
     }
 
     /**
@@ -161,20 +158,52 @@ class ApiUserRepository extends ApiRepository
     {
         $user = UserModel::where('email', $params['user'])->first();
         if (!$user || !$user->id) {
-            // Login by phone
-//            $user = UserModel::where('phone', $params['user'])->where('phone_area_code', $params['phone_area_code'])->first();
-//            Login by email
             throw new ForbiddenException(Lang::get('overlander.users::lang.user.change_password.failed'));
         }
-        if (!$user || !$user->checkPassword($params['password'])) {
+        if (!$user || $user->checkPassword($params['current_password'])) {
             throw new ForbiddenException(Lang::get('overlander.users::lang.user.change_password.wrong'));
         }
 
         if ((!$user->is_activated && (bool)Settings::get('validate_activate'))) {
             throw new ForbiddenException(Lang::get('legato.api::lang.auth.login.inactive'));
         }
+
+        if ($params['new_password'] == $params['password_confirmation']) {
+            $user->password = $params['new_password'];
+            $user->save();
+        }
+
         return [
             'message' => Lang::get('overlander.users::lang.user.change_password.success'),
         ];
     }
+
+    public function updateByToken($params)
+    {
+        $token = $this->tokenRepository->loadByToken($params['token']);
+        if (!$token) {
+            throw new NotFoundException(Lang::get('overlander.users::lang.user.not_found'));
+        }
+        $user = $token->user;
+        try {
+            $user->first_name = $params['first_name'];
+            $user->last_name = $params['last_name'];
+            $user->phone = $params['phone'];
+            $user->phone_area_code = $params['phone_area_code'];
+            $user->country_id = $this->countries->where('country', $params['country'])->first()->id;
+            $user->month = $params['month'] === "" ? '1' : $params['month'];
+            $user->year = $params['year'] === "" ? ((int)Carbon::now()->format('Y')) : $params['year'];
+            $user->gender = $params['gender'] === "" ? null : $params['gender'];
+            $user->district = $params['district'];
+            $user->address = $params['address'];
+            $user->updated_at = Carbon::now();
+            $user->save();
+            return [
+                'message' => Lang::get('overlander.users::lang.user.update.success')
+            ];
+        } catch (Exception $th) {
+            throw new BadRequestException($th->getMessage());
+        }
+    }
+
 }

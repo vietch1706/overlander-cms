@@ -10,6 +10,7 @@ use October\Rain\Database\Traits\Validation;
 use Overlander\General\Models\Countries;
 use Overlander\General\Models\Interests;
 use Overlander\General\Models\MembershipTier;
+use Overlander\Transaction\Models\PointHistory;
 
 
 /**
@@ -71,8 +72,21 @@ class Users extends BackendUser
         'validity_date' => ['date', 'after:join_date',]
     ];
     public $belongsTo = [
-        'membership_tier' => [MembershipTier::class, 'key' => 'membership_tier_id'],
-        'country' => [Countries::class, 'key' => 'country_id'],
+        'membership_tier' => [
+            MembershipTier::class,
+            'key' => 'membership_tier_id'
+        ],
+        'country' => [
+            Countries::class,
+            'key' => 'country_id'
+        ],
+    ];
+
+    public $hasMany = [
+        'point_history' => [
+            PointHistory::class,
+            'key' => 'user_id'
+        ],
     ];
     /**
      * @var mixed|string
@@ -139,6 +153,7 @@ class Users extends BackendUser
             $this->save();
         }
         $this->member_no = str_pad($this->id, 6, '0', STR_PAD_LEFT);
+        $this->is_activated = self::IS_ACTIVATED_ACTIVATE;
         $this->save();
     }
 

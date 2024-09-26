@@ -33,7 +33,7 @@ class Register extends ApiRegister
             'first_name' => 'required',
             'last_name' => 'required',
             'phone' => ['required', 'numeric', 'regex:/[0-9]/', 'not_regex:/[a-z]/', 'unique:backend_users,phone'],
-            'password' => 'required',
+            'password' => 'required|regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/',
             'country' => 'required',
             'email' => ['required', 'email', 'regex:/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/', 'unique:backend_users,email'],
         ]);

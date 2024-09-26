@@ -11,7 +11,7 @@ class BuilderTableCreateOverlanderTransactionPointHistory extends Migration
     {
         Schema::create('overlander_transaction_point_history', function ($table) {
             $table->increments('id')->unsigned();
-            $table->string('member_no');
+            $table->integer('user_id')->unsigned();
             $table->string('type');
             $table->integer('amount');
             $table->text('reason');

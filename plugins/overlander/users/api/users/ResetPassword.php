@@ -3,9 +3,9 @@
 namespace Overlander\Users\Api\Users;
 
 use Illuminate\Http\Request;
+use Legato\Api\Api\AuthPasswordReset as ApiPasswordReset;
 use Legato\Api\Helpers\RestHelper;
 use Overlander\Users\Repository\ApiUserRepository;
-use Legato\Api\Api\AuthPasswordReset as ApiPasswordReset;
 
 class ResetPassword extends ApiPasswordReset
 {
@@ -30,8 +30,8 @@ class ResetPassword extends ApiPasswordReset
         $params = $request->all();
         RestHelper::validate($params, [
             'user' => 'required',
-            'password' => 'required',
-            'password_confirmation' => 'required',
+            'password' => 'required|regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/',
+            'password_confirmation' => 'required|regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/',
         ]);
 
         return $this->userRepository->apiPasswordReset($params);
