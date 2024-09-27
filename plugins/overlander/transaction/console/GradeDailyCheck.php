@@ -27,7 +27,6 @@ class GradeDailyCheck extends Command
      */
     public function handle()
     {
-        dd(Users::find(2));
         $users = Users::where('status', Users::STATUS_ACTIVE)
             ->where('is_activated', Users::IS_ACTIVATED_ACTIVATE)
             ->where('deleted_at', null)

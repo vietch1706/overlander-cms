@@ -4,7 +4,6 @@ namespace Overlander\Transaction\console;
 
 use Carbon\Carbon;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
 use Lang;
 use Overlander\Transaction\Models\PointHistory;
 use Overlander\Users\Models\Users;
@@ -37,7 +36,7 @@ class PointExpired extends Command
                     $user = Users::find($pointHistory->user_id)->first();
                     if (!empty($user)) {
                         $user->points_sum = $user->points_sum - $pointHistory->amount;
-                        $user->save();
+                        $user->forceSave();
                     }
                     PointHistory::addPointHistory(
                         $pointHistory->user_id,

@@ -12,7 +12,7 @@
         'archived' => 'Account archived!'
     ],
     'point_history' => [
-        'not_found' => 'No Transaction History found!',
+        'not_found' => 'You have no loss point history',
         'gain_reason' => [
             'invoice' => 'Point from invoice no: :invoice_no',
             'remain' => 'Point remain from invoice no::invoice_no',
@@ -22,6 +22,6 @@
             'upgrade' => 'Upgrade Membership to :membership.',
             'downgrade' => 'Downgrade Membership to :membership.',
             'remain' => 'Remain current Membership: :membership.',
-        ]
+        ],
     ]
 ];
