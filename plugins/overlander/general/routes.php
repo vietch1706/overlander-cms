@@ -5,6 +5,8 @@ use Overlander\General\Api\Brands\GetBrand;
 use Overlander\General\Api\ContactUs\CreateMessage;
 use Overlander\General\Api\Countries\GetCountry;
 use Overlander\General\Api\Interests\GetInterest;
+use Overlander\General\Api\Membership\Get;
+use Overlander\General\Api\Membership\Upgrade;
 use Overlander\General\Api\Stores\GetStore;
 use Overlander\General\Api\SupportivePages\GetSpPage;
 
@@ -25,6 +27,9 @@ Route::group([
 
     Route::get('interest/get', GetInterest::class);
 
+    Route::get('membership-tier/get', Get::class);
+
+    Route::post('membership-tier/upgrade', Upgrade::class);
 });
 Route::group([
     'prefix' => '/api/{ver}/general',

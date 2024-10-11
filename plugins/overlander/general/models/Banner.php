@@ -28,7 +28,6 @@ class Banner extends Model
     public $rules = [
         'name' => 'required',
         'image' => 'required',
-        'link' => 'required',
         'published_at' => 'required|before:expired_at',
         'expired_at' => 'required|after:tomorrow',
     ];

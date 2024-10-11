@@ -10,7 +10,6 @@ class AbstractSpPages
     public RepositorySupportivePages $spPage;
     public function __construct(RepositorySupportivePages $spPage)
     {
-
         $this->spPage = $spPage;
     }
 }

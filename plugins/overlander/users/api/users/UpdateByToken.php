@@ -18,8 +18,9 @@ class UpdateByToken extends AbstractUsers
             'phone_area_code' => 'required|numeric',
             'district' => 'required|string',
             'address' => 'required|string',
-
         ]);
+        $params['mail_receive'] = $params['mail_receive'] === 'true';
+        $params['e_newsletter'] = $params['e_newsletter'] === 'true';
         return $this->apiUserRepository->updateByToken($params);
     }
 }

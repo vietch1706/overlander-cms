@@ -49,7 +49,7 @@ class Campaign extends Model
 
     public static function getCampaign($target)
     {
-        return self::select('membership_tier_id', 'brand_id', 'sku', 'shop', 'multiplier', 'start_date', 'end_date')
+        return self::select('id','membership_tier_id', 'brand_id', 'sku', 'shop', 'multiplier', 'start_date', 'end_date')
             ->where('status', Campaign::STATUS_ACTIVATE)
             ->where('target', $target)
             ->orderBy('multiplier', 'desc');

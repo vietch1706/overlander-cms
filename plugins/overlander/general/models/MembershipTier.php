@@ -17,6 +17,7 @@ class MembershipTier extends Model
     public $table = 'overlander_general_membership_tier';
 
     public const ID_ORDINARY = 2;
+    public const ID_GOLD = 4;
     public const SLUG_TEMPORARY = 'temporary';
     public const SLUG_ORDINARY = 'ordinary';
     public const SLUG_VIP = 'vip';
@@ -54,5 +55,10 @@ class MembershipTier extends Model
             return null;
         }
         return $previousMembership;
+    }
+
+    public function scopeGetById($query, $id)
+    {
+        return $query->where('id', $id);
     }
 }

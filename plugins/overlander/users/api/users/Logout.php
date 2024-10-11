@@ -29,12 +29,7 @@ class Logout extends ApiLogout
     public function __invoke(Request $request)
     {
         $data = $request->all();
-        dd($data);
-        RestHelper::validate($data, [
-            'hehe' => 'required',
-        ]);
         $lang = !empty(Input::get('lang')) ? Input::get('lang') : 'zh-hk';
-        dd($data);
         $data['lang'] = $lang;
         $result = $this->userRepository->apiLogout($request);
         return $result;

@@ -77,11 +77,12 @@ class Users
     {
         $country = Countries::where('id', $user->country_id)->first();
         $membershipTier = MembershipTier::where('id', $user->membership_tier_id)->first();
+        $upgradePoint = MembershipTier::select('points_required')->find($membershipTier->id + 1);
         return [
             'member_no' => $user->member_no . $user->member_prefix,
             'first_name' => $user->first_name,
             'last_name' => $user->last_name,
-            'phone_area_code' => '+' . $user->phone_area_code,
+            'phone_area_code' => $user->phone_area_code,
             'phone' => $user->phone,
             'password' => $user->password,
             'country' => $country === null ? '' : $country->country,
@@ -91,8 +92,9 @@ class Users
             'year' => strval($user->year),
             'gender' => str($user->gender),
             'interests' => array_map('intval', explode(",", $user->interests)),
-            'points' => $user->points,
+            'points' => ($user->points_sum),
             'membership_tier' => $membershipTier === null ? '' : MembershipTierRepository::convertData($membershipTier),
+            'upgrade_point' => ($upgradePoint->points_required),
             'address' => $user->address,
             'member_type' => $user->is_existing_member,
             'status' => $user->status,

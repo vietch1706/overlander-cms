@@ -27,13 +27,10 @@ Route::group([
 
     Route::post('/login', Login::class);
 
-    Route::post('/update', Update::class);
-
     Route::post('/reset-password', ResetPassword::class);
 
     Route::post('/change-password', ChangePassword::class);
 
-    Route::post('/update-information', UpdateByToken::class);
 });
 
 // NOTE:: use middleware auth for all api need authentication
@@ -42,7 +39,10 @@ Route::group([
     'middleware' => ['rest', 'auth']
 ], function () {
     Route::get('/me', Get::class);
+
     Route::get('/logout', Logout::class);
+
+    Route::post('/update', UpdateByToken::class);
 });
 
 // NOTE:: Group APIs with the same functionality [1]
@@ -55,4 +55,6 @@ Route::group([
     Route::post('/step-2', StepTwo::class);
 
     Route::get('questions/get', GetQuestions::class);
+
+    Route::post('/update', Update::class);
 });

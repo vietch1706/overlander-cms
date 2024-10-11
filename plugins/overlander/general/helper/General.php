@@ -6,7 +6,8 @@ use Carbon\Carbon;
 
 class General
 {
-
+    public const LIMIT_DEFAULT = 10;
+    public  const PAGE_DEFAULT = 1;
     public static function getCurrentDay()
     {
         return Carbon::now()->format('Y-m-d');

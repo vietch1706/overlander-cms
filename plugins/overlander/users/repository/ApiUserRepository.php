@@ -91,14 +91,14 @@ class ApiUserRepository extends ApiRepository
     public function apiLogout(Request $request): void
     {
         $user = BackendAuth::getUser();
-        $params = $request->all();
+        $token = Tokens::where('user_id', $user->id)->orderBy('created_at', 'desc')->first();
         if (!$user) {
             throw new NotFoundException(Lang::get('legato.api::lang.auth.error.user_not_found'));
         }
 
-        Event::fire('legato.api.logout', [$params]);
+        Event::fire('legato.api.logout');
 
-        $this->tokenRepository->delete($request->input('token'));
+        $this->tokenRepository->delete($token->token);
     }
 
     /**
@@ -156,11 +156,12 @@ class ApiUserRepository extends ApiRepository
 
     public function apiPasswordChange($params): array
     {
-        $user = UserModel::where('email', $params['user'])->first();
+        // dung BackenAuth lay user
+        $user = BackendAuth::getUser();
         if (!$user || !$user->id) {
             throw new ForbiddenException(Lang::get('overlander.users::lang.user.change_password.failed'));
         }
-        if (!$user || $user->checkPassword($params['current_password'])) {
+        if (!$user->checkPassword($params['current_password'])) {
             throw new ForbiddenException(Lang::get('overlander.users::lang.user.change_password.wrong'));
         }
 
@@ -196,6 +197,8 @@ class ApiUserRepository extends ApiRepository
             $user->gender = $params['gender'] === "" ? null : $params['gender'];
             $user->district = $params['district'];
             $user->address = $params['address'];
+            $user->mail_receive = $params['mail_receive'];
+            $user->e_newsletter = $params['e_newsletter'];
             $user->updated_at = Carbon::now();
             $user->save();
             return [

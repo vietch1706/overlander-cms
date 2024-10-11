@@ -11,9 +11,12 @@ use Overlander\General\Helper\General;
 use Overlander\General\Models\MembershipTier;
 use Overlander\Transaction\Models\PointHistory as ModelsPointHistory;
 use Overlander\Transaction\Models\Transaction;
+use Overlander\Transaction\Repository\Transaction as RepositoryTransaction;
 use Overlander\Users\Models\Users;
+use function array_push;
 use function number_format;
 use function str_replace;
+use function strrpos;
 use function strtolower;
 use function substr;
 
@@ -32,7 +35,7 @@ class PointHistory
         $this->transactions = $transaction;
     }
 
-    public function getByToken()
+    public function getList($limit, $page, $type)
     {
         $user = BackendAuth::getUser();
 
@@ -40,57 +43,73 @@ class PointHistory
             throw new NotFoundException(Lang::get('overlander.users::lang.user.not_found'));
         }
 
-        $pointHistory = $this->users->find($user->id)->point_history;
-        if (!$pointHistory) {
+        $pointHistory = $this->pointHistories->where('user_id', $user->id)
+            ->where('is_hidden', ModelsPointHistory::IS_HIDDEN_FALSE);
+
+        if ($type == ModelsPointHistory::TYPE_GAIN) {
+            $pointHistory = $pointHistory->where('type', ModelsPointHistory::TYPE_GAIN);
+        } elseif ($type == ModelsPointHistory::TYPE_LOSS) {
+            $pointHistory = $pointHistory->where('type', ModelsPointHistory::TYPE_LOSS);
+        }
+        $pointHistory = $pointHistory->paginate($limit, $page);
+        if (empty($pointHistory->first())) {
             throw new NotFoundException(Lang::get('overlander.transaction::lang.point_history.not_found'));
         }
-        $convertData = [];
-        foreach ($pointHistory as $pointHistoryItem) {
-            $convertData[] = $this->convertData($pointHistoryItem);
+        foreach ($pointHistory as $key => $pointHistoryItem) {
+            $pointHistory[$key] = $this->convertData($pointHistoryItem);
         }
-        return $convertData;
+        return $pointHistory;
     }
 
     public function convertData($pointHistory)
     {
-        $user = $this->users->select('member_no', 'member_prefix')->find($pointHistory->user_id);
-        $transaction = '';
+        $user = $this->users->select('member_no', 'member_prefix')
+            ->find($pointHistory->user_id);
         $date = '';
         $invoice_no = '';
         $totalFprice = '';
         $logo = null;
+        $transactionDetail = null;
+        $campaign = null;
+        $transactionDate = null;
         if ($pointHistory->type == $this->pointHistories::TYPE_GAIN) {
             $transaction = $pointHistory->transaction;
-            $amount = '+' . number_format($pointHistory->amount) . 'pt.';
-            $invoice_no = 'Invoice ID #' . $transaction->invoice_no;
+            $amount = number_format($pointHistory->amount);
+            $invoice_no = $transaction->invoice_no;
             $totalFprice = $transaction->detail->sum('fprice');
-            $date = 'Expire at ' . Carbon::create($pointHistory->expired_date)->format('d M Y');
+            $date = Carbon::create($pointHistory->expired_date)->format('d M Y');
+            $transactionDetail = $transaction->detail;
+            $campaign = $transaction->campaign;
+            $transactionDate = Carbon::create($transaction->date)->format('d M Y');
+            foreach ($transactionDetail as $key => $transactionDetailItem) {
+                $transactionDetail[$key] = RepositoryTransaction::convertData($transactionDetailItem);
+            }
         } else {
-            $amount = '-' . number_format($pointHistory->amount) . 'pt.';
-            $date = 'Upgraded at ' . Carbon::create($pointHistory->created_at)->format('d M Y');
-            $last_word_start = strrpos($pointHistory->reason, ' ') + 1;
-            $membershipSlug = strtolower(str_replace(".", "", substr($pointHistory->reason, $last_word_start)));
-            $membershipTier = MembershipTier::select('logo')
-                ->where('slug', $membershipSlug)
-                ->first();
-            if (!$membershipTier) {
-                $logo = null;
-            } else {
-                $logo = General::getBaseUrl() . $membershipTier->logo;
-            }
-            if ($pointHistory->is_used == $this->pointHistories::IS_USED_UNUSABLE) {
-                $date = 'Expire at ' . Carbon::create($pointHistory->expired_date)->format('d M Y');
-            }
+            $amount = number_format($pointHistory->amount);
+            $date = Carbon::create($pointHistory->created_at)->format('d M Y');
+
+        }
+        $last_word_start = strrpos($pointHistory->reason, ' ') + 1;
+        $membershipSlug = strtolower(str_replace(".", "", substr($pointHistory->reason, $last_word_start)));
+        $membershipTier = MembershipTier::select('logo')
+            ->where('slug', $membershipSlug)
+            ->first();
+        if (!$membershipTier) {
+            $logo = null;
+        } else {
+            $logo = General::getBaseUrl() . $membershipTier->logo;
         }
         return [
-            'member_no' => $user->member_no . $user->member_prefix,
             'type' => $pointHistory->type,
             'amount' => $amount,
             'reason' => $pointHistory->reason,
             'invoice_no' => $invoice_no,
-            'total_fprice' => ' $' . $totalFprice,
+            'total_fprice' => $totalFprice,
             'logo' => $logo,
-            'date' => $date,
+            'transaction_date' => $transactionDate,
+            'history_date' => $date,
+            'campaign' => $campaign,
+            'detail' => $transactionDetail,
         ];
     }
 }
