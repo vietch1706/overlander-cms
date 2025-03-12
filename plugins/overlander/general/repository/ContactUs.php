@@ -2,37 +2,29 @@
 
 namespace Overlander\General\Repository;
 
-use Exception;
-use Illuminate\Http\Request;
+use Lang;
 use Overlander\General\Models\Contact;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class ContactUs
 {
-  public Contact $contact;
+    public Contact $contact;
 
-  public function __construct(Contact $contact)
-  {
-    $this->contact = $contact;
-  }
-
-  public function add($data)
-  {
-    try {
-      Contact::insert(
-        [
-          'name' => $data['name'],
-          'email' => $data['email'],
-          'title' => $data['title'],
-          'reason' => $data['reason'],
-          'message' => $data['message'],
-        ],
-      );
-      return [
-        'message' => "Save Successful!"
-      ];
-    } catch (Exception $th) {
-      throw new BadRequestHttpException($th->getMessage());
+    public function __construct(Contact $contact)
+    {
+        $this->contact = $contact;
     }
-  }
+
+    public function add($data): array
+    {
+        $contact = new $this->contact();
+        $contact->name = $data['name'];
+        $contact->email = $data['email'];
+        $contact->title = $data['title'];
+        $contact->reason = $data['reason'];
+        $contact->message = $data['message'];
+        $contact->save();
+        return [
+            'message' => Lang::get('overlander.general::lang.contact.sent'),
+        ];
+    }
 }

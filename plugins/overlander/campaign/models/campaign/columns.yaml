@@ -1,0 +1,53 @@
+columns:
+    id:
+        label: Id
+        type: number
+    title:
+        label: Title
+        type: text
+    short_description:
+        label: 'Short Description'
+        type: text
+    image:
+        label: Image
+        type: text
+    t_c:
+        label: 'T&C'
+        type: text
+    target:
+        label: Target
+        type: partial
+        path: $/overlander/campaign/models/campaign/_target.htm
+    membership_tier:
+        label: 'Membership Tier'
+        select: name
+        relation: membership_tier
+    brand:
+        label: 'Brand'
+        select: name
+        relation: brand
+    shop:
+        label: 'Shop'
+        type: text
+    sku:
+        label: 'SKU'
+        type: text
+    multiplier:
+        label: Multiplier
+        type: text
+    status:
+        label: Status
+        type: partial
+        path: $/overlander/campaign/models/campaign/_status.htm
+    start_date:
+        label: 'Start Date'
+        type: text
+    end_date:
+        label: 'End Date'
+        type: text
+    created_at:
+        label: 'Created At'
+        type: datetime
+    updated_at:
+        label: 'Updated At'
+        type: datetime

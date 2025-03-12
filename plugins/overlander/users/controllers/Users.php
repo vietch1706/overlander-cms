@@ -24,4 +24,11 @@ class Users extends Controller
         BackendMenu::setContext('Overlander.Users', 'Users', 'users-users');
     }
 
+    public function listExtendQuery($query)
+    {
+        $query->where(function ($query) {
+            $query->where('role_id', \Overlander\Users\Models\Users::ROLE_CUSTOMER_ID)
+                ->orWhere('role_id', null);
+        });
+    }
 }

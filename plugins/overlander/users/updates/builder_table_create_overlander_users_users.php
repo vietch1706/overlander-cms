@@ -24,7 +24,7 @@ class BuilderTableCreateOverlanderUsersUsers extends Migration
             $table->boolean('mail_receive')->default(0);
             $table->date('join_date')->nullable();
             $table->date('validity_date')->nullable();
-            $table->integer('membership_tier_id')->default(0);
+            $table->integer('membership_tier_id')->default(1);
             $table->boolean('status')->default(0);
             $table->string('interests')->nullable();
             $table->integer('sales_amounts')->nullable();

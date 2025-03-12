@@ -14,15 +14,3 @@ navigation:
                 label: Users
                 url: overlander/users/users
                 icon: icon-users
-            users-membershiptier:
-                label: 'Membership Tier'
-                url: overlander/users/membershiptier
-                icon: icon-trophy
-            users-point-history:
-                label: 'Point History'
-                url: overlander/users/pointhistory
-                icon: icon-money
-            users-transaction:
-                label: Transaction
-                url: overlander/users/transaction
-                icon: icon-exchange

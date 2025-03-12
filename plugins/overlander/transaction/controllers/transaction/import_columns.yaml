@@ -1,0 +1,77 @@
+columns:
+    vip:
+        label: VIP
+        type: text
+    name:
+        label: NAME
+        type: text
+    plc:
+        label: PLC
+        type: number
+    brand_code:
+        label: BRAND CODE
+        type: number
+    description:
+        label: DESCRIPTION
+        type: text
+    invoice:
+        label: INVOICE
+        type: text
+    date:
+        label: DATE
+        type: text
+    quantity:
+        label: QUANTITY
+        type: text
+    unit:
+        label: UNIT
+        type: text
+    price:
+        label: PRICE
+        type: text
+    discount:
+        label: DISCOUNT
+        type: text
+    fprice:
+        label: FPRICE
+        type: text
+    shop_id:
+        label: SHOPID
+        type: text
+    loyalty_balance:
+        label: LOYALTY_BALANCE
+        type: double
+    act01:
+        label: ACT01
+        type: number
+    act02:
+        label: ACT02
+        type: number
+    act03:
+        label: ACT03
+        type: number
+    act04:
+        label: ACT04
+        type: number
+    act05:
+        label: ACT05
+        type: number
+    act06:
+        label: ACT06
+        type: number
+    act07:
+        label: ACT07
+        type: number
+    act08:
+        label: ACT08
+        type: number
+    act09:
+        label: ACT09
+        type: number
+    act10:
+        label: ACT10
+        type: number
+
+    category:
+        label: CATEGORY
+        type: text

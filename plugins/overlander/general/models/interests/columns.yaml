@@ -2,12 +2,7 @@ columns:
     id:
         label: ID
         type: number
+        width: 10%
     name:
         label: Name
         type: text
-    created_at:
-        label: 'Created At'
-        type: datetime
-    updated_at:
-        label: 'Updated At'
-        type: datetime

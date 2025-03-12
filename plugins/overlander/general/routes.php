@@ -1,23 +1,39 @@
 <?php
 
-use Overlander\General\Api\Banners;
-use Overlander\General\Api\Stores;
+use Overlander\General\Api\Banners\GetBanner;
+use Overlander\General\Api\Brands\GetBrand;
+use Overlander\General\Api\ContactUs\CreateMessage;
+use Overlander\General\Api\Countries\GetCountry;
+use Overlander\General\Api\Interests\GetInterest;
+use Overlander\General\Api\Membership\Get;
+use Overlander\General\Api\Membership\Upgrade;
+use Overlander\General\Api\Stores\GetStore;
+use Overlander\General\Api\SupportivePages\GetSpPage;
 
 Route::group([
     'prefix' => '/api/{ver}/general',
+    'middleware' => ['rest'],
 ], function () {
 
-    Route::get('supportive/get', 'Overlander\General\Api\SupportivePages@getAllSupportivePages');
+    Route::get('supportive/get', GetSpPage::class);
 
-    Route::post('contact-us', 'Overlander\General\Api\ContactUs@getAllMessages');
+    Route::get('brand/get', GetBrand::class);
 
-    Route::get('brand', 'Overlander\General\Api\Brand@getAllBrands');
+    Route::get('store/get', GetStore::class);
 
-    Route::get('store', [Stores::class, 'getApi']);
+    Route::get('banner/get', GetBanner::class);
 
-    Route::get('banner', [Banners::class, 'getApi']);
+    Route::get('country/get', GetCountry::class);
 
-    Route::get('phonecode/get', 'Overlander\General\Api\Country@getCountry');
-    
-    Route::get('interests/get', 'Overlander\General\Api\Interests@getInterests');
+    Route::get('interest/get', GetInterest::class);
+
+    Route::get('membership-tier/get', Get::class);
+
+    Route::post('membership-tier/upgrade', Upgrade::class);
+});
+Route::group([
+    'prefix' => '/api/{ver}/general',
+    'middleware' => ['rest'],
+], function () {
+    Route::post('contact-us/create', CreateMessage::class);
 });

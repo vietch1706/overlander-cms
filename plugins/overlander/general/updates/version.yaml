@@ -33,3 +33,15 @@ v1.0.11:
 v1.0.12:
     - 'Seed table overlander_general_interests'
     - seed_overlander_general_interests.php
+v1.0.13:
+    - 'Seed table overlander_general_brands'
+    - seed_overlander_general_brands.php
+v1.0.14:
+    - 'Created table overlander_general_membership_tier'
+    - builder_table_create_overlander_general_membership_tier.php
+v1.0.15:
+    - 'Seed table overlander_general_membership_tier'
+    - seed_overlander_general_membership_tier.php
+v1.0.16:
+    - 'Seed table overlander_general_banners'
+    - seed_overlander_general_banners.php

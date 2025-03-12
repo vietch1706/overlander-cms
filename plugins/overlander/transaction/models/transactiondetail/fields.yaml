@@ -1,0 +1,25 @@
+fields:
+    id:
+        label: Id
+        span: auto
+        type: number
+    invoice_no:
+        label: 'Invoice no'
+        span: auto
+        type: text
+    plc:
+        label: Plc
+        span: auto
+        type: text
+    price:
+        label: Price
+        span: auto
+        type: number
+    quantity:
+        label: Quantity
+        span: auto
+        type: number
+    brand_code:
+        label: 'Brand code'
+        span: auto
+        type: number

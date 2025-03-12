@@ -1,0 +1,11 @@
+# ===================================
+#  Import/Export Behavior Config
+# ===================================
+
+import:
+    title: Import transactions
+    modelClass: Overlander\Transaction\Models\TransactionImport
+    list: $/overlander/transaction/models/transaction/import_columns.yaml
+    redirect: overlander/transaction/transaction
+defaultFormatOptions:
+    fileFormat: csv

@@ -11,6 +11,11 @@ columns:
         label: "Logo"
         type: partial
         path: ~/plugins/overlander/general/models/brands/_image.htm
+    group:
+        label: "Brand Group"
+        type: partial
+        path: ~/plugins/overlander/general/models/brands/_group.htm
+        searchable: true
     created_at:
         label: "Created At"
         type: datetime

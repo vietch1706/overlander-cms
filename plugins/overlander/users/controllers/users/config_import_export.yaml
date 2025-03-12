@@ -3,7 +3,7 @@
 # ===================================
 
 import:
-    title: Import subscribers
+    title: Import users
     modelClass: Overlander\Users\Models\UsersImport
     list: $/overlander/users/models/users/import_columns.yaml
     redirect: overlander/users/users

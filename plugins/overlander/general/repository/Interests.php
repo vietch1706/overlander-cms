@@ -2,9 +2,9 @@
 
 namespace Overlander\General\Repository;
 
-use Exception;
+use Lang;
+use Legato\Api\Exceptions\NotFoundException;
 use Overlander\General\Models\Interests as ModelInterests;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class Interests
 {
@@ -17,38 +17,34 @@ class Interests
 
     public function getAll()
     {
-        try {
-            $list = $this->interests->all();
-
-            $data = [];
-
-            foreach ($list as $key => $value) {
-                $data[] = $this->convertData($value);
-            }
-            return $data;
-        } catch (Exception $th) {
-            throw new BadRequestHttpException($th->getMessage());
+        $list = $this->interests->all();
+        $data = [];
+        foreach ($list as $key => $value) {
+            $data[] = $this->convertData($value);
         }
+        if (empty($data)) {
+            throw new NotFoundException(Lang::get('overlander.general::lang.not_found'));
+        }
+        return $data;
     }
 
     public function convertData($data)
     {
         return [
+            'id' => $data->id,
             'name' => $data->name,
         ];
     }
 
     public function getById($id)
     {
-        try {
-            $data = null;
-            $interest = $this->interests->getById($id)->first();
-            if (!empty($interest)) {
-                $data = $this->convertData($interest);
-            }
-            return $data;
-        } catch (Exception $th) {
-            throw new BadRequestHttpException($th->getMessage());
+        $data = null;
+        $interest = $this->interests->getById($id)->first();
+        if (!empty($interest)) {
+            $data = $this->convertData($interest);
+        } else {
+            throw new NotFoundException(Lang::get('overlander.general::lang.not_found'));
         }
+        return $data;
     }
 }

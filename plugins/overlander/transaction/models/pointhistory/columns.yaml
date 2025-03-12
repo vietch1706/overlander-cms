@@ -1,0 +1,26 @@
+columns:
+    id:
+        label: Id
+        type: number
+    member_no:
+        label: 'Member No'
+        type: text
+    type:
+        label: Type
+        type: partial
+        path: $/overlander/transaction/models/pointhistory/_type.htm
+    amount:
+        label: Amount
+        type: number
+    reason:
+        label: Reason
+        type: text
+    expired_date:
+        label: 'Expired Date'
+        type: text
+    created_at:
+        label: 'Created At'
+        type: datetime
+    updated_at:
+        label: 'Updated At'
+        type: datetime

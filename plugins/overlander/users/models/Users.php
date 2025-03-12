@@ -2,15 +2,16 @@
 
 namespace Overlander\Users\Models;
 
+use Backend\Models\User as BackendUser;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
-use Model;
+use Illuminate\Support\Facades\DB;
 use October\Rain\Database\Traits\Validation;
 use Overlander\General\Models\Countries;
 use Overlander\General\Models\Interests;
-use Overlander\Users\Controllers\Transaction;
-use Backend\Models\User as BackendUser;
+use Overlander\General\Models\MembershipTier;
+use Overlander\Transaction\Models\PointHistory;
+
 
 /**
  * Model
@@ -20,17 +21,28 @@ class Users extends BackendUser
     use Validation;
     use Notifiable;
 
-    const GENDER_MALE = 0;
-    const GENDER_FEMALE = 1;
-    const GENDER_OTHER = '';
-    const EXIST_MEMBER = 1;
-    const NORMAL_MEMBER = 0;
-    const ACTIVE = 1;
-    const INACTIVE = 0;
-    const YES = 1;
-    const NO = 0;
+    public const ROLE_ADMIN_ID = 1;
+    public const ROLE_ADMIN_CODE = 'admin';
+    public const ROLE_EMPLOYEE_ID = 2;
+    public const ROLE_EMPLOYEE_CODE = 'employee';
+    public const ROLE_CUSTOMER_ID = 3;
+    public const ROLE_CUSTOMER_CODE = 'customer';
+    public const GENDER_MALE = 0;
+    public const GENDER_FEMALE = 1;
+    public const GENDER_OTHER = null;
+    public const EXIST_MEMBER = 1;
+    public const NORMAL_MEMBER = 0;
+    public const STATUS_ACTIVE = 1;
+    public const STATUS_INACTIVE = 0;
 
-    const MONTH = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+    public const IS_ACTIVATED_ACTIVATE = 1;
+    public const IS_ACTIVATED_SUSPEND = 0;
+
+    public const YES = 1;
+    public const NO = 0;
+    public const DEFAULT_POINTS_SUM = 0;
+
+    public const MONTH = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
     public $attributes = [
         'is_existing_member' => '0',
@@ -51,17 +63,30 @@ class Users extends BackendUser
     public $rules = [
         'first_name' => 'required',
         'last_name' => 'required',
-        'phone' => ['required', 'unique:overlander_users_users,phone', 'integer'],
+        'phone' => 'required|numeric|regex:/[0-9]/|not_regex:/[a-z]/',
         'country_id' => 'required',
-        'email' => ['required', 'email', 'unique:overlander_users_users,email'],
+        'email' => ['required', 'email', 'unique:backend_users,email'],
         'month' => ['integer', 'between:0,12'],
         'year' => ['integer'],
         'join_date' => ['date', 'before:validity_date',],
         'validity_date' => ['date', 'after:join_date',]
     ];
     public $belongsTo = [
-        'membership_tier' => [MembershipTier::class, 'key' => 'membership_tier_id'],
-        'country' => [Countries::class, 'key' => 'country_id'],
+        'membership_tier' => [
+            MembershipTier::class,
+            'key' => 'membership_tier_id'
+        ],
+        'country' => [
+            Countries::class,
+            'key' => 'country_id'
+        ],
+    ];
+
+    public $hasMany = [
+        'point_history' => [
+            PointHistory::class,
+            'key' => 'user_id'
+        ],
     ];
     /**
      * @var mixed|string
@@ -78,12 +103,9 @@ class Users extends BackendUser
         'gender',
         'interests',
         'is_existing_member',
-        'status',
-        'active_date',
         'points_sum',
         'membership_tier_id',
         'send_mail_at',
-        'verification_code',
         'join_date',
         'validity_date',
         'district',
@@ -92,29 +114,56 @@ class Users extends BackendUser
         'mail_receive',
     ];
 
-    public function getFullMemberNumberAttribute()
+    public function getFullMemberNoAttribute()
     {
         return $this->member_no . $this->member_prefix;
     }
 
-    public function beforeValidate(){
+    public function getPhoneNumberAttribute()
+    {
+        return $this->phone_area_code . $this->phone;
+    }
+
+    public function getBirthdayAttribute()
+    {
+        if ($this->month == null || $this->year == null) {
+            return '';
+        }
+        return $this->month . '-' .$this->year;
+    }
+
+    public function beforeValidate()
+    {
         if (!$this->login) {
             $this->login = str_random(10);
         }
     }
-    public function beforeCreate()
+
+    public function getPhoneAreaCodeOptions()
     {
-        $lastestUser = $this->orderBy('member_no', 'desc')->first();
-        if (empty($this->member_no) && empty($this->member_prefix)) {
-            $this->member_prefix = 'A';
-            if (!empty($lastestUser)) {
-                $this->member_no = 100000 + 1;
-            } else {
-                $this->member_no = 100000;
-            }
-        }
+        return Countries::all()->lists('code', 'code');
     }
 
+    public function afterCreate()
+    {
+        $this->role_id = self::ROLE_CUSTOMER_ID;
+        if (empty($this->member_no) && empty($this->member_prefix)) {
+            $this->member_prefix = 'A';
+            $this->member_no = str_pad($this->id, 6, '0', STR_PAD_LEFT);
+            $this->save();
+        }
+        $this->member_no = str_pad($this->id, 6, '0', STR_PAD_LEFT);
+        $this->is_activated = self::IS_ACTIVATED_ACTIVATE;
+        $this->save();
+    }
+
+    public function getIsActivatedOptions()
+    {
+        return [
+            self::IS_ACTIVATED_ACTIVATE => 'Activate',
+            self::IS_ACTIVATED_SUSPEND => 'Suspend',
+        ];
+    }
     public function getGenderOptions()
     {
         return [
@@ -161,20 +210,12 @@ class Users extends BackendUser
     public function getYearOptions()
     {
         $j = 0;
-        for ($i = ((int)Carbon::now()->format('Y')) - 80; $i <= ((int)Carbon::now()->format('Y')); $i++) {
-            $years[$i] = $i;
+        $years = [];
+        for ($i = ((int)Carbon::now()->format('Y')); $i >= ((int)Carbon::now()->format('Y') - 80); $i--) {
+            $years[$j] = $i;
             $j++;
         }
         return $years;
-    }
-
-    public function getMemberPrefixOptions()
-    {
-        return [
-            'A',
-            'S',
-            'P'
-        ];
     }
 
     public function getIsExistingMemberOptions()
@@ -188,8 +229,8 @@ class Users extends BackendUser
     public function getStatusOptions()
     {
         return [
-            self::ACTIVE => 'Active',
-            self::INACTIVE => 'Inactive',
+            self::STATUS_ACTIVE => 'Active',
+            self::STATUS_INACTIVE => 'Inactive',
         ];
     }
 
@@ -215,11 +256,6 @@ class Users extends BackendUser
         return title_case($result);
     }
 
-    public function transaction(): HasMany
-    {
-        return $this->hasMany(Transaction::class);
-    }
-
     public function scopeGetByMemberNumber($query, $memberNumber)
     {
         return $query->where('member_no', $memberNumber);
@@ -237,6 +273,6 @@ class Users extends BackendUser
 
     public function scopeGetByPhone($query, $phone)
     {
-        return $query->where('phone', $phone);
+        return $query->where(DB::raw('concat(phone_area_code, phone)'), $phone);
     }
 }

@@ -2,8 +2,8 @@
 
 namespace Overlander\General\Updates;
 
-use Schema;
 use October\Rain\Database\Updates\Migration;
+use Schema;
 
 class BuilderTableCreateOverlanderGeneralBrands extends Migration
 {
@@ -13,6 +13,9 @@ class BuilderTableCreateOverlanderGeneralBrands extends Migration
             $table->increments('id')->unsigned();
             $table->string('name');
             $table->string('image');
+            $table->integer('code');
+            $table->integer('group')->default(0);
+            $table->text('description')->nullable();
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();
         });

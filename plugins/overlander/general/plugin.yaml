@@ -42,3 +42,7 @@ navigation:
                 label: Interests
                 url: overlander/general/interests
                 icon: icon-info
+            general-membershiptier:
+                label: 'Membership Tier'
+                url: overlander/general/membershiptier
+                icon: icon-user-plus

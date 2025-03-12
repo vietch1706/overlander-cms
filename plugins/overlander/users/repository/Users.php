@@ -5,19 +5,21 @@ namespace Overlander\Users\Repository;
 use Backend\Facades\BackendAuth;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Lang;
+use Legato\Api\Exceptions\BadRequestException;
+use Legato\Api\Exceptions\NotFoundException;
 use Overlander\General\Helper\General;
 use Overlander\General\Models\Countries;
 use Overlander\General\Models\Interests;
+use Overlander\General\Models\MembershipTier;
+use Overlander\General\Repository\MembershipTier as MembershipTierRepository;
 use Overlander\Logs\Models\Maillogs;
 use Overlander\Users\Models\Users as ModelUsers;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-
 
 class Users
 {
-    const ACTIVE = 1;
     public ModelUsers $users;
     public Countries $countries;
     public Interests $interests;
@@ -32,323 +34,145 @@ class Users
     public static function sendCode($email, $method)
     {
         $user = ModelUsers::where('email', $email)->first();
-        $mailLog = new Maillogs();
-        if ($mailLog->where('email', $email)->whereDate('created_at', Carbon::now())->count() >= 3) {
-            return [
-                'message' => Lang::get('overlander.users::lang.user.sendcode_message.daily_limit')
-            ];
-        }
-        if (Carbon::now()->diffInMinutes($user['send_mail_at']) < 1 && $user['verification_code'] != null) {
-            return [
-                'message' => Lang::get('overlander.users::lang.user.sendcode_message.send_times')
-            ];
-        }
-        $code = General::generateRandomCode();
-        $message = Lang::get('overlander.users::lang.user.sendcode_message.verify', ['code' => $code]);
-        Mail::sendTo($email, 'overlander.general::mail.exists_verify', ['content' => $message]);
-        $user->verification_code = $code;
-        $mailLog->email = $email;
-        $mailLog->content = $message;
-        $mailLog->method = $method;
-        $mailLog->save();
-        $user->send_mail_at = Carbon::now()->toDateTimeString();
-        $user->save();
-        return [
-            'message' => Lang::get('overlander.users::lang.user.sendcode_message.success')
-        ];
-    }
-
-    public function checkExist($param)
-    {
-        $messages = '';
-        $data = null;
-        if (!empty($param['email'])) {
-            $data = $this->users->where('email', $param['email'])->first();
-            if ($data != null) {
-                $messages = [
-                    'email' => 'The email address already existed.',
-                ];
-            }
-        }
-        if (!empty($param['phone']) && $data != null) {
-            if ($this->users->where('phone', $param['phone'])->first() != null) {
-                $messages = [
-                    'email' => 'The email address already existed.',
-                    'phone' => 'The phone number already existed.',
-                ];
-            }
-        }
-        if (!empty($param['phone']) && $data == null) {
-            $data = $this->users->where('phone', $param['phone'])->first();
-            if (!empty($data)) {
-                $messages = [
-                    'phone' => 'The phone number already existed.',
-                ];
-            }
-        }
-        if (!empty($param['member_no'])) {
-            $data = $this->users->where('member_no', $param['member_no'])->first();
-            if (empty($data)) {
-                $messages = [
-                    'member_no' => 'The member number is not exists.',
-                ];
-            }
-        }
-
-        return $messages;
-    }
-
-    public function getByPhone($phone)
-    {
         try {
-            $data = null;
-            $phone = str_replace(' ', '+', $phone);
-            $user = $this->users->getByPhone($phone)->first();
-            if (!empty($user)) {
-                $data = $this->convertData($user);
-            } else {
-                $data = '';
+            if (empty($user)) {
+                throw new BadRequestException(Lang::get('overlander.users::lang.user.not_found'));
             }
-            return $data;
-        } catch (Exception $th) {
-            throw new BadRequestHttpException($th->getMessage());
-        }
-    }
-
-    public function convertData($users)
-    {
-        return [
-            'member_no' => $users->member_no . $users->member_prefix,
-            'first_name' => $users->first_name,
-            'last_name' => $users->last_name,
-            'phone' => $users->phone,
-            'password' => $users->password,
-            'country' => $users->country_id,
-            'email' => $users->email,
-            'month' => $users->month,
-            'year' => $users->year,
-            'gender' => $users->gender,
-            'interests' => $users->interests,
-            'points' => $users->points,
-            'membership_tier_id' => $users->points,
-            'address' => $users->address,
-            'is_existing_member' => $users->is_existing_member,
-            'status' => $users->status,
-            'active_date' => $users->active_date,
-            'send_mail_at' => $users->send_mail_at,
-        ];
-    }
-
-    public function getByEmail($email)
-    {
-        try {
-            $data = null;
-            $user = $this->users->getByEmail($email)->first();
-            dd($user->member_prefix);
-            if (!empty($user)) {
-                $data = $this->convertData($user);
+            $mailLogDailyLimit = Maillogs::where('email', $email)
+                ->whereDate('created_at', Carbon::now())
+                ->count();
+            if ($mailLogDailyLimit >= 3) {
+                throw new BadRequestException(Lang::get('overlander.users::lang.user.send_code_message.daily_limit'));
             }
-            return $data;
-        } catch (Exception $th) {
-            throw new BadRequestHttpException($th->getMessage());
-        }
-    }
 
-    public function create($data)
-    {
-        $data = $this->checkEmptyData($data);
-        $user = [
-            'first_name' => $data['first_name'],
-            'last_name' => $data['last_name'],
-            'phone' => $data['phone'],
-            'password' => $data['password'],
-            'country_id' => $this->countries->where('country', $data['country'])->first()['id'],
-            'email' => $data['email'],
-            'month' => $data['month'] ?? '1',
-            'year' => $data['year'],
-            'gender' => $data['gender'],
-            'mail_receive' => $data['mail_receive'],
-            'e_newsletter' => $data['e_newsletter'],
-            'interests' => $data['interests'],
-            'join_date' => Carbon::now()->format('Y-m-d'),
-            'validity_date' => Carbon::now()->addMonth(3)->format('Y-m-d'),
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
-        ];
-        try {
-            $this->users->fill($user);
-            $this->users->save();
-            return [
-                'message' => 'Save successfull!',
-            ];
-        } catch (Exception $th) {
-            throw new BadRequestHttpException($th->getMessage());
-            return $th->getMessage();
-        }
-    }
-
-    /**
-     * @param $data
-     * @return mixed
-     */
-    public function checkEmptyData($data)
-    {
-        if (empty($data['interests'])) {
-            $data['interests'] = ' ';
-        } else {
-            $interest = [];
-            foreach ($data['interests'] as $key => $value) {
-                $interest[$key] = $this->interests->where('name', $value)->first()['id'];
+            if (
+                Carbon::now()->diffInMinutes($user->send_mail_at) < 1 &&
+                $user->activation_code != null
+            ) {
+                throw new BadRequestException(Lang::get('overlander.users::lang.user.send_code_message.send_times'));
             }
-            $data['interests'] = implode(',', $interest);
-        }
-        if (empty($data['month'])) {
-            $data['month'] = 1;
-        }
-        if (empty($data['year'])) {
-            $data['year'] = (int)Carbon::now()->format('Y') - 80;
-        }
-        if ($data['gender'] == "") {
-            $data['gender'] = null;
-        }
-        return $data;
-    }
 
-    public function resetPassword($newPassword, $confirmPassword, $email)
-    {
-        if ($newPassword == $confirmPassword) {
-            $user = $this->users->where('email', $email)->first();
-            $user->password = $newPassword;
+            $code = General::generateRandomCode();
+            $message = Lang::get('overlander.users::lang.user.send_code_message.verify', ['code' => $code]);
+
+            Mail::sendTo($email, 'overlander.general::mail.exists_verify', ['content' => $message]);
+            $mailLog = new Maillogs();
+            $mailLog->email = $email;
+            $mailLog->content = $message;
+            $mailLog->method = $method;
+            $mailLog->save();
+
+            $user->activation_code = $code;
+            $user->send_mail_at = Carbon::now()->toDateTimeString();
             $user->save();
             return [
-                'message' => Lang::get('overlander.users::lang.user.reset.success'),
-            ];
-        }
-        return [
-            'message' => Lang::get('overlander.users::lang.user.reset.failed'),
-        ];
-    }
-
-    public function update($data)
-    {
-        $data = $this->checkEmptyData($data);
-        $interests = function () use ($data) {
-            $interest = [];
-            foreach ($data['interests'] as $key => $value) {
-                $interest[$key] = $this->interests->where('name', $value)->first()['id'];
-            }
-            return $interest;
-        };
-        $updateUser = [
-            'first_name' => $data['first_name'],
-            'last_name' => $data['last_name'],
-            'phone' => $data['phone'],
-            'password' => $data['password'],
-            'country_id' => $this->countries->where('country', $data['country'])->first()['id'],
-            'email' => $data['email'],
-            'month' => $data['month'],
-            'year' => $data['year'],
-            'gender' => $data['gender'],
-            'interest_id' => implode(",", $interests()),
-            'updated_at' => General::getCurrentDay(),
-        ];
-        try {
-            $user = $this->users->where('email', $data['email'])->first();
-            $user->fill($updateUser);
-            $user->save();
-            return [
-                'message' => 'Update Successfully!!!',
+                'message' => Lang::get('overlander.users::lang.user.send_code_message.success')
             ];
         } catch (Exception $th) {
-            throw new BadRequestHttpException($th->getMessage());
+            throw new BadRequestException($th->getMessage());
         }
     }
 
-    public function verifyCode($email, $code)
+    public static function convertData($user)
+    {
+        $country = Countries::where('id', $user->country_id)->first();
+        $membershipTier = MembershipTier::where('id', $user->membership_tier_id)->first();
+        $upgradePoint = MembershipTier::select('points_required')->find($membershipTier->id + 1);
+        return [
+            'member_no' => $user->member_no . $user->member_prefix,
+            'first_name' => $user->first_name,
+            'last_name' => $user->last_name,
+            'phone_area_code' => $user->phone_area_code,
+            'phone' => $user->phone,
+            'password' => $user->password,
+            'country' => $country === null ? '' : $country->country,
+            'district' => $user->district,
+            'email' => $user->email,
+            'month' => strval($user->month),
+            'year' => strval($user->year),
+            'gender' => str($user->gender),
+            'interests' => array_map('intval', explode(",", $user->interests)),
+            'points' => ($user->points_sum),
+            'membership_tier' => $membershipTier === null ? '' : MembershipTierRepository::convertData($membershipTier),
+            'upgrade_point' => ($upgradePoint->points_required),
+            'address' => $user->address,
+            'member_type' => $user->is_existing_member,
+            'status' => $user->status,
+            'is_activated' => $user->is_activated,
+            'active_date' => $user->activated_at,
+            'e_newsletter' => $user->e_newsletter === 1,
+            'mail_receive' => $user->mail_receive === 1,
+            'join_date' => $user->join_date,
+            'validity_date' => Carbon::parse($user->validity_date)->format("d M Y"),
+        ];
+    }
+
+    public function update($params)
+    {
+        $user = $this->users->where(DB::raw('concat(phone_area_code, phone)'), $params['phone'])->first();
+        if (empty($user)) {
+            $user = $this->users->where('email', $params['email'])->first();
+        }
+        if (empty($user)) {
+            throw new NotFoundException(Lang::get('overlander.users::lang.user.not_found'));
+        }
+        $params['interests'] = implode(",", $params['interests']);
+        // Save user into backend_users table
+        $user->first_name = $params['first_name'];
+        $user->last_name = $params['last_name'];
+        $user->phone = $params['phone'];
+        $user->phone_area_code = $params['phone_area_code'];
+        $user->password = $params['password'] === "" ? "" : $params['password'];
+        $user->password_confirmation = $params['password_confirmation'];
+        $user->email = $params['email'];
+        $user->country_id = $this->countries->where('country', $params['country'])->first()['id'];
+        $user->district = $params['district'] ?? "";
+        $user->address = $params['address'] ?? "";
+        $user->month = $params['month'] === "" ? '1' : $params['month'];
+        $user->year = $params['year'] === "" ? ((int)Carbon::now()->format('Y')) : $params['year'];
+        $user->gender = $params['gender'] === "" ? null : $params['gender'];
+        $user->mail_receive = $params['mail_receive'];
+        $user->e_newsletter = $params['e_newsletter'];
+        $user->interests = $params['interests'];
+        $user->updated_at = Carbon::now();
+        try {
+            $user->save();
+            return [
+                'message' => Lang::get('overlander.users::lang.user.update.success'),
+            ];
+        } catch (Exception $th) {
+            throw new BadRequestException($th->getMessage());
+        }
+    }
+
+    public function checkCode($email, $code)
     {
         $user = $this->users->where('email', $email)->first();
-        if (Carbon::now()->diffInMinutes($user['send_mail_at']) > 10) {
-            $user->send_mail_at = null;
-            $user->save();
-            return [
-                'message' => Lang::get('overlander.users::lang.user.verify_message.expired')
-            ];
-        }
-
-        if ($user['verification_code'] == $code) {
-            $user->verification_code = null;
-            $user->send_mail_at = null;
-            if ($user['status'] != self::ACTIVE) {
-                $user->status = self::ACTIVE;
-                $user->active_date = Carbon::now();
+        try {
+            if (Carbon::now()->diffInMinutes($user->send_mail_at) > 10) {
+                throw new BadRequestException(Lang::get('overlander.users::lang.user.verify_message.expired'));
             }
+            if ($user->activation_code != $code) {
+                throw new BadRequestException(Lang::get('overlander.users::lang.user.verify_message.failed'));
+            }
+            if ($user->status != $this->users::STATUS_INACTIVE) {
+                $user->status = $this->users::STATUS_ACTIVE;
+                $user->activated_at = Carbon::now();
+            }
+            $user->activation_code = null;
+            $user->send_mail_at = null;
             $user->save();
-            return [
-                'message' => Lang::get('overlander.users::lang.user.verify_message.success')
-            ];
+        } catch (Exception $th) {
+            throw new BadRequestException($th->getMessage());
         }
         return [
-            'message' => Lang::get('overlander.users::lang.user.verify_message.failed')
+            'message' => Lang::get('overlander.users::lang.user.verify_message.success')
         ];
     }
-
-    public function login($param)
-    {
-        if (!empty($param['member_no'])) {
-            $member_no = preg_replace('/[^0-9]/', '', $param['member_no']);
-            $data = $this->users->where('member_no', $member_no)->first();
-        } elseif (!empty($param['email'])) {
-            $data = $this->users->where('email', $param['email'])->first();
-        }
-        if ($data == null) {
-            return [
-                'message' => Lang::get('overlander.users::lang.user.login.failed'),
-            ];
-        } else {
-            if ($param['password'] == $data['password']) {
-                return [
-                    'message' => Lang::get('overlander.users::lang.user.login.success'),
-                ];
-            }
-            return [
-                'message' => Lang::get('overlander.users::lang.user.login.wrong'),
-            ];
-        }
-    }
-
-    public function getByMemberNumber($memberNumber)
-    {
-        try {
-            $data = null;
-            $user = $this->users->getByMemberNumber($memberNumber)->first();
-            if (!empty($user)) {
-                $data = $this->convertData($user);
-            }
-            return $data;
-        } catch (Exception $th) {
-            throw new BadRequestHttpException($th->getMessage());
-        }
-    }
-
-    public function getById($id)
-    {
-        try {
-            $data = null;
-            $user = $this->users->getById($id)->first();
-            if (!empty($user)) {
-                $data = $this->convertData($user);
-            }
-            return $data;
-        } catch (Exception $th) {
-            throw new BadRequestHttpException($th->getMessage());
-        }
-    }
-
     public function getUser()
     {
         $user = BackendAuth::getUser();
-        // TODO: update function convertData
-        // return $this->convertData($user);
-        return $user;
+        return self::convertData($user);
     }
+
 }

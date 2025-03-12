@@ -12,8 +12,8 @@ class BuilderTableCreateOverlanderGeneralBanner extends Migration
         Schema::create('overlander_general_banner', function ($table) {
             $table->increments('id')->unsigned();
             $table->string('name');
-            $table->string('image');
-            $table->string('link');
+            $table->string('image')->nullable();
+            $table->string('link')->nullable();
             $table->date('published_at')->nullable();
             $table->date('expired_at')->nullable();
             $table->timestamp('created_at')->nullable();

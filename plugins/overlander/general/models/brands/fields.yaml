@@ -1,11 +1,11 @@
 fields:
     name:
-        label: 'Brand Name'
+        label: 'Name'
         span: auto
         required: 1
         type: text
     image:
-        label: 'Brand Logo'
+        label: 'Logo'
         mode: image
         thumbOptions:
             mode: crop
@@ -13,3 +13,12 @@ fields:
         span: auto
         required: 1
         type: mediafinder
+    group:
+        label: 'Group'
+        span: full
+        required: 1
+        type: dropdown
+    description:
+        label: 'Description'
+        span: full
+        type: richeditor

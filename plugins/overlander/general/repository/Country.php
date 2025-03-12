@@ -2,9 +2,9 @@
 
 namespace Overlander\General\Repository;
 
-use Exception;
+use Lang;
+use Legato\Api\Exceptions\NotFoundException;
 use Overlander\General\Models\Countries;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class Country
 {
@@ -17,18 +17,15 @@ class Country
 
     public function getAll()
     {
-        try {
-            $list = $this->countries->all();
-
-            $data = [];
-
-            foreach ($list as $key => $value) {
-                $data[] = $this->convertData($value);
-            }
-            return $data;
-        } catch (Exception $th) {
-            throw new BadRequestHttpException($th->getMessage());
+        $list = $this->countries->all();
+        $data = [];
+        foreach ($list as $key => $value) {
+            $data[] = $this->convertData($value);
         }
+        if (empty($data)) {
+            throw new NotFoundException(Lang::get('overlander.general::lang.not_found'));
+        }
+        return $data;
     }
 
     public function convertData($countries)
@@ -42,16 +39,14 @@ class Country
 
     public function getById($id)
     {
-        try {
-            $data = null;
-            $country = $this->countries->getById($id)->first();
-            if (!empty($country)) {
-                $data = $this->convertData($country);
-            }
-            return $data;
-        } catch (Exception $th) {
-            throw new BadRequestHttpException($th->getMessage());
+        $data = null;
+        $country = $this->countries->getById($id)->first();
+        if (!empty($country)) {
+            $data = $this->convertData($country);
+        } else {
+            throw new NotFoundException(Lang::get('overlander.general::lang.not_found'));
         }
+        return $data;
     }
 
 }

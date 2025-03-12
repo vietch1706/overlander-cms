@@ -1,0 +1,36 @@
+columns:
+    id:
+        label: Id
+        type: number
+    vip:
+        label: VIP
+        type: text
+    name:
+        label: Name
+        type: text
+    invoice_no:
+        label: Invoice
+        type: text
+    total_point:
+        label: 'Total Point'
+        type: text
+    date:
+        label: Date
+        type: text
+    loyalty_balance:
+        label: 'Loyalty Balance'
+        type: text
+    shop_id:
+        label: Shop
+        type: text
+    created_at:
+        label: 'Created At'
+        type: datetime
+    updated_at:
+        label: 'Updated At'
+        type: datetime
+    point_history:
+        label: 'Point History'
+        type: partial
+        path: $/overlander/transaction/models/transaction/_button.htm
+

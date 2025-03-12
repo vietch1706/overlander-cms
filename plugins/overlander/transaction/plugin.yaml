@@ -1,0 +1,20 @@
+plugin:
+    name: 'overlander.transaction::lang.plugin.name'
+    description: 'overlander.transaction::lang.plugin.description'
+    author: Overlander
+    icon: oc-icon-money
+    homepage: ''
+navigation:
+    transaction:
+        label: 'overlander.transaction::lang.plugin.name'
+        url: /
+        icon: icon-money
+        sideMenu:
+            transaction-entity:
+                label: Transaction
+                url: overlander/transaction/transaction
+                icon: icon-money
+            side-menu-item:
+                label: 'Point History'
+                url: overlander/transaction/pointhistory
+                icon: icon-trophy

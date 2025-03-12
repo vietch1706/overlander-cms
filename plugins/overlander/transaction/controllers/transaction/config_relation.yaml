@@ -1,0 +1,15 @@
+# ===================================
+#  Relation Behavior Config
+# ===================================
+
+detail:
+    label: Detail
+    view:
+        list: $/overlander/transaction/models/transactiondetail/columns.yaml
+        recordOnClick: ''
+        toolbarButtons: false
+        showCheckboxes: false
+        recordsPerPage: 20
+    manage:
+        form: $/overlander/transaction/models/transactiondetail/fields.yaml
+        showSearch: true

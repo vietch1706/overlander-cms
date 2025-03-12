@@ -1,0 +1,10 @@
+name: PointHistory
+form: $/overlander/transaction/models/pointhistory/fields.yaml
+modelClass: Overlander\Transaction\Models\PointHistory
+defaultRedirect: overlander/transaction/pointhistory
+create:
+    redirect: 'overlander/transaction/pointhistory/update/:id'
+    redirectClose: overlander/transaction/pointhistory
+update:
+    redirect: overlander/transaction/pointhistory
+    redirectClose: overlander/transaction/pointhistory
